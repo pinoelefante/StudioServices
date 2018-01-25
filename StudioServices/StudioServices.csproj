@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{F4EEB033-3CFE-4D60-B0CA-F0D5389550CA}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>StudioServices</RootNamespace>
+    <AssemblyName>StudioServices</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Data\Anagrafica\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Controllers\Persone\" />
+    <Folder Include="Controllers\Modelli\" />
+    <Folder Include="Controllers\Servizi\" />
+    <Folder Include="Controllers\Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Anagrafica\Persona.cs" />
+    <Compile Include="Data\Anagrafica\Indirizzo.cs" />
+    <Compile Include="Data\Anagrafica\Telefono.cs" />
+    <Compile Include="Data\Anagrafica\Email.cs" />
+    <Compile Include="Data\DataFile.cs" />
+    <Compile Include="Controllers\Servizi\ServiziController.cs" />
+    <Compile Include="Controllers\Modelli\ModelliController.cs" />
+    <Compile Include="Data\Anagrafica\DocumentoRiconoscimento.cs" />
+    <Compile Include="Controllers\Persone\AutenticazioneController.cs" />
+    <Compile Include="Data\Anagrafica\Account.cs" />
+    <Compile Include="Controllers\Persone\PersoneController.cs" />
+    <Compile Include="Controllers\Utils\PasswordStorage.cs" />
+    <Compile Include="Controllers\Utils\Tester.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
