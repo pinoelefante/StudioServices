@@ -2,9 +2,9 @@
 namespace StudioServices.Controllers.Servizi
 {
     /* Gestisce le operazioni relative ai servizi (Contabilità, etc etc) */
-    public class ServiziController
+    public class ServicesController
     {
-        public ServiziController()
+        public ServicesController()
         {
         }
     }

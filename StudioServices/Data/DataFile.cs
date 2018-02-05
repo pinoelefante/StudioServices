@@ -1,8 +1,10 @@
-﻿using System;
+﻿using SQLite;
+using System;
 namespace StudioServices.Data
 {
     public class DataFile
     {
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public bool Attivo { get; set; } = true;
         public DateTime Creazione { get; set; }

@@ -1,14 +1,16 @@
-﻿using System;
-namespace StudioServices.Data.Anagrafica
+﻿using SQLite;
+using System;
+namespace StudioServices.Data.Registry
 {
-    public class Email : DataFile
+    public class Email : PersonReference
     {
         /* Settaggi */
-        public bool IsPec { get; set; }
-        public bool IsGestita { get; set; } // se gestito dallo studio
+        public bool IsPec { get; set; } = false;
+        public bool IsManaged { get; set; } = false; // se gestito dallo studio
 
         /* Email */
-        public string Indirizzo { get; set; }
+        [Unique]
+        public string Address { get; set; }
         public string Password { get; set; }
 
         /* Tipo account aruba */
@@ -16,9 +18,9 @@ namespace StudioServices.Data.Anagrafica
         public string ServicePassword { get; set; }
 
         /* Servizi per caselle email a pagamento */
-        public DateTime Scadenza { get; set; }
-        public bool RinnovoAutomaticoAttivo { get; set; }
-        public string RinnovoAutomaticoPaypal { get; set; }
+        public DateTime? Expire { get; set; }
+        public bool AutoRenewEnabled { get; set; }
+        public string AutoRenewPaypalAddress { get; set; }
 
         /* Settaggi server posta */
         public string IMAPAddress { get; set; }
@@ -29,6 +31,6 @@ namespace StudioServices.Data.Anagrafica
         public int SMTPPort { get; set; }
         public string SMTPUsername { get; set; }
 
-        public string NomeVisualizzato { get; set; }
+        public string FullName { get; set; }
     }
 }

@@ -6,6 +6,8 @@
 [Bb]in/
 packages/
 TestResults/
+.vso/
+.vs/
 
 # globs
 Makefile.in
