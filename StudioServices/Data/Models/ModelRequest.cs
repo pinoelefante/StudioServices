@@ -3,7 +3,7 @@ namespace StudioServices.Data.ModelRequest
     public class ModelRequest : PersonReference
     {
         public int ModelId {get;set;}
-        public bool IsRequest {get;set}
+        public bool IsRequest { get; set; }
         public bool IsPrint {get;set;}
         public string Note {get;set;}
         public ModelRequestStatus Status {get;set;}

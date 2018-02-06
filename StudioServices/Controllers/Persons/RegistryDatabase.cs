@@ -113,7 +113,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<IdentificationDocument>().Where(x => x.PersonId == id_person && (all && !x.Attivo ? true : false)).AsEnumerable();
+                return con.Table<IdentificationDocument>().Where(x => x.PersonId == id_person && (all ? true : x.Attivo)).AsEnumerable();
             }
         }
         public ContactMethod ContactMethodSelect(int contact_id)
@@ -141,7 +141,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<ContactMethod>().Where(x => x.PersonId == id_person && (all && !x.Attivo ? true : false)).AsEnumerable();
+                return con.Table<ContactMethod>().Where(x => x.PersonId == id_person && (all ? true : x.Attivo)).AsEnumerable();
             }
         }
         public Address AddressSelect(int id_address)
@@ -169,7 +169,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<Address>().Where(x => x.PersonId == person_id && (all && !x.Attivo ? true : false)).AsEnumerable();
+                return con.Table<Address>().Where(x => x.PersonId == person_id && (all ? true : x.Attivo)).AsEnumerable();
             }
         }
         public Email EmailSelect(int email_id)
@@ -197,7 +197,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<Email>().Where(x => x.PersonId == person_id && (all && !x.Attivo ? true : false)).AsEnumerable();
+                return con.Table<Email>().Where(x => x.PersonId == person_id && (all ? true : x.Attivo)).AsEnumerable();
             }
         }
     }

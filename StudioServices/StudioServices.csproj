@@ -30,24 +30,30 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="Controllers\Models\ModelsController.cs" />
+    <Compile Include="Controllers\Models\ModelsDatabase.cs" />
+    <Compile Include="Controllers\Newsboard\NewsboardController.cs" />
+    <Compile Include="Controllers\Newsboard\NewsboardDatabase.cs" />
     <Compile Include="Controllers\Persons\RegistryDatabase.cs" />
     <Compile Include="Controllers\Utils\Database.cs" />
     <Compile Include="Controllers\Utils\FileUtils.cs" />
     <Compile Include="Controllers\Utils\Sessions\Session.cs" />
     <Compile Include="Controllers\Utils\StringUtils.cs" />
+    <Compile Include="Data\Accounting\Company.cs" />
+    <Compile Include="Data\Accounting\Invoice.cs" />
+    <Compile Include="Data\Models\Model.cs" />
+    <Compile Include="Data\Models\ModelRequest.cs" />
+    <Compile Include="Data\Newsboard\Message.cs" />
     <Compile Include="Data\Registry\Person.cs" />
     <Compile Include="Data\Registry\Address.cs" />
     <Compile Include="Data\Registry\ContactMethod.cs" />
     <Compile Include="Data\Registry\Email.cs" />
     <Compile Include="Data\DataFile.cs" />
-    <Compile Include="Controllers\Servizi\ServicesController.cs" />
-    <Compile Include="Controllers\Modelli\ModelliController.cs" />
     <Compile Include="Data\Registry\IdentificationDocument.cs" />
     <Compile Include="Controllers\Persons\AuthenticationController.cs" />
     <Compile Include="Data\Registry\Account.cs" />
     <Compile Include="Controllers\Persons\PersonController.cs" />
     <Compile Include="Controllers\Utils\PasswordStorage.cs" />
-    <Compile Include="Controllers\Utils\Tester.cs" />
     <Compile Include="Data\PersonReference.cs" />
   </ItemGroup>
   <ItemGroup>

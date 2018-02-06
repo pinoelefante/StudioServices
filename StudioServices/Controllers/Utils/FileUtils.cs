@@ -30,7 +30,16 @@ namespace StudioServices.Controllers.Utils
         }
         public static bool Delete(string folder, string filename)
         {
-            return true;
+            try
+            {
+                File.Delete(Path.Combine(folder, filename));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
         }
     }
 }

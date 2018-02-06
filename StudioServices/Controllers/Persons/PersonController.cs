@@ -60,9 +60,9 @@ namespace StudioServices.Controllers.Persons
             document.PersonId = person_id;
             document.SetAttivo(true);
             bool isUpdate = document.Creazione.CompareTo(timestamp) < 0;
-            
+
             // Salvataggio file e generazione nome
-            string filename = document.Filename ?? $"{person_id}_{document_type}_{StringUtils.RandomString()}.{file_ext}";
+            string filename = document.Filename ?? String.Format("%04d_%04d_%s", person_id, document_type, StringUtils.RandomString(), file_ext);
             document.Filename = filename;
             if (FileUtils.WriteFile("", filename, file))
             {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using StudioServices.Data.Newsboard;
 
 namespace StudioServices.Controllers.Utils
 {
@@ -30,6 +30,9 @@ namespace StudioServices.Controllers.Utils
                 connection.CreateTable(typeof(ContactMethod));
                 connection.CreateTable(typeof(Account));
                 connection.CreateTable(typeof(Person));
+
+                /* Newsboard */
+                connection.CreateTable<Message>();
             } 
         }
         public SQLiteConnection GetConnection()
