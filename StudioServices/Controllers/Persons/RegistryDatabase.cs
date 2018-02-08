@@ -47,7 +47,7 @@ namespace StudioServices.Controllers.Persons
             }
             return persona;
         }
-        public bool IdentificationDocumentExists(int persona, string numero, int tipo)
+        public bool IdentificationDocumentExists(int persona, string numero, DocumentType tipo)
         {
             using (var con = GetConnection())
             {
@@ -102,7 +102,7 @@ namespace StudioServices.Controllers.Persons
                 return con.Get<IdentificationDocument>(doc_id);
             }
         }
-        public IdentificationDocument IdentificationDocumentSelect(string number, int type, int person_id)
+        public IdentificationDocument IdentificationDocumentSelect(string number, DocumentType type, int person_id)
         {
             using (var con = GetConnection())
             {
@@ -130,7 +130,7 @@ namespace StudioServices.Controllers.Persons
                 return null;
             return contact;
         }
-        public ContactMethod ContactMethodSelect(string number, int type, int person_id)
+        public ContactMethod ContactMethodSelect(string number, ContactType type, int person_id)
         {
             using (var con = GetConnection())
             {

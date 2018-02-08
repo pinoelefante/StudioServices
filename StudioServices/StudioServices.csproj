@@ -28,12 +28,18 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <ItemGroup />
   <ItemGroup>
+    <Folder Include="Data\Services\Immigration\" />
+    <Folder Include="Services\Timetable\" />
+    <Folder Include="Services\UMA\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\Models\ModelDatabase.cs" />
     <Compile Include="Controllers\Models\ModelsController.cs" />
-    <Compile Include="Controllers\Models\ModelsDatabase.cs" />
     <Compile Include="Controllers\Newsboard\NewsboardController.cs" />
     <Compile Include="Controllers\Newsboard\NewsboardDatabase.cs" />
+    <Compile Include="Controllers\Payments\PaymentDatabase.cs" />
+    <Compile Include="Controllers\Payments\PaymentsController.cs" />
     <Compile Include="Controllers\Persons\RegistryDatabase.cs" />
     <Compile Include="Controllers\Utils\Database.cs" />
     <Compile Include="Controllers\Utils\FileUtils.cs" />
@@ -44,6 +50,8 @@
     <Compile Include="Data\Models\Model.cs" />
     <Compile Include="Data\Models\ModelRequest.cs" />
     <Compile Include="Data\Newsboard\Message.cs" />
+    <Compile Include="Data\Newsboard\ReadStatus.cs" />
+    <Compile Include="Data\Payment\PaymentHistory.cs" />
     <Compile Include="Data\Registry\Person.cs" />
     <Compile Include="Data\Registry\Address.cs" />
     <Compile Include="Data\Registry\ContactMethod.cs" />
@@ -55,6 +63,8 @@
     <Compile Include="Controllers\Persons\PersonController.cs" />
     <Compile Include="Controllers\Utils\PasswordStorage.cs" />
     <Compile Include="Data\PersonReference.cs" />
+    <Compile Include="Data\Services\TimeTable\Deadline.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SQLite-net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

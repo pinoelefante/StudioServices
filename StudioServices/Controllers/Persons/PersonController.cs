@@ -52,11 +52,11 @@ namespace StudioServices.Controllers.Persons
         {
             // Crea oggetto documento
             var timestamp = DateTime.Now;
-            IdentificationDocument document = db.IdentificationDocumentSelect(number, document_type, person_id) ?? new IdentificationDocument();
+            IdentificationDocument document = db.IdentificationDocumentSelect(number, (DocumentType)Enum.ToObject(typeof(DocumentType), document_type), person_id) ?? new IdentificationDocument();
             document.Issue = issue_date;
             document.Expire = expire_date;
             document.Number = number;
-            document.Type = document_type;
+            document.Type = (DocumentType)Enum.ToObject(typeof(DocumentType), document_type);
             document.PersonId = person_id;
             document.SetAttivo(true);
             bool isUpdate = document.Creazione.CompareTo(timestamp) < 0;
@@ -93,11 +93,11 @@ namespace StudioServices.Controllers.Persons
         }
         public bool AddContactNumber(int id_persona, int tipo_contatto, string numero, bool whatsapp = false, bool telegram = false, int priorita = 0)
         {
-            ContactMethod contact = db.ContactMethodSelect(numero, tipo_contatto, id_persona) ?? new ContactMethod();
+            ContactMethod contact = db.ContactMethodSelect(numero, (ContactType)Enum.ToObject(typeof(ContactType),tipo_contatto), id_persona) ?? new ContactMethod();
             contact.IsTelegram = telegram;
             contact.IsWhatsApp = whatsapp;
             contact.Number = numero;
-            contact.Type = tipo_contatto;
+            contact.Type = (ContactType)Enum.ToObject(typeof(ContactType), tipo_contatto);
             contact.Priority = priorita;
             contact.PersonId = id_persona;
             contact.SetAttivo(true);
@@ -115,7 +115,7 @@ namespace StudioServices.Controllers.Persons
         public bool AddAddress(int id_persona, int tipo_indirizzo, string nazione, string citta, string provincia, string indirizzo, string numero, string descrizione = null)
         {
             var address = db.AddressSelect(id_persona, indirizzo, numero, citta, provincia, nazione) ?? new Address();
-            address.AddressType = tipo_indirizzo;
+            address.AddressType = (AddressType)Enum.ToObject(typeof(AddressType), tipo_indirizzo);
             address.City = citta;
             address.CivicNumber = numero;
             address.Country = nazione;

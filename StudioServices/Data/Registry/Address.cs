@@ -8,12 +8,12 @@ namespace StudioServices.Data.Registry
         public string Province { get; set; }
         public string Street { get; set; }
         public string CivicNumber { get; set; }
-
-        /* 
-            0 - casa
-            1 - lavoro
-        */
-        public int AddressType { get; set; }
+        public AddressType AddressType { get; set; }
         public string Description { get; set; }
+    }
+    public enum AddressType
+    {
+        HOME = 0,
+        WORK = 1
     }
 }

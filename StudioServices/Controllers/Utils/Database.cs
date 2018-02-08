@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StudioServices.Data.Newsboard;
+using StudioServices.Data.Models;
+using StudioServices.Data.Payment;
 
 namespace StudioServices.Controllers.Utils
 {
@@ -22,7 +24,19 @@ namespace StudioServices.Controllers.Utils
             using (var connection = GetConnection())
             {
                 // connection.Execute("PRAGMA foreign_keys = ON");
+
+                /* Accounting */
                 
+                /* Models */
+                connection.CreateTable<Model>();
+                connection.CreateTable<ModelRequest>();
+
+                /* Newsboard */
+                connection.CreateTable<Message>();
+
+                /* Payment */
+                connection.CreateTable<PaymentHistory>();
+
                 /* Registry */
                 connection.CreateTable(typeof(IdentificationDocument));
                 connection.CreateTable(typeof(Email));
@@ -30,9 +44,6 @@ namespace StudioServices.Controllers.Utils
                 connection.CreateTable(typeof(ContactMethod));
                 connection.CreateTable(typeof(Account));
                 connection.CreateTable(typeof(Person));
-
-                /* Newsboard */
-                connection.CreateTable<Message>();
             } 
         }
         public SQLiteConnection GetConnection()
