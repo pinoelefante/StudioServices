@@ -8,9 +8,10 @@ namespace StudioServices.Data.Payment
 {
     public class PaymentHistory : PersonReference
     {
-        public double Quantity { get; set; }
+        public double Amount { get; set; }
         public PaymentMethod Type { get; set; }
         public string Description { get; set; }
+        public string TransactionId { get; set; }
     }
     public enum PaymentMethod
     {

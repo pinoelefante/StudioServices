@@ -34,8 +34,8 @@
     <Folder Include="Services\UMA\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Models\ModelDatabase.cs" />
-    <Compile Include="Controllers\Models\ModelsController.cs" />
+    <Compile Include="Controllers\Items\ItemsDatabase.cs" />
+    <Compile Include="Controllers\Items\ItemsController.cs" />
     <Compile Include="Controllers\Newsboard\NewsboardController.cs" />
     <Compile Include="Controllers\Newsboard\NewsboardDatabase.cs" />
     <Compile Include="Controllers\Payments\PaymentDatabase.cs" />
@@ -47,8 +47,8 @@
     <Compile Include="Controllers\Utils\StringUtils.cs" />
     <Compile Include="Data\Accounting\Company.cs" />
     <Compile Include="Data\Accounting\Invoice.cs" />
-    <Compile Include="Data\Models\Model.cs" />
-    <Compile Include="Data\Models\ModelRequest.cs" />
+    <Compile Include="Data\Items\PayableItem.cs" />
+    <Compile Include="Data\Items\ItemRequest.cs" />
     <Compile Include="Data\Newsboard\Message.cs" />
     <Compile Include="Data\Newsboard\ReadStatus.cs" />
     <Compile Include="Data\Payment\PaymentHistory.cs" />

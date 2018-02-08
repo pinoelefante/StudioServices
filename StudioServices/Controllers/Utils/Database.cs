@@ -28,8 +28,8 @@ namespace StudioServices.Controllers.Utils
                 /* Accounting */
                 
                 /* Models */
-                connection.CreateTable<Model>();
-                connection.CreateTable<ModelRequest>();
+                connection.CreateTable<PayableItem>();
+                connection.CreateTable<ItemRequest>();
 
                 /* Newsboard */
                 connection.CreateTable<Message>();

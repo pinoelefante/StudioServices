@@ -1,9 +1,9 @@
 using SQLite;
 using System;
 
-namespace StudioServices.Data.Models
+namespace StudioServices.Data.Items
 {
-    public class Model : DataFile
+    public class PayableItem : DataFile
     {
         public string Name { get; set; }
         [Indexed(Name = "ModelId", Order = 1, Unique = true)]
@@ -14,5 +14,8 @@ namespace StudioServices.Data.Models
         public double RequestPrintCost { get; set; }
         public bool IsUnique { get; set; } // indica che può essere richiesto solo una volta
         public bool IsPrintable { get; set; }
+        public bool IsRequestable { get; set; } // Per servizi aggiungibili solo dagli amministratori
+        public string Description { get; set; }
+        public bool IsOther { get; set; }
     }
 }
