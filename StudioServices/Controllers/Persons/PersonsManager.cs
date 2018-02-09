@@ -6,10 +6,10 @@ using System.IO;
 
 namespace StudioServices.Controllers.Persons
 {
-    public class PersonController
+    public class PersonsManager
     {
         private RegistryDatabase db;
-        public PersonController()
+        public PersonsManager()
         {
             /* 
                 Dipendenze da aggiungere:

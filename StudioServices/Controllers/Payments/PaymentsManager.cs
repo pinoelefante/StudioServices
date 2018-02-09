@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace StudioServices.Controllers.Payments
 {
-    public class PaymentsController
+    public class PaymentsManager
     {
         private PaymentDatabase db;
         private ItemsDatabase db_models;
-        public PaymentsController()
+        public PaymentsManager()
         {
             db = new PaymentDatabase();
             db_models = new ItemsDatabase();

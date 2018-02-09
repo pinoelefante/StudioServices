@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 namespace StudioServices.Controllers.Items
 {
-    public class ItemsController
+    public class ItemsManager
     {
         private ItemsDatabase db;
-        public ItemsController()
+        public ItemsManager()
         {
             db = new ItemsDatabase();
         }

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace StudioServices.Controllers.Newsboard
 {
-    public class NewsboardController
+    public class NewsboardManager
     {
         private NewsboardDatabase db;
-        public NewsboardController()
+        public NewsboardManager()
         {
             db = new NewsboardDatabase();
         }

@@ -4,7 +4,7 @@ VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioServices", "StudioServices\StudioServices.csproj", "{F4EEB033-3CFE-4D60-B0CA-F0D5389550CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioServicesWeb", "StudioServicesWeb\StudioServicesWeb.csproj", "{29E12B5E-030F-41FF-BA9A-F1708D92A96D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioServicesWeb", "StudioServicesWeb\StudioServicesWeb.csproj", "{29E12B5E-030F-41FF-BA9A-F1708D92A96D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

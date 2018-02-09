@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{F4EEB033-3CFE-4D60-B0CA-F0D5389550CA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>StudioServices</RootNamespace>
     <AssemblyName>StudioServices</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -19,7 +19,8 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>
@@ -28,6 +29,9 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Folder Include="Data\Services\Immigration\" />
     <Folder Include="Services\Timetable\" />
@@ -35,11 +39,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Items\ItemsDatabase.cs" />
-    <Compile Include="Controllers\Items\ItemsController.cs" />
-    <Compile Include="Controllers\Newsboard\NewsboardController.cs" />
+    <Compile Include="Controllers\Items\ItemsManager.cs" />
+    <Compile Include="Controllers\Newsboard\NewsboardManager.cs" />
     <Compile Include="Controllers\Newsboard\NewsboardDatabase.cs" />
     <Compile Include="Controllers\Payments\PaymentDatabase.cs" />
-    <Compile Include="Controllers\Payments\PaymentsController.cs" />
+    <Compile Include="Controllers\Payments\PaymentsManager.cs" />
     <Compile Include="Controllers\Persons\RegistryDatabase.cs" />
     <Compile Include="Controllers\Utils\Database.cs" />
     <Compile Include="Controllers\Utils\FileUtils.cs" />
@@ -58,9 +62,9 @@
     <Compile Include="Data\Registry\Email.cs" />
     <Compile Include="Data\DataFile.cs" />
     <Compile Include="Data\Registry\IdentificationDocument.cs" />
-    <Compile Include="Controllers\Persons\AuthenticationController.cs" />
+    <Compile Include="Controllers\Persons\AuthenticationManager.cs" />
     <Compile Include="Data\Registry\Account.cs" />
-    <Compile Include="Controllers\Persons\PersonController.cs" />
+    <Compile Include="Controllers\Persons\PersonsManager.cs" />
     <Compile Include="Controllers\Utils\PasswordStorage.cs" />
     <Compile Include="Data\PersonReference.cs" />
     <Compile Include="Data\Services\TimeTable\Deadline.cs" />
@@ -85,7 +89,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

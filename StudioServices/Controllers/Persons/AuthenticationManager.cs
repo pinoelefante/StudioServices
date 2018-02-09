@@ -1,14 +1,12 @@
-﻿using StudioServices.Controllers.Persons;
-using StudioServices.Controllers.Utils;
-using StudioServices.Data.Registry;
+﻿using StudioServices.Data.Registry;
 using StudioServices.Registry.Data;
 using System;
-namespace StudioServices.Services.Persons
+namespace StudioServices.Controllers.Persons
 {
-    public class AuthenticationController
+    public class AuthenticationManager
     {
         private RegistryDatabase db;
-        public AuthenticationController()
+        public AuthenticationManager()
         {
             db = new RegistryDatabase();
         }
@@ -65,29 +63,28 @@ namespace StudioServices.Services.Persons
             // TODO Registrazione account con creazione Persona
             return false;
         }
-        public bool Login(string username, string password, out string message)
+        public int Login(string username, string password, out string message)
         {
             message = "";
             Account acc = db.SelectAccountByUsername(username);
             if (acc == null)
             {
                 message = "L'account non esiste";
-                return false;
+                return -1;
             }
             if(!acc.Attivo)
             {
                 message = "Account non abilitato";
-                return false;
+                return -1;
             }
             if (PasswordSecurity.PasswordStorage.VerifyPassword(password, acc.Password))
             {
-                // TODO Impostare la sessione
-                return true;
+                return acc.Id;
             }
             else
             {
                 message = "Password errata";
-                return false;
+                return -1;
             }
         }
         public bool ChangePassword(int account_id, string vecchia_password, string nuova_password)

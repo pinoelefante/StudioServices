@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+using StudioServices.Controllers.Persons;
 
 namespace StudioServicesWeb
 {
@@ -24,6 +27,8 @@ namespace StudioServicesWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,6 +38,16 @@ namespace StudioServicesWeb
             {
                 app.UseDeveloperExceptionPage();
             }
+            SessionOptions sessionOptions = new SessionOptions()
+            {
+                IdleTimeout = TimeSpan.FromDays(7),
+                Cookie = new Microsoft.AspNetCore.Http.CookieBuilder()
+                {
+                    Name = "SSWSESSID",
+                    Expiration = TimeSpan.FromDays(90)
+                }
+            };
+            app.UseSession(sessionOptions);
 
             app.UseMvc();
         }

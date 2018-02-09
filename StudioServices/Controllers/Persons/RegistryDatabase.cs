@@ -52,7 +52,7 @@ namespace StudioServices.Controllers.Persons
             using (var con = GetConnection())
             {
                 var numero_lower = numero.ToLower();
-                return con.Table<IdentificationDocument>().Where(x => x.PersonId == persona && x.Type == tipo && x.Number.ToLower().CompareTo(numero_lower) == 0).Any();
+                return con.Table<IdentificationDocument>().Where(x => x.PersonId == persona && x.Type == tipo && x.Number.ToLower().Equals(numero_lower)).Any();
             }
         }
         public int VerifyPersonCode(string fiscal_code, string verify_code)
@@ -68,7 +68,7 @@ namespace StudioServices.Controllers.Persons
                     return -2;
                 if (person.AuthCode == null)
                     return -1;
-                if (person.AuthCode.CompareTo(verify_code.ToUpper()) == 0)
+                if (person.AuthCode.CompareTo(verify_code) == 0)
                     return person.Id;
                 else
                     return 0;
@@ -78,7 +78,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<Account>().Where(x => x.Username.CompareTo(username) == 0).FirstOrDefault();
+                return con.Table<Account>().Where(x => x.Username.Equals(username)).FirstOrDefault();
             }
         }
         public Account SelectAccount(int account_id)
