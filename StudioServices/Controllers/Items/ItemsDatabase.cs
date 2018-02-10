@@ -40,7 +40,7 @@ namespace StudioServices.Controllers.Items
         {
             using (var con = GetConnection())
             {
-                return con.Table<PayableItem>().Where(x => only_active ? x.Attivo : true).OrderBy(x => x.Year).AsEnumerable();
+                return con.Table<PayableItem>().Where(x => only_active ? x.Enabled : true).OrderBy(x => x.Year).AsEnumerable();
             }
         }
         public PayableItem SelectItem(int item_id)

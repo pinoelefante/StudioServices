@@ -22,7 +22,7 @@ namespace StudioServices.Controllers.Items
                 message = "Il modello non è richiedibile";
                 return false;
             }
-            if(!admin && !item.Attivo)
+            if(!admin && !item.Enabled)
             {
                 message = "Non è più possibile richiedere il modello";
                 return false;
@@ -59,7 +59,7 @@ namespace StudioServices.Controllers.Items
                 message = "Il modello non è stampabile";
                 return false;
             }
-            if(!model.Attivo)
+            if(!model.Enabled)
             {
                 message = "Il modello non è attivo. Contatta lo studio per ulteriori informazioni";
                 return false;

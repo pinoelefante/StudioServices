@@ -14,7 +14,7 @@ namespace StudioServices.Controllers.Newsboard
         {
             using (var con = GetConnection())
             {
-                return con.Table<Message>().Where(x => (x.PersonId == person_id || !x.IsPrivate) && x.Creazione.CompareTo(last_message) > 0 && (all ? true : x.Attivo)).OrderBy(x => x.Creazione).AsEnumerable();
+                return con.Table<Message>().Where(x => (x.PersonId == person_id || !x.IsPrivate) && x.CreationTime.CompareTo(last_message) > 0 && (all ? true : x.Enabled)).OrderBy(x => x.CreationTime).AsEnumerable();
             }
         }
         public Message SelectMessage(int message_id)

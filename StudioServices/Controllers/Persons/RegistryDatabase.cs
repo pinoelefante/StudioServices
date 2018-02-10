@@ -39,13 +39,20 @@ namespace StudioServices.Controllers.Persons
                 persona = connection.Get<Person>(id);
                 if (persona != null)
                 {
-                    connection.Table<ContactMethod>().Where(x => x.PersonId == id && x.Attivo).ToList().ForEach(x => persona.Add(x));
-                    connection.Table<IdentificationDocument>().Where(x => x.PersonId == id && x.Attivo).ToList().ForEach(x => persona.Add(x));
-                    connection.Table<Email>().Where(x => x.PersonId == id && x.Attivo).ToList().ForEach(x => persona.Add(x));
-                    connection.Table<Address>().Where(x => x.PersonId == id && x.Attivo).ToList().ForEach(x => persona.Add(x));
+                    connection.Table<ContactMethod>().Where(x => x.PersonId == id && x.Enabled).ToList().ForEach(x => persona.Add(x));
+                    connection.Table<IdentificationDocument>().Where(x => x.PersonId == id && x.Enabled).ToList().ForEach(x => persona.Add(x));
+                    connection.Table<Email>().Where(x => x.PersonId == id && x.Enabled).ToList().ForEach(x => persona.Add(x));
+                    connection.Table<Address>().Where(x => x.PersonId == id && x.Enabled).ToList().ForEach(x => persona.Add(x));
                 }
             }
             return persona;
+        }
+        public List<Person> SelectNewPersons()
+        {
+            using (var con = GetConnection())
+            {
+                return con.Table<Person>().Where(x => !x.Enabled && x.DisabledTime.Ticks == 0).ToList();
+            }
         }
         public bool IdentificationDocumentExists(int persona, string numero, DocumentType tipo)
         {
@@ -88,6 +95,13 @@ namespace StudioServices.Controllers.Persons
                 return con.Get<Account>(account_id);
             }
         }
+        public List<Account> SelectNewAccounts()
+        {
+            using (var con = GetConnection())
+            {
+                return con.Table<Account>().Where(x => !x.Enabled && x.DisabledTime.Ticks == 0).ToList();
+            }
+        }
         public IdentificationDocument IdentificationDocumentSelect(int doc_id, int person_id)
         {
             var doc = IdentificationDocumentSelect(doc_id);
@@ -113,7 +127,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<IdentificationDocument>().Where(x => x.PersonId == id_person && (all ? true : x.Attivo)).AsEnumerable();
+                return con.Table<IdentificationDocument>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).AsEnumerable();
             }
         }
         public ContactMethod ContactMethodSelect(int contact_id)
@@ -141,7 +155,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<ContactMethod>().Where(x => x.PersonId == id_person && (all ? true : x.Attivo)).AsEnumerable();
+                return con.Table<ContactMethod>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).AsEnumerable();
             }
         }
         public Address AddressSelect(int id_address)
@@ -169,7 +183,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<Address>().Where(x => x.PersonId == person_id && (all ? true : x.Attivo)).AsEnumerable();
+                return con.Table<Address>().Where(x => x.PersonId == person_id && (all ? true : x.Enabled)).AsEnumerable();
             }
         }
         public Email EmailSelect(int email_id)
@@ -197,7 +211,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<Email>().Where(x => x.PersonId == person_id && (all ? true : x.Attivo)).AsEnumerable();
+                return con.Table<Email>().Where(x => x.PersonId == person_id && (all ? true : x.Enabled)).AsEnumerable();
             }
         }
     }

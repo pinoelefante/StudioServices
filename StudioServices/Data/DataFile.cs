@@ -6,22 +6,22 @@ namespace StudioServices.Data
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        public bool Attivo { get; set; } = true;
-        public DateTime Creazione { get; set; }
-        public DateTime Disattivazione { get; set; }
+        public bool Enabled { get; set; } = true;
+        public DateTime CreationTime { get; set; }
+        public DateTime DisabledTime { get; set; }
 
         public DataFile()
         {
-            Creazione = DateTime.Now;
+            CreationTime = DateTime.Now;
         }
 
         public bool SetAttivo(bool status)
         {
-            if (status == Attivo)
+            if (status == Enabled)
                 return false;
-            Attivo = status;
+            Enabled = status;
             if (!status)
-                Disattivazione = DateTime.Now;
+                DisabledTime = DateTime.Now;
             return true;
         }
     }

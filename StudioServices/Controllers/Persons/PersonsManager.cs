@@ -11,15 +11,9 @@ namespace StudioServices.Controllers.Persons
         private RegistryDatabase db;
         public PersonsManager()
         {
-            /* 
-                Dipendenze da aggiungere:
-                    - Manager sessione
-                    - Manager cache
-                    - Database
-            */
             db = new RegistryDatabase();
         }
-        public bool AddPerson(string name, string surname, string fiscal_code, DateTime birthday, string birth_place, out string verify_code)
+        public bool AddPerson(string name, string surname, string fiscal_code, DateTime birthday, string birth_place, out string verify_code, bool enabled = false)
         {
             // Usabile solo dall'amministratore
 
@@ -32,11 +26,12 @@ namespace StudioServices.Controllers.Persons
                 FiscalCode = fiscal_code,
                 Birth = birthday,
                 BirthPlace = birth_place,
-                AuthCode = verify_code
+                AuthCode = verify_code,
+                Enabled = enabled
             };
             return db.PersonSave(persona);
         }
-        private Person GetPerson(int person_id)
+        public Person GetPerson(int person_id)
         {
             // TODO gestione cache
             return db.PersonSelect(person_id);
@@ -59,7 +54,7 @@ namespace StudioServices.Controllers.Persons
             document.Type = (DocumentType)Enum.ToObject(typeof(DocumentType), document_type);
             document.PersonId = person_id;
             document.SetAttivo(true);
-            bool isUpdate = document.Creazione.CompareTo(timestamp) < 0;
+            bool isUpdate = document.CreationTime.CompareTo(timestamp) < 0;
 
             // Salvataggio file e generazione nome
             string filename = document.Filename ?? String.Format("%04d_%04d_%s", person_id, document_type, StringUtils.RandomString(), file_ext);

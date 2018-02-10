@@ -7,5 +7,6 @@ namespace StudioServices.Data.Registry
         [Unique]
         public string Username { get; set; }
         public string Password { get; set; }
+        public bool IsAdmin { get; private set; } = false;
     }
 }

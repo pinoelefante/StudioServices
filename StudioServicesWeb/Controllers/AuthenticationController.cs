@@ -3,31 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using StudioServices.Controllers.Persons;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace StudioServicesWeb.Controllers
 {
     [Route("api/authentication")]
-    public class AuthenticationController : Controller
+    public class AuthenticationController : MyController
     {
-        private static AuthenticationManager auth = new AuthenticationManager();
-        //PersonController persons;
-        public AuthenticationController()
+        private AuthenticationManager auth;
+        public AuthenticationController(AuthenticationManager manager)
         {
+            auth = manager;
         }
 
         [Route("login")]
         [HttpGet("{username}&{password}")]
         public Response<bool> Login([FromQuery]string username, [FromQuery]string password)
         {
-            int id = auth.Login(username, password, out string message);
-            bool response = id > 0;
+            int account_id = auth.Login(username, password, out int person_id, out bool admin, out string message);
+            bool response = account_id > 0;
             if (response)
-                HttpContext.Session.SetInt32("AccountId", id);
-            return ResponseCreator.CreateBoolean(response, message);
+                _setUserSession(account_id, person_id, admin);
+            return CreateBoolean(response, message);
         }
         
         [Route("register")]
@@ -35,21 +32,25 @@ namespace StudioServicesWeb.Controllers
         public Response<bool> CreateAccount([FromQuery]string username, string password, string email, string fiscal_code, string verify_code)
         {
             bool res = auth.AccountRegister(username, password, email, fiscal_code, verify_code, out string message);
-            return ResponseCreator.CreateBoolean(res, message);
+            return CreateBoolean(res, message);
+        }
+
+        [Route("is_logged")]
+        [HttpGet]
+        public Response<bool> IsLogged()
+        {
+            bool res = _isLogged();
+            return CreateBoolean(res);
         }
 
         [HttpGet]
         public string Get()
         {
-            int? sessionId = HttpContext.Session.GetInt32("AccountId");
-            if (sessionId != null && sessionId > 0)
-            {
-                return "AccountId : " + sessionId;
-            }
+            int accountId = _getAccountId();
+            if (accountId > 0)
+                return $"AccountId {accountId} ({_isAdmin()})";
             else
-            {
                 return "Welcome!";
-            }
         }
     }
 }

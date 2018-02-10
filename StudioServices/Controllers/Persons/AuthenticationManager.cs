@@ -38,7 +38,7 @@ namespace StudioServices.Controllers.Persons
             {
                 Username = username,
                 Password = PasswordSecurity.PasswordStorage.CreateHash(password),
-                Attivo = false,
+                Enabled = false,
                 PersonId = id_person
             };
 
@@ -58,27 +58,31 @@ namespace StudioServices.Controllers.Persons
             message = "Errore durante il salvataggio";
             return false;
         }
-        public bool AccountRegisterWithPerson(string username, string password, string name, string surname, DateTime birth, string fiscal_code, string birth_place)
+        public bool AccountRegisterWithPerson(string username, string password, string email, string name, string surname, DateTime birth, string fiscal_code, string birth_place)
         {
             // TODO Registrazione account con creazione Persona
             return false;
         }
-        public int Login(string username, string password, out string message)
+        public int Login(string username, string password, out int person_id, out bool admin, out string message)
         {
             message = "";
+            person_id = -1;
+            admin = false;
             Account acc = db.SelectAccountByUsername(username);
             if (acc == null)
             {
                 message = "L'account non esiste";
                 return -1;
             }
-            if(!acc.Attivo)
+            if(!acc.Enabled)
             {
                 message = "Account non abilitato";
                 return -1;
             }
             if (PasswordSecurity.PasswordStorage.VerifyPassword(password, acc.Password))
             {
+                person_id = acc.PersonId;
+                admin = acc.IsAdmin;
                 return acc.Id;
             }
             else
