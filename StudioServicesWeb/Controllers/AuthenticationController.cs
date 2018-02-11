@@ -31,7 +31,7 @@ namespace StudioServicesWeb.Controllers
         [HttpGet("{username}&{password}&{email}&{fiscal_code}&{verify_code}")]
         public Response<bool> CreateAccount([FromQuery]string username, string password, string email, string fiscal_code, string verify_code)
         {
-            bool res = auth.AccountRegister(username, password, email, fiscal_code, verify_code, out string message);
+            bool res = auth.AccountRegister(username, password, email.ToLower(), fiscal_code.ToUpper(), verify_code, out string message);
             return CreateBoolean(res, ResponseCode.OK, message);
         }
 

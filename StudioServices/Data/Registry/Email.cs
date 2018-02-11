@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 namespace StudioServices.Data.Registry
 {
@@ -11,10 +12,12 @@ namespace StudioServices.Data.Registry
         /* Email */
         [Unique]
         public string Address { get; set; }
+        [JsonIgnore]
         public string Password { get; set; }
 
         /* Tipo account aruba */
         public string ServiceUsername { get; set; }
+        [JsonIgnore]
         public string ServicePassword { get; set; }
 
         /* Servizi per caselle email a pagamento */

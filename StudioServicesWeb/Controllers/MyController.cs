@@ -73,6 +73,7 @@ namespace StudioServicesWeb.Controllers
         OK = 0,
         REQUIRE_LOGIN = 1,
         FAIL = 2,
-        ADMIN_FUNCTION = 3
+        ADMIN_FUNCTION = 3,
+        MAINTENANCE = 4
     }
 }
