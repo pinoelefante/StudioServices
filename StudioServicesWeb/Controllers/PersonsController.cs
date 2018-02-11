@@ -26,7 +26,7 @@ namespace StudioServicesWeb.Controllers
             if (!_isAdmin())
             {
                 // TODO : loggare tentativo
-                return CreateBoolean(false, "Funzione non abilitata all'utente");
+                return CreateBoolean(false,ResponseCode.ADMIN_FUNCTION, "Funzione non abilitata all'utente");
             }
             bool res = persons.AddPerson(name, surname, fiscal_code, new DateTime(b_year, b_month, b_day), b_place, out string verify_code);
             return CreateBoolean(res);   
@@ -37,7 +37,7 @@ namespace StudioServicesWeb.Controllers
         public Response<Person> GetPerson()
         {
             if (!_isLogged())
-                return Create<Person>(null, "Login required");
+                return Create<Person>(null, ResponseCode.REQUIRE_LOGIN, "Login required");
             Person person = persons.GetPerson(_getPersonId());
             return Create(person);
         }
@@ -49,7 +49,7 @@ namespace StudioServicesWeb.Controllers
             if (!_isAdmin())
             {
                 // TODO : loggare tentativo
-                return CreateBoolean(false, "Funzione non abilitata");
+                return CreateBoolean(false, ResponseCode.ADMIN_FUNCTION,"Funzione non abilitata");
             }
             bool res = persons.ChangeActiveStatus(person_id, status);
             return CreateBoolean(res);

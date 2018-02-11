@@ -35,19 +35,19 @@ namespace StudioServicesWeb.Controllers
             HttpContext.Session.SetInt32("PersonId", person_id);
             HttpContext.Session.SetInt32("IsAdmin", admin ? 1 : 0);
         }
-        public Response<Boolean> CreateBoolean(bool resp, string message = "")
+        public Response<Boolean> CreateBoolean(bool resp, ResponseCode code = ResponseCode.OK, string message = "")
         {
             return new Response<bool>(resp)
             {
-                Result = resp,
+                Code = code,
                 Message = message
             };
         }
-        public Response<T> Create<T>(T data, string message = "")
+        public Response<T> Create<T>(T data, ResponseCode code = ResponseCode.OK, string message = "")
         {
             return new Response<T>(data)
             {
-                Result = data != null ? true : false,
+                Code = code,
                 Message = message
             };
         }
@@ -55,7 +55,7 @@ namespace StudioServicesWeb.Controllers
     public class Response<T>
     {
         public long Ticks { get; }
-        public bool Result { get; set; } = true;
+        public ResponseCode Code { get; set; }
         public string Message { get; set; }
         public T Data { get; set; }
 
@@ -67,5 +67,12 @@ namespace StudioServicesWeb.Controllers
         {
             Data = data;
         }
+    }
+    public enum ResponseCode
+    {
+        OK = 0,
+        REQUIRE_LOGIN = 1,
+        FAIL = 2,
+        ADMIN_FUNCTION = 3
     }
 }

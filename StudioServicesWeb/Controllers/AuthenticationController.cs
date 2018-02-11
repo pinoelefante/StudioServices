@@ -24,7 +24,7 @@ namespace StudioServicesWeb.Controllers
             bool response = account_id > 0;
             if (response)
                 _setUserSession(account_id, person_id, admin);
-            return CreateBoolean(response, message);
+            return CreateBoolean(response, ResponseCode.OK, message);
         }
         
         [Route("register")]
@@ -32,7 +32,7 @@ namespace StudioServicesWeb.Controllers
         public Response<bool> CreateAccount([FromQuery]string username, string password, string email, string fiscal_code, string verify_code)
         {
             bool res = auth.AccountRegister(username, password, email, fiscal_code, verify_code, out string message);
-            return CreateBoolean(res, message);
+            return CreateBoolean(res, ResponseCode.OK, message);
         }
 
         [Route("is_logged")]
