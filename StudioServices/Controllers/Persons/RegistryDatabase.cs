@@ -123,11 +123,11 @@ namespace StudioServices.Controllers.Persons
                 return con.Table<IdentificationDocument>().Where(x => x.Number.Equals(number) && x.Type == type && x.PersonId == person_id).FirstOrDefault();
             }
         }
-        public IEnumerable<IdentificationDocument> IdentificationDocumentList(int id_person, bool all = false)
+        public List<IdentificationDocument> IdentificationDocumentList(int id_person, bool all = false)
         {
             using (var con = GetConnection())
             {
-                return con.Table<IdentificationDocument>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).AsEnumerable();
+                return con.Table<IdentificationDocument>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).ToList();
             }
         }
         public ContactMethod ContactMethodSelect(int contact_id)

@@ -9,9 +9,9 @@ namespace StudioServices
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Init()
         {
-
+            // TODO read config file
         }
     }
 }

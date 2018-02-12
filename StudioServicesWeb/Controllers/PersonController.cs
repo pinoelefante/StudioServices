@@ -46,7 +46,7 @@ namespace StudioServicesWeb.Controllers
             return Create(person);
         }
 
-        [Route("set_status")]
+        [Route("status")]
         [HttpGet]
         public Response<bool> SetStatus(int person_id, bool status)
         {
@@ -82,45 +82,51 @@ namespace StudioServicesWeb.Controllers
             return CreateBoolean(res);
         }
 
-        [Route("add_contact")]
+        [Route("contact")]
         [HttpPost]
-        public Response<bool> AddContact(int type, string number, bool whatsapp, bool telegram, int priorita)
+        public Response<bool> AddContact(int type, string number, bool whatsapp = false, bool telegram = false, int priorita = 0)
         {
-            throw new NotImplementedException();
+            var res = persons.AddContactNumber(_getPersonId(), type, number, whatsapp, telegram, priorita);
+            return CreateBoolean(res);
         }
-        [Route("remove_contact")]
-        [HttpPost]
+        [Route("contact")]
+        [HttpDelete]
         public Response<bool> RemoveContact(int id)
         {
-            throw new NotImplementedException();
+            bool res = persons.RemoveContactNumber(_getPersonId(), id);
+            return CreateBoolean(res);
         }
 
-        [Route("add_address")]
+        [Route("address")]
         [HttpPost]
         public Response<bool> AddAddress(int type, string country, string city, string province, string address, string number, string description)
         {
-            throw new NotImplementedException();
+            var res = persons.AddAddress(_getPersonId(), type, country, city, province, address, number, description);
+            return CreateBoolean(res);
         }
 
-        [Route("remove_address")]
-        [HttpPost]
+        [Route("address")]
+        [HttpDelete]
         public Response<bool> RemoveAddress(int id)
         {
-            throw new NotImplementedException();
+            var res = persons.RemoveAddress(_getPersonId(), id);
+            return CreateBoolean(res);
         }
 
-        [Route("add_email")]
+        [Route("email")]
         [HttpPost]
         public Response<bool> AddEmail(string address, bool pec, bool managed, string password, string fullname, string imap_address, int imap_port, string imap_username, string smtp_address, int smtp_port, string smtp_username, string service_username, string service_password, int expire_year, int expire_month, int expire_day, bool renew_auto, string renew_paypal)
         {
-            throw new NotImplementedException();
+            var res = persons.AddEmail(_getPersonId(), address, pec, managed, password, fullname, imap_address, imap_port, imap_username, smtp_address, smtp_port, smtp_username, service_username, service_password, new DateTime(expire_year, expire_month, expire_day), renew_auto, renew_paypal);
+            return CreateBoolean(res);
         }
 
-        [Route("remove_email")]
-        [HttpPost]
+        [Route("email")]
+        [HttpDelete]
         public Response<bool> RemoveEmail(int id)
         {
-            throw new NotImplementedException();
+            var res = persons.RemoveEmail(_getPersonId(), id);
+            return CreateBoolean(res);
         }
 
         [HttpGet]

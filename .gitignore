@@ -8,6 +8,7 @@ packages/
 TestResults/
 .vso/
 .vs/
+.vscode/
 
 # globs
 Makefile.in
@@ -41,3 +42,4 @@ Thumbs.db
 # dotCover
 *.dotCover
 /StudioServicesWeb/database.sqlite
+.vscode/tasks.json

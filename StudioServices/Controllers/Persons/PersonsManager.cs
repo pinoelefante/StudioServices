@@ -65,7 +65,7 @@ namespace StudioServices.Controllers.Persons
                     return true;
                 else
                 {
-                    if (!isUpdate) // cancellare il file solo se è un nuovo inserimento
+                    if (!isUpdate) // cancella il file solo se è un nuovo inserimento
                         FileUtils.Delete("", filename);
                     return false;
                 }
@@ -79,10 +79,12 @@ namespace StudioServices.Controllers.Persons
         public bool RemoveIdentificationDocument(int id_persona, int id_documento)
         {
             IdentificationDocument doc = db.IdentificationDocumentSelect(id_documento, id_persona);
-            if(doc == null)
+            var list = db.IdentificationDocumentList(id_persona);
+            if(doc == null || list.Count <=1)
             {
                 return false;
             }
+
             doc.SetAttivo(false);
             return db.SaveItem(doc);
         }
@@ -137,19 +139,22 @@ namespace StudioServices.Controllers.Persons
             email.Address = casella;
             email.IsPec = is_pec;
             email.IsManaged = is_gestita;
-            email.Password = password;
-            email.FullName = nome_visualizzato;
-            email.IMAPAddress = imap_address;
-            email.IMAPUsername = imap_username;
-            email.IMAPPort = imap_port;
-            email.SMTPAddress = smtp_address;
-            email.SMTPUsername = smtp_username;
-            email.SMTPPort = smtp_port;
-            email.ServiceUsername = service_username;
-            email.ServicePassword = service_password;
-            email.AutoRenewEnabled = rinnovo_automatico;
-            email.AutoRenewPaypalAddress = rinnovo_paypal;
-            email.Expire = scadenza;
+            if (is_gestita)
+            {
+                email.Password = password;
+                email.FullName = nome_visualizzato;
+                email.IMAPAddress = imap_address;
+                email.IMAPUsername = imap_username;
+                email.IMAPPort = imap_port;
+                email.SMTPAddress = smtp_address;
+                email.SMTPUsername = smtp_username;
+                email.SMTPPort = smtp_port;
+                email.ServiceUsername = service_username;
+                email.ServicePassword = service_password;
+                email.AutoRenewEnabled = rinnovo_automatico;
+                email.AutoRenewPaypalAddress = rinnovo_paypal;
+                email.Expire = scadenza;
+            }
             email.SetAttivo(true);
             return db.SaveItem(email);
         }
