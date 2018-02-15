@@ -13,15 +13,12 @@ namespace StudioServicesWeb.Controllers
     {
         [Route("act_as")]
         [HttpGet("{person_id}")]
-        public string ActAs(int person_id)
+        public Response<bool> ActAs(int person_id)
         {
             if(!_isAdmin())
-            {
-                // TODO : log request
-                // return CreateBoolean(false, ResponseCode.ADMIN_FUNCTION);
-                return "not logged";
-            }
-            return "";
+                return CreateBoolean(false, ResponseCode.ADMIN_FUNCTION);
+            _setUserSession(_getAccountId(), person_id, true);
+            return CreateBoolean(true);
         }
     }
 }

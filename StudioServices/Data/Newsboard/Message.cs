@@ -13,5 +13,6 @@ namespace StudioServices.Data.Newsboard
         public bool IsExpireEnabled { get; set; }
         public DateTime ExpireDate { get; set; }
         public bool IsMarked { get; set; }
+        public int SenderId { get; set; }
     }
 }

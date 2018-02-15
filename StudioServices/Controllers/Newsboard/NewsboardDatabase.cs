@@ -10,11 +10,11 @@ namespace StudioServices.Controllers.Newsboard
 {
     public class NewsboardDatabase : Database
     {
-        public IEnumerable<Message> MessageList(int person_id, DateTime last_message = default(DateTime), bool all = false)
+        public List<Message> MessageList(int person_id, DateTime last_message = default(DateTime), bool all = false)
         {
             using (var con = GetConnection())
             {
-                return con.Table<Message>().Where(x => (x.PersonId == person_id || !x.IsPrivate) && x.CreationTime.CompareTo(last_message) > 0 && (all ? true : x.Enabled)).OrderBy(x => x.CreationTime).AsEnumerable();
+                return con.Table<Message>().Where(x => (x.PersonId == person_id || !x.IsPrivate) && x.CreationTime.CompareTo(last_message) > 0 && (all ? true : x.Enabled)).OrderBy(x => x.CreationTime).ToList();
             }
         }
         public Message SelectMessage(int message_id)
@@ -22,6 +22,13 @@ namespace StudioServices.Controllers.Newsboard
             using (var con = GetConnection())
             {
                 return con.Get<Message>(message_id);
+            }
+        }
+        public ReadStatus GetReadStatus(int message_id, int person_id)
+        {
+            using (var con = GetConnection())
+            {
+                return con.Table<ReadStatus>().Where(x => x.MessageId == message_id && x.PersonId == person_id).FirstOrDefault();
             }
         }
     }

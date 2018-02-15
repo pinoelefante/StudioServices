@@ -3,17 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using StudioServices.Controllers.Items;
+using StudioServices.Data.Items;
 
 namespace StudioServicesWeb.Controllers
 {
     [Route("api/items")]
     public class ItemsController : MyController
     {
+        private ItemsManager items;
+        public ItemsController(ItemsManager m)
+        {
+            items = m;
+        }
+
         [Route("items")]
         [HttpGet]
-        public string GetItemsList()
+        public Response<List<PayableItem>> GetItemsList()
         {
-            return "GetList";
+            if (!_isLogged())
+                return Create<List<PayableItem>>(null, ResponseCode.REQUIRE_LOGIN);
+            var list = items.ListItems();
+            return Create(list);
         }
 
         [Route("items")]
@@ -25,22 +36,25 @@ namespace StudioServicesWeb.Controllers
 
         [Route("items")]
         [HttpDelete("{id}")]
-        public string DeleteItem(int id)
+        public Response<bool> DeleteItem(int id)
         {
             if (!_isAdmin())
             {
                 // TODO log request
-                return "Admin only";
-                //return CreateBoolean(false, ResponseCode.ADMIN_FUNCTION);
+                return CreateBoolean(false, ResponseCode.ADMIN_FUNCTION);
             }
-            return $"Delete {id}";
+            var res = items.DeleteItem(id);
+            return CreateBoolean(res);
         }
 
         [Route("request")]
         [HttpGet]
-        public string GetRequestList()
+        public Response<List<ItemRequest>> GetRequestList()
         {
-            return "";
+            if (!_isLogged())
+                return CreateLoginRequired<List<ItemRequest>>();
+            var list = items.ListRequests(_getPersonId());
+            return Create(list);
         }
 
         [Route("request")]
@@ -52,23 +66,32 @@ namespace StudioServicesWeb.Controllers
 
         [Route("request")]
         [HttpPost]
-        public string RequestItem([FromForm]int item_id)
+        public Response<bool> RequestItem([FromForm]int item_id, bool print, string note, int item_quantity, int print_quantity)
         {
-            return $"Request {item_id}";
+            if (!_isLogged())
+                return CreateLoginRequired<bool>();
+            var res = items.RequestModel(_getPersonId(), item_id, print, note, out string message, item_quantity, print_quantity);
+            return CreateBoolean(res, ResponseCode.OK, message);
         }
 
         [Route("request")]
         [HttpDelete("{id}")]
-        public string DeleteRequest(int id)
+        public Response<bool> DeleteRequest(int id)
         {
-            return "";
+            if (!_isLogged())
+                CreateLoginRequired<bool>();
+            var res = items.DeleteRequest(id, _getPersonId());
+            return CreateBoolean(res);
         }
 
         [Route("request")]
         [HttpPost("{id}&{note}")]
-        public string SetNote(int id, string note)
+        public Response<bool> SetNote(int id, string note)
         {
-            return "";
+            if (!_isLogged())
+                return CreateLoginRequired<bool>();
+            var res = items.ModifyNote(id, _getPersonId(), note);
+            return CreateBoolean(res);
         }
     }
 }

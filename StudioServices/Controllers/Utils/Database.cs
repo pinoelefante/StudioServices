@@ -27,12 +27,13 @@ namespace StudioServices.Controllers.Utils
 
                 /* Accounting */
                 
-                /* Models */
+                /* Items */
                 connection.CreateTable<PayableItem>();
                 connection.CreateTable<ItemRequest>();
 
                 /* Newsboard */
                 connection.CreateTable<Message>();
+                connection.CreateTable<ReadStatus>();
 
                 /* Payment */
                 connection.CreateTable<PaymentHistory>();
@@ -53,6 +54,13 @@ namespace StudioServices.Controllers.Utils
         public SQLiteAsyncConnection GetConnectionAsync()
         {
             return new SQLiteAsyncConnection("database.sqlite");
+        }
+        public bool SaveObject<T>(T item, bool update = true)
+        {
+            using (var con = GetConnection())
+            {
+                return con.InsertOrReplace(item) > 0;
+            }
         }
         public bool SaveItem(DataFile item, bool update = true)
         {

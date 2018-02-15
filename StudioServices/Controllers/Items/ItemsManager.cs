@@ -12,6 +12,15 @@ namespace StudioServices.Controllers.Items
         {
             db = new ItemsDatabase();
         }
+        public List<PayableItem> ListItems()
+        {
+            return db.SelectItemsList();
+        }
+        public bool DeleteItem(int item_id)
+        {
+            // TODO implement this
+            throw new NotImplementedException();
+        }
         /* Spostare la parte admin in una nuova classe dedicata */
         public bool RequestModel(int person_id, int model_id, bool print, string note, out string message, int request_count = 1, int print_count = 1, bool admin = false)
         {
@@ -80,7 +89,7 @@ namespace StudioServices.Controllers.Items
             };
             return db.SaveItem(request);
         }
-        public IEnumerable<ItemRequest> ListRequests(int person_id)
+        public List<ItemRequest> ListRequests(int person_id)
         {
             return db.SelectItemRequestsList(person_id);
         }

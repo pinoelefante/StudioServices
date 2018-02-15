@@ -14,18 +14,16 @@ namespace StudioServices.Controllers.Newsboard
         {
             db = new NewsboardDatabase();
         }
-        public bool SendMessage(string content, bool isPrivate = false, int person_id = 0, bool isMarked = false,  bool isExpire = false, DateTime expireDate = default(DateTime))
+        public bool SendPublicMessage(string content, int sender_id, bool isMarked = false,  bool isExpire = false, DateTime expireDate = default(DateTime))
         {
-            //TODO controllare che venga chiamato da un amministratore
-
             Message msg = new Message()
             {
                 Content = content,
                 ExpireDate = expireDate,
                 IsExpireEnabled = isExpire,
-                IsMarked = isExpire,
-                IsPrivate = isPrivate,
-                PersonId = person_id
+                IsMarked = isMarked,
+                IsPrivate = false,
+                SenderId = sender_id
             };
 
             if(db.SaveItem(msg))
@@ -35,7 +33,33 @@ namespace StudioServices.Controllers.Newsboard
             }
             return false;
         }
-        public IEnumerable<Message> ListMessages(int person_id, DateTime last_message_date = default(DateTime))
+        public bool SendConversationMessage(string content, int sender_id, int receiver_id)
+        {
+            Message msg = new Message()
+            {
+                Content = content,
+                IsExpireEnabled = false,
+                IsMarked = false,
+                IsPrivate = true,
+                SenderId = sender_id,
+                PersonId = receiver_id
+            };
+            if(db.SaveItem(msg))
+            {
+                // TODO send push
+                return true;
+            }
+            return false;
+        }
+        public bool SendMessageToAdmin(string content, int sender_id)
+        {
+            // TODO implement
+
+            // Search Admin IDs
+            
+            return false;
+        }
+        public List<Message> ListMessages(int person_id, DateTime last_message_date = default(DateTime))
         {
             return db.MessageList(person_id, last_message_date);
         }
@@ -49,6 +73,35 @@ namespace StudioServices.Controllers.Newsboard
             }
             msg.SetAttivo(false);
             return db.SaveItem(msg);
+        }
+        public bool SetRead(int person_id, int message_id, ReadMode mode)
+        {
+            var read_status = db.GetReadStatus(message_id, person_id) ?? new ReadStatus() { PersonId = person_id, MessageId = message_id };
+            switch(mode)
+            {
+                case ReadMode.APP:
+                    read_status.App = true;
+                    break;
+                case ReadMode.EMAIL:
+                    read_status.Email = true;
+                    break;
+                case ReadMode.TELEGRAM:
+                    read_status.Telegram = true;
+                    break;
+                case ReadMode.WEB:
+                    read_status.Web = true;
+                    break;
+                case ReadMode.WHATSAPP:
+                    read_status.Whatsapp = true;
+                    break;
+                default:
+                    return false;
+            }
+            return db.SaveObject(read_status);
+        }
+        public bool IsRead(int person_id, int message_id)
+        {
+            return db.GetReadStatus(message_id, person_id) != null;
         }
     }
 }

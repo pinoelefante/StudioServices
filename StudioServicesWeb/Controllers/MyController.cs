@@ -51,6 +51,14 @@ namespace StudioServicesWeb.Controllers
                 Message = message
             };
         }
+        public Response<T> CreateLoginRequired<T>()
+        {
+            return Create(default(T), ResponseCode.REQUIRE_LOGIN);
+        }
+        public Response<T> CreateOnlyAdmin<T>()
+        {
+            return Create(default(T), ResponseCode.ADMIN_FUNCTION);
+        }
     }
     public class Response<T>
     {

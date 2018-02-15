@@ -29,18 +29,18 @@ namespace StudioServices.Controllers.Items
                 return con.Table<ItemRequest>().Where(x => x.PersonId == person_id && x.ItemId == item_id).ToList();
             }
         }
-        public IEnumerable<ItemRequest> SelectItemRequestsList(int person_id, bool all = false)
+        public List<ItemRequest> SelectItemRequestsList(int person_id, bool all = false)
         {
             using (var con = GetConnection())
             {
-                return con.Table<ItemRequest>().Where(x => x.PersonId == person_id && (all ? true : x.Status!=ItemRequestStatus.DELETED)).OrderByDescending(x => x.Id).AsEnumerable();
+                return con.Table<ItemRequest>().Where(x => x.PersonId == person_id && (all ? true : x.Status!=ItemRequestStatus.DELETED)).OrderByDescending(x => x.Id).ToList();
             }
         }
-        public IEnumerable<PayableItem> SelectItemsList(bool only_active = true)
+        public List<PayableItem> SelectItemsList(bool only_active = true)
         {
             using (var con = GetConnection())
             {
-                return con.Table<PayableItem>().Where(x => only_active ? x.Enabled : true).OrderBy(x => x.Year).AsEnumerable();
+                return con.Table<PayableItem>().Where(x => only_active ? x.Enabled : true).OrderBy(x => x.Year).ToList();
             }
         }
         public PayableItem SelectItem(int item_id)
