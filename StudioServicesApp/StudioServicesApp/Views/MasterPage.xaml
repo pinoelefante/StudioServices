@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProjectRunner.Views.MasterPage"
+             xmlns:views="clr-namespace:ProjectRunner.Views"
+             BindingContext="{Binding MyMasterDetailViewModel, Source={StaticResource Locator}}">
+    <ContentPage.Title>
+        <OnPlatform x:TypeArguments="x:String" iOS="Menu" Android="Project Runners" WinPhone="Project Runners"/>
+    </ContentPage.Title>
+    <ContentPage.Content>
+        <Grid>
+            <Grid.Margin>
+                <OnPlatform x:TypeArguments="Thickness" Android="0,24,0,0"/>
+            </Grid.Margin>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- user profile -->
+            <Grid Grid.Row="0" HeightRequest="50" Padding="5">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenUserProfile}"/>
+                </Grid.GestureRecognizers>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="{Binding cache.CurrentUser, Converter={StaticResource UserImageConverter}}" WidthRequest="64" HeightRequest="64" HorizontalOptions="Center"/>
+                <Label Grid.Column="1" Text="{Binding cache.CurrentUser.Username}" VerticalOptions="Center" HorizontalOptions="Start"/>
+            </Grid>
+            
+            <!-- Commands List -->
+            <ListView Grid.Row="1" x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="None" ListView.RowHeight="40">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="10,0" Spacing="10">
+                                    <Image Source="{Binding IconSource}" HeightRequest="24" WidthRequest="24" HorizontalOptions="Start" VerticalOptions="Center"/>
+                                    <Label Text="{Binding Title}" VerticalOptions="Center"/>
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </ContentPage.Content>
+</views:MyContentPage>
