@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectRunner.Views
+namespace pinoelefante.Views
 {
     public class MasterPageItem
     {

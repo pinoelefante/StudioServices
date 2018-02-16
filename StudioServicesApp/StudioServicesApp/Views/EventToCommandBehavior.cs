@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
-namespace ProjectRunner.Views
+namespace StudioServicesApp.Views
 {
     public class BindableBehavior<T> : Behavior<T> where T : BindableObject
     {

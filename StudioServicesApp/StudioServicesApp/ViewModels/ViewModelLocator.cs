@@ -1,8 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
-using Microsoft.Practices.ServiceLocation;
-using ProjectRunner.ServerAPI;
-using ProjectRunner.Services;
+using pinoelefante.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,32 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace ProjectRunner.ViewModel
+namespace StudioServicesApp.ViewModels
 {
     public class ViewModelLocator
     {
-        public const string HomePage = "HomePage",
-            LoginPage = "LoginPage",
-            RegisterPage = "RegisterPage",
-            ForgotPassword = "ForgotPasswordPage",
-            Activities = "ActivitiesPage",
-            CreateActivity = "CreateActivityPage",
-            AddLocation = "AddLocation",
-            CreateActivityConfirm = "CreateActivityConfirm",
-            ActivityDetails = "ActivityDetailsPage",
-            ActivitySearch = "SearchActivity",
-            ActivitySearchResults = "ActivitySearchResults",
-            ViewUserProfile = "ViewUserProfile",
-            FriendsPage = "FriendsPage",
-            SearchFriendsPage = "SearchFriendsPage",
-            SettingsPage = "SettingsPage";
-        
-        private static NavigationService nav;
+        public const string HOME_PAGE = "HomePage";
+
         static ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-            nav = new NavigationService();
-            SimpleIoc.Default.Register<INavigationService>(()=>nav);
+            // ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            var nav = new NavigationService();
+            SimpleIoc.Default.Register<INavigationService>(() => nav);
+            /*
             SimpleIoc.Default.Register<PRServer>();
             SimpleIoc.Default.Register<PRCache>();
             var dbService = DependencyService.Get<ISQLite>();
@@ -57,9 +41,11 @@ namespace ProjectRunner.ViewModel
             SimpleIoc.Default.Register<ViewUserProfileViewModel>();
             SimpleIoc.Default.Register<FriendsViewModel>();
             SimpleIoc.Default.Register<SearchFriendsViewModel>();
+            */
         }
         public static void RegisterPages()
         {
+            /*
             nav.Configure(ForgotPassword, typeof(Views.ForgotPasswordPage));
             nav.Configure(LoginPage, typeof(Views.LoginPage));
             nav.Configure(RegisterPage, typeof(Views.RegisterPage));
@@ -78,10 +64,13 @@ namespace ProjectRunner.ViewModel
             nav.Configure(FriendsPage, typeof(Views.FriendsPage));
             nav.Configure(SearchFriendsPage, typeof(Views.SearchFriendsPage));
             nav.Configure(SettingsPage, typeof(Views.SettingsPage));
+            */
         }
-        public static T GetService<T>() => ServiceLocator.Current.GetInstance<T>();
-        public static NavigationService NavigationService { get { return nav; } }
+        public static NavigationService NavigationService => (NavigationService)GetService<INavigationService>();
+        public static T GetService<T>() => SimpleIoc.Default.GetInstance<T>();
 
+        public MyMasterDetailViewModel MyMasterDetailViewModel => GetService<MyMasterDetailViewModel>();
+        /*
         public LoginPageViewModel LoginPageViewModel => GetService<LoginPageViewModel>();
         public RegisterPageViewModel RegisterPageViewModel => GetService<RegisterPageViewModel>();
         public ForgotPasswordViewModel ForgotPasswordViewModel => GetService<ForgotPasswordViewModel>();
@@ -96,5 +85,6 @@ namespace ProjectRunner.ViewModel
         public ViewUserProfileViewModel ViewUserProfileViewModel => GetService<ViewUserProfileViewModel>();
         public FriendsViewModel FriendsViewModel => GetService<FriendsViewModel>();
         public SearchFriendsViewModel SearchFriendsViewModel => GetService<SearchFriendsViewModel>();
+        */
     }
 }

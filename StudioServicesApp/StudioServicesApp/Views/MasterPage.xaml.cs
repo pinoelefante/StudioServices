@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
-using ProjectRunner.ServerAPI;
-using ProjectRunner.ViewModel;
+using pinoelefante.ViewModels;
+using pinoelefante.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace ProjectRunner.Views
+namespace StudioServicesApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MasterPage : MyContentPage
@@ -24,10 +24,11 @@ namespace ProjectRunner.Views
             {
                 new MasterPageItem()
                 {
-                    Title = "Home",
-                    PageKey = ViewModelLocator.HomePage,
+                    Title = "News & Messaggi",
+                    PageKey = ViewModelLocator.HOME_PAGE,
                     //IconSource = "home.png"
                 },
+                /*
                 new MasterPageItem()
                 {
                     Title = "Activities",
@@ -38,6 +39,7 @@ namespace ProjectRunner.Views
                     Title = "Friends",
                     PageKey = ViewModelLocator.FriendsPage
                 }
+                */
             };
 
             (ViewModel as MyMasterDetailViewModel).CloseMasterPage = new RelayCommand(() =>

@@ -1,14 +1,14 @@
-﻿using ProjectRunner.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using pinoelefante.ViewModels;
+using pinoelefante.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace ProjectRunner.Views
+namespace StudioServicesApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MyMasterPage : MasterDetailPage
@@ -18,7 +18,7 @@ namespace ProjectRunner.Views
             InitializeComponent();
             masterPage.ListView.ItemTapped += ListView_ItemTapped;
             masterPage.MasterDetails = this;
-            App.ConfigureNavigation(navigationPage, ViewModelLocator.HomePage, true);
+            // App.ConfigureNavigation(navigationPage, ViewModelLocator.HOME_PAGE, true);
         }
         private MyMasterDetailViewModel VM => this.BindingContext as MyMasterDetailViewModel;
         private void ListView_ItemTapped(object sender, ItemTappedEventArgs e)

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace ProjectRunner.Services
+namespace pinoelefante.Services
 {
     public class NavigationService : INavigationService
     {

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ProjectRunner.Views.MasterPage"
-             xmlns:views="clr-namespace:ProjectRunner.Views"
+             x:Class="StudioServicesApp.Views.MasterPage"
+             xmlns:views="clr-namespace:pinoelefante.Views"
              BindingContext="{Binding MyMasterDetailViewModel, Source={StaticResource Locator}}">
     <ContentPage.Title>
         <OnPlatform x:TypeArguments="x:String" iOS="Menu" Android="Project Runners" WinPhone="Project Runners"/>

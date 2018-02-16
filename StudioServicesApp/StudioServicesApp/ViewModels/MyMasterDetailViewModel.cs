@@ -1,8 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
-using ProjectRunner.ServerAPI;
-using ProjectRunner.Services;
+using pinoelefante.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,14 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace ProjectRunner.ViewModel
+namespace StudioServicesApp.ViewModels
 {
     public class MyMasterDetailViewModel : MyViewModel
     {
-        public PRCache cache { get; }
-        public MyMasterDetailViewModel(INavigationService n, PRCache c) : base(n)
+        public MyMasterDetailViewModel(INavigationService n) : base(n)
         {
-            cache = c;
+            
         }
         public override void NavigatedToAsync(object parameter = null)
         {
@@ -28,8 +26,10 @@ namespace ProjectRunner.ViewModel
         {
             navigation.NavigateTo(pageKey);
         }
-        private RelayCommand _openProfile;
         public RelayCommand CloseMasterPage { get; set; }
+
+        // private RelayCommand _openProfile;
+        /*
         public RelayCommand OpenUserProfile =>
             _openProfile ??
             (_openProfile = new RelayCommand(() =>
@@ -37,5 +37,6 @@ namespace ProjectRunner.ViewModel
                 navigation.NavigateTo(ViewModelLocator.ViewUserProfile, cache.CurrentUser.Id);
                 CloseMasterPage?.Execute(null);
             }));
+         */
     }
 }
