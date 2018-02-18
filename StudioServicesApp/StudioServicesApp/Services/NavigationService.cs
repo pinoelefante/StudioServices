@@ -16,6 +16,11 @@ namespace pinoelefante.Services
         private NavigationPage _navigation;
         private string MainPageKey;
 
+        public NavigationService()
+        {
+            Debug.WriteLine("NavigationService Constructor");
+        }
+
         public string CurrentPageKey
         {
             get
@@ -74,19 +79,12 @@ namespace pinoelefante.Services
 
                     if (parameter == null)
                     {
-                        constructor = type.GetTypeInfo()
-                            .DeclaredConstructors
-                            .FirstOrDefault(c => !c.GetParameters().Any());
-
-                        parameters = new object[]
-                        {
-                        };
+                        constructor = type.GetTypeInfo().DeclaredConstructors.FirstOrDefault(c => !c.GetParameters().Any());
+                        parameters = new object[] { };
                     }
                     else
                     {
-                        constructor = type.GetTypeInfo()
-                            .DeclaredConstructors
-                            .FirstOrDefault(
+                        constructor = type.GetTypeInfo().DeclaredConstructors.FirstOrDefault(
                                 c =>
                                 {
                                     var p = c.GetParameters();
@@ -94,16 +92,12 @@ namespace pinoelefante.Services
                                            && p[0].ParameterType == objtype.GetType();  /*parameter.GetType();*/
                                 });
 
-                        parameters = new[]
-                        {
-                            parameter
-                        };
+                        parameters = new[] { parameter };
                     }
 
                     if (constructor == null)
                     {
-                        throw new InvalidOperationException(
-                            "No suitable constructor found for page " + pageKey);
+                        throw new InvalidOperationException("No suitable constructor found for page " + pageKey);
                     }
                     var page = constructor.Invoke(parameters) as Page;
                     var lastPage = _navigation.Navigation.NavigationStack.LastOrDefault();
@@ -121,9 +115,7 @@ namespace pinoelefante.Services
                 else
                 {
                     throw new ArgumentException(
-                        string.Format(
-                            "No such page: {0}. Did you forget to call NavigationService.Configure?",
-                            pageKey),
+                        string.Format("No such page: {0}. Did you forget to call NavigationService.Configure?", pageKey),
                         "pageKey");
                 }
             }

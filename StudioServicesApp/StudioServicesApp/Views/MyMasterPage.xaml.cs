@@ -19,7 +19,7 @@ namespace StudioServicesApp.Views
             InitializeComponent();
             masterPage.ListView.ItemTapped += ListView_ItemTapped;
             masterPage.MasterDetails = this;
-            // App.ConfigureNavigation(navigationPage, ViewModelLocator.HOME_PAGE, true);
+            App.ConfigureNavigation(navigationPage, ViewModelLocator.NEWS_PAGE, true);
         }
         private MyMasterDetailViewModel VM => this.BindingContext as MyMasterDetailViewModel;
         private void ListView_ItemTapped(object sender, ItemTappedEventArgs e)

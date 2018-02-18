@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
 using StudioServicesApp.Services;
+using StudioServicesApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,6 +28,7 @@ namespace StudioServicesApp.ViewModels
                 if (res.Code == ResponseCode.OK && res.Data)
                 {
                     Debug.WriteLine("Login OK");
+                    App.Current.MainPage = new MyMasterPage();
                 }
                 else
                     Debug.WriteLine("Login fail: "+res.Message);

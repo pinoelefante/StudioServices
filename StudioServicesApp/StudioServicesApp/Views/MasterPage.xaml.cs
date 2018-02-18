@@ -26,7 +26,7 @@ namespace StudioServicesApp.Views
                 new MasterPageItem()
                 {
                     Title = "News & Messaggi",
-                    PageKey = ViewModelLocator.LOGIN_PAGE,
+                    PageKey = ViewModelLocator.NEWS_PAGE,
                     //IconSource = "home.png"
                 },
                 /*

@@ -5,7 +5,7 @@
              xmlns:views="clr-namespace:pinoelefante.Views"
              BindingContext="{Binding MyMasterDetailViewModel, Source={StaticResource Locator}}">
     <ContentPage.Title>
-        <OnPlatform x:TypeArguments="x:String" iOS="Menu" Android="Project Runners" WinPhone="Project Runners"/>
+        <OnPlatform x:TypeArguments="x:String" iOS="Menu" Android="Studio Services" WinPhone="Studio Services"/>
     </ContentPage.Title>
     <ContentPage.Content>
         <Grid>
@@ -16,19 +16,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-
-            <!-- user profile -->
-            <Grid Grid.Row="0" HeightRequest="50" Padding="5">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OpenUserProfile}"/>
-                </Grid.GestureRecognizers>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Source="{Binding cache.CurrentUser, Converter={StaticResource UserImageConverter}}" WidthRequest="64" HeightRequest="64" HorizontalOptions="Center"/>
-                <Label Grid.Column="1" Text="{Binding cache.CurrentUser.Username}" VerticalOptions="Center" HorizontalOptions="Start"/>
-            </Grid>
             
             <!-- Commands List -->
             <ListView Grid.Row="1" x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="None" ListView.RowHeight="40">

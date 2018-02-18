@@ -15,7 +15,8 @@ namespace StudioServicesApp.ViewModels
 {
     public class ViewModelLocator
     {
-        public const string LOGIN_PAGE = "LoginPage";
+        public const string LOGIN_PAGE = "LoginPage",
+            NEWS_PAGE = "NewsPage";
 
         static ViewModelLocator()
         {
@@ -26,10 +27,13 @@ namespace StudioServicesApp.ViewModels
 
             SimpleIoc.Default.Register<MyMasterDetailViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
+
+            RegisterPages();
         }
         public static void RegisterPages()
         {
             NavigationService.Configure(LOGIN_PAGE, typeof(LoginPage));
+            NavigationService.Configure(NEWS_PAGE, typeof(NewsPage));
         }
 
         public static NavigationService NavigationService => (NavigationService)GetService<INavigationService>();

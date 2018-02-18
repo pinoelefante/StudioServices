@@ -153,12 +153,17 @@ namespace StudioServicesApp.Services
     }
     public class ParametersList : List<KeyValuePair<string, string>>
     {
-        public ParametersList(params object[] list) : base()
+        public ParametersList(params object[] list) : this(true, list) { }
+        public ParametersList(bool skipNull, params object[] list) : base()
         {
             if (list.Length % 2 != 0)
                 throw new Exception("List must be even");
-            for(int i = 0; i < list.Length; i = i+2)
-                Add(list[i].ToString(), list[i+1]!=null ? list[i+1].ToString() : "null");
+            for (int i = 0; i < list.Length; i = i + 2)
+            {
+                if (list[i + 1] == null && skipNull)
+                    continue;
+                Add(list[i].ToString(), list[i + 1] != null ? list[i + 1].ToString() : "null");
+            }
         }
         public void Add(string key, string value)
         {

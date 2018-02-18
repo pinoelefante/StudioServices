@@ -3,7 +3,6 @@
                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                   x:Class="StudioServicesApp.Views.MyMasterPage"
                   xmlns:local="clr-namespace:StudioServicesApp.Views"
-                  Icon="slideout.png"
                   BindingContext="{Binding MyMasterDetailViewModel, Source={StaticResource Locator}}">
     <MasterDetailPage.Master>
         <local:MasterPage x:Name="masterPage"/>
@@ -12,10 +11,7 @@
     <MasterDetailPage.Detail>
         <NavigationPage x:Name="navigationPage">
             <x:Arguments>
-                <!--<local:HomePage />-->
-                <ContentPage>
-                    <Label Text="Ciao mondo"/>
-                </ContentPage>
+                <local:NewsPage />
             </x:Arguments>
         </NavigationPage>
     </MasterDetailPage.Detail>
