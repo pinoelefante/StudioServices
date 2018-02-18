@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using pinoelefante.ViewModels;
 using pinoelefante.Views;
+using StudioServicesApp.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

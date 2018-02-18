@@ -28,11 +28,12 @@ namespace StudioServicesWeb.Controllers
         }
 
         [HttpGet("{id}")]
-        public Response<bool> SetRead(int message_id, ReadMode mode)
+        public Response<bool> SetRead(int message_id, int mode)
         {
             if(!_isLogged())
                 return CreateLoginRequired<bool>();
-            var res = news.SetRead(!_isAdmin() ? _getPersonId() : 0, message_id, mode);
+            ReadMode mode_enum = (ReadMode)Enum.ToObject(typeof(ReadMode), mode);
+            var res = news.SetRead(!_isAdmin() ? _getPersonId() : 0, message_id, mode_enum);
             return Create(res);
         }
 

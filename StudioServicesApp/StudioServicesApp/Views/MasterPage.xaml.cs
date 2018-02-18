@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using pinoelefante.ViewModels;
 using pinoelefante.Views;
+using StudioServicesApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace StudioServicesApp.Views
                 new MasterPageItem()
                 {
                     Title = "News & Messaggi",
-                    PageKey = ViewModelLocator.HOME_PAGE,
+                    PageKey = ViewModelLocator.LOGIN_PAGE,
                     //IconSource = "home.png"
                 },
                 /*

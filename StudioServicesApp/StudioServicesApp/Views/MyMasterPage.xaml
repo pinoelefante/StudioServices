@@ -12,7 +12,10 @@
     <MasterDetailPage.Detail>
         <NavigationPage x:Name="navigationPage">
             <x:Arguments>
-                <local:HomePage />
+                <!--<local:HomePage />-->
+                <ContentPage>
+                    <Label Text="Ciao mondo"/>
+                </ContentPage>
             </x:Arguments>
         </NavigationPage>
     </MasterDetailPage.Detail>

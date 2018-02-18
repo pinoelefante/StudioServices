@@ -17,8 +17,8 @@ namespace StudioServicesWeb.Controllers
         }
 
         [Route("login")]
-        [HttpGet("{username}&{password}")]
-        public Response<bool> Login([FromQuery]string username, [FromQuery]string password)
+        [HttpPost]
+        public Response<bool> Login([FromForm]string username, [FromForm]string password)
         {
             int account_id = auth.Login(username, password, out int person_id, out bool admin, out string message);
             bool response = account_id > 0;
@@ -28,8 +28,8 @@ namespace StudioServicesWeb.Controllers
         }
         
         [Route("register")]
-        [HttpGet("{username}&{password}&{email}&{fiscal_code}&{verify_code}")]
-        public Response<bool> CreateAccount([FromQuery]string username, string password, string email, string fiscal_code, string verify_code)
+        [HttpPost]
+        public Response<bool> CreateAccount([FromForm]string username, [FromForm]string password, [FromForm]string email, [FromForm]string fiscal_code, [FromForm]string verify_code)
         {
             bool res = auth.AccountRegister(username, password, email.ToLower(), fiscal_code.ToUpper(), verify_code, out string message);
             return CreateBoolean(res, ResponseCode.OK, message);

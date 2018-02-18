@@ -13,7 +13,7 @@ namespace StudioServicesApp
 			InitializeComponent();
 
 
-            MainPage = new MyMasterPage();
+            MainPage = new NavigationPage(new LoginPage());
         }
 
 		protected override void OnStart ()

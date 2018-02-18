@@ -14,7 +14,7 @@ namespace StudioServicesApp.ViewModels
 {
     public class MyMasterDetailViewModel : MyViewModel
     {
-        public MyMasterDetailViewModel(INavigationService n) : base(n)
+        public MyMasterDetailViewModel(INavigationService n, StudioServicesApp.Services.StudioServicesApi a) : base(n, a)
         {
             
         }

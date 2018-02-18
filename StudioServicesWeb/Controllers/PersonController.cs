@@ -22,8 +22,8 @@ namespace StudioServicesWeb.Controllers
         }
 
         [Route("create")]
-        [HttpGet]
-        public Response<bool> CreatePerson(string name, string surname, string fiscal_code, int b_year, int b_month, int b_day, string b_place)
+        [HttpPost]
+        public Response<bool> CreatePerson([FromForm]string name, [FromForm]string surname, [FromForm]string fiscal_code, [FromForm]int b_year, [FromForm]int b_month, [FromForm]int b_day, [FromForm]string b_place)
         {
             if (!_isAdmin())
             {
@@ -61,13 +61,13 @@ namespace StudioServicesWeb.Controllers
 
         [Route("document")]
         [HttpPost]
-        public Response<bool> AddDocument(int type, string number, int i_year, int i_month, int i_day, int e_year, int e_month, int e_day, byte[] file, string file_ext)
+        public Response<bool> AddDocument(int type, string number, long i_ticks, long e_ticks, byte[] file, string file_ext)
         {
             if (!_isLogged())
                 return CreateBoolean(false, ResponseCode.REQUIRE_LOGIN);
             number = number.ToUpper();
-            DateTime issue_date = new DateTime(i_year, i_month, i_day);
-            DateTime expire_date = new DateTime(e_year, e_month, e_day);
+            DateTime issue_date = new DateTime(i_ticks);
+            DateTime expire_date = new DateTime(e_ticks);
             bool res = persons.AddIdentificationDocument(_getPersonId(), type, number, issue_date, expire_date, file, file_ext);
             return CreateBoolean(res);
         }
@@ -115,9 +115,9 @@ namespace StudioServicesWeb.Controllers
 
         [Route("email")]
         [HttpPost]
-        public Response<bool> AddEmail(string address, bool pec, bool managed, string password, string fullname, string imap_address, int imap_port, string imap_username, string smtp_address, int smtp_port, string smtp_username, string service_username, string service_password, int expire_year, int expire_month, int expire_day, bool renew_auto, string renew_paypal)
+        public Response<bool> AddEmail(string address, bool pec, bool managed, string password, string fullname, string imap_address, int imap_port, string imap_username, string smtp_address, int smtp_port, string smtp_username, string service_username, string service_password, long expire_day, bool renew_auto, string renew_paypal)
         {
-            var res = persons.AddEmail(_getPersonId(), address, pec, managed, password, fullname, imap_address, imap_port, imap_username, smtp_address, smtp_port, smtp_username, service_username, service_password, new DateTime(expire_year, expire_month, expire_day), renew_auto, renew_paypal);
+            var res = persons.AddEmail(_getPersonId(), address, pec, managed, password, fullname, imap_address, imap_port, imap_username, smtp_address, smtp_port, smtp_username, service_username, service_password, new DateTime(expire_day), renew_auto, renew_paypal);
             return CreateBoolean(res);
         }
 
