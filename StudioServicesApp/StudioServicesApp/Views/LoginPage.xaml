@@ -34,6 +34,14 @@
                 <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Password, Mode=TwoWay}"/>
                 <Button Grid.Row="2" Grid.ColumnSpan="2" HorizontalOptions="Center" Text="Accedi" Command="{Binding LoginCommand}"/>
             </Grid>
+
+            <Grid Grid.Row="2" Grid.Column="1">
+                <Label Text="Non hai un account? Iscriviti." FontSize="Medium" TextColor="Blue">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenRegisterPageCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
             
         </Grid>
     </ContentPage.Content>

@@ -15,12 +15,7 @@ namespace pinoelefante.Services
         private readonly Dictionary<string, Type> _pagesByKey = new Dictionary<string, Type>();
         private NavigationPage _navigation;
         private string MainPageKey;
-
-        public NavigationService()
-        {
-            Debug.WriteLine("NavigationService Constructor");
-        }
-
+        
         public string CurrentPageKey
         {
             get
@@ -145,11 +140,12 @@ namespace pinoelefante.Services
             });
         }
         
-        public void Initialize(NavigationPage navigation, string mainPageKey, Action OnExit)
+        public void Initialize(NavigationPage navigation, string mainPageKey, Action OnExit = null, bool clearBackstack = true)
         {
             _navigation = navigation;
             MainPageKey = mainPageKey;
             ExitAction = OnExit;
+            ClearBackstack();
         }
         public void PrintBackstack()
         {

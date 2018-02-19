@@ -2,10 +2,14 @@
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.App"
-             xmlns:vm="clr-namespace:StudioServicesApp.ViewModels">
+             xmlns:vm="clr-namespace:StudioServicesApp.ViewModels"
+             xmlns:converters="clr-namespace:pinoelefante.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator" />
+
+            <converters:NotBoolean x:Key="NotBoolean"/>
+
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="PrimaryDark">#1976D2</Color>
             <Color x:Key="Accent">#96d1ff</Color>
@@ -17,6 +21,11 @@
             <Style TargetType="NavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource Primary}" />
                 <Setter Property="BarTextColor" Value="White" />
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="Red" />
+                <Setter Property="FontSize" Value="18" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>

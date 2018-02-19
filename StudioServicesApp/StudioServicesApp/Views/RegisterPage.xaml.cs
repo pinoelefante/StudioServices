@@ -1,5 +1,4 @@
-﻿using StudioServicesApp.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,11 +10,11 @@ using Xamarin.Forms.Xaml;
 namespace StudioServicesApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class LoginPage : ContentPage
+	public partial class RegisterPage : ContentPage
 	{
-		public LoginPage ()
+		public RegisterPage ()
 		{
 			InitializeComponent ();
-        }
+		}
 	}
 }

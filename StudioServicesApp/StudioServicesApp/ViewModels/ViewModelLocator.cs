@@ -16,17 +16,18 @@ namespace StudioServicesApp.ViewModels
     public class ViewModelLocator
     {
         public const string LOGIN_PAGE = "LoginPage",
-            NEWS_PAGE = "NewsPage";
+            NEWS_PAGE = "NewsPage",
+            REGISTER_PAGE = "RegisterPage";
 
         static ViewModelLocator()
         {
             SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
-            var web = new WebService();
             SimpleIoc.Default.Register<WebService>();
             SimpleIoc.Default.Register<StudioServicesApi>();
 
             SimpleIoc.Default.Register<MyMasterDetailViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
+            SimpleIoc.Default.Register<RegisterViewModel>();
 
             RegisterPages();
         }
@@ -34,6 +35,7 @@ namespace StudioServicesApp.ViewModels
         {
             NavigationService.Configure(LOGIN_PAGE, typeof(LoginPage));
             NavigationService.Configure(NEWS_PAGE, typeof(NewsPage));
+            NavigationService.Configure(REGISTER_PAGE, typeof(RegisterPage));
         }
 
         public static NavigationService NavigationService => (NavigationService)GetService<INavigationService>();
@@ -41,5 +43,6 @@ namespace StudioServicesApp.ViewModels
 
         public MyMasterDetailViewModel MyMasterDetailViewModel => GetService<MyMasterDetailViewModel>();
         public LoginViewModel LoginViewModel => GetService<LoginViewModel>();
+        public RegisterViewModel RegisterViewModel => GetService<RegisterViewModel>();
     }
 }

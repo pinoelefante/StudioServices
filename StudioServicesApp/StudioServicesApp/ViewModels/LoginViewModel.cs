@@ -14,12 +14,14 @@ namespace StudioServicesApp.ViewModels
     {
         public LoginViewModel(INavigationService n, StudioServicesApi a) : base(n, a)
         {
+            
         }
+        private RelayCommand _loginCmd, _registerPageCmd;
+        private string _username, _password;
 
-        public string Username { get; set; }
-        public string Password { get; set; }
-
-        private RelayCommand _loginCmd;
+        public string Username { get => _username; set => Set(ref _username, value); }
+        public string Password { get => _password; set => Set(ref _password, value); }
+        
         public RelayCommand LoginCommand =>
             _loginCmd ?? (_loginCmd = new RelayCommand(async () =>
             {
@@ -35,6 +37,20 @@ namespace StudioServicesApp.ViewModels
                 IsBusyActive = false;
             }));
 
+        public RelayCommand OpenRegisterPageCommand =>
+            _registerPageCmd ?? (_registerPageCmd = new RelayCommand(() =>
+            {
+                MessengerInstance.Register<Tuple<string, string>>(this, "RegistrationComplete", (x) =>
+                {
+                    Debug.WriteLine($"{x.Item1} - {x.Item2}");
+                    Username = x.Item1;
+                    Password = x.Item2;
+                    // TODO mostrare alert tempo registrazione: "potrebbero essere necessari fino a 2 giorni lavorativi per completare l'attivazione"
+                    MessengerInstance.Unregister<Tuple<string, string>>(this, "RegistrationComplete");
+                });
 
+                Debug.WriteLine("Opening Register Page");
+                navigation.NavigateTo(ViewModelLocator.REGISTER_PAGE);
+            }));
     }
 }
