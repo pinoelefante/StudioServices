@@ -18,13 +18,13 @@ namespace StudioServicesWeb.Controllers
         }
 
         [Route("all")]
-        [HttpGet("{time}")]
-        public Response<List<Message>> GetAllNews(long time = 0)
+        [HttpGet]
+        public Response<List<Message>> GetAllNews([FromQuery]long time = 0)
         {
             if (!_isLogged())
                 return CreateLoginRequired<List<Message>>();
             var list = news.ListMessages(_getPersonId(), new DateTime(time));
-            return Create(list);
+            return CreateResponse(list);
         }
 
         [HttpGet("{id}")]
@@ -34,7 +34,7 @@ namespace StudioServicesWeb.Controllers
                 return CreateLoginRequired<bool>();
             ReadMode mode_enum = (ReadMode)Enum.ToObject(typeof(ReadMode), mode);
             var res = news.SetRead(!_isAdmin() ? _getPersonId() : 0, message_id, mode_enum);
-            return Create(res);
+            return CreateResponse(res);
         }
 
         [HttpPost]
@@ -72,7 +72,7 @@ namespace StudioServicesWeb.Controllers
             {
                 //TODO implement
                 var messages = new List<Message>();
-                return Create(messages);
+                return CreateResponse(messages);
             }
             if (!_isAdmin())
             {

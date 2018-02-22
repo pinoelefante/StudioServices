@@ -43,3 +43,4 @@ Thumbs.db
 *.dotCover
 /StudioServicesWeb/database.sqlite
 .vscode/tasks.json
+*.bat

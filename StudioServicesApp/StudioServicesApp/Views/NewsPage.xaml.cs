@@ -1,4 +1,5 @@
-﻿using System;
+﻿using pinoelefante.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ using Xamarin.Forms.Xaml;
 namespace StudioServicesApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class NewsPage : ContentPage
+	public partial class NewsPage : MyContentPage
 	{
 		public NewsPage ()
 		{

@@ -1,4 +1,5 @@
-﻿using StudioServicesApp.ViewModels;
+﻿using pinoelefante.Views;
+using StudioServicesApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using Xamarin.Forms.Xaml;
 namespace StudioServicesApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class LoginPage : ContentPage
+	public partial class LoginPage : MyContentPage
 	{
 		public LoginPage ()
 		{

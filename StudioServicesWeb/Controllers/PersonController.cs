@@ -41,9 +41,9 @@ namespace StudioServicesWeb.Controllers
         public Response<Person> GetPerson()
         {
             if (!_isLogged())
-                return Create<Person>(null, ResponseCode.REQUIRE_LOGIN, "Login required");
+                return CreateResponse<Person>(null, ResponseCode.REQUIRE_LOGIN, "Login required");
             Person person = persons.GetPerson(_getPersonId());
-            return Create(person);
+            return CreateResponse(person);
         }
 
         [Route("status")]

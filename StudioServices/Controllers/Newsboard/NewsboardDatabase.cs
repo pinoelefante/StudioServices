@@ -14,7 +14,8 @@ namespace StudioServices.Controllers.Newsboard
         {
             using (var con = GetConnection())
             {
-                return con.Table<Message>().Where(x => (x.PersonId == person_id || !x.IsPrivate) && x.CreationTime.CompareTo(last_message) > 0 && (all ? true : x.Enabled)).OrderBy(x => x.CreationTime).ToList();
+                //return con.Table<Message>().Where(x => (x.PersonId == person_id || !x.IsPrivate) && x.CreationTime.CompareTo(last_message) > 0 && (all ? true : x.Enabled)).OrderByDescending(x => x.CreationTime).ToList();
+                return con.Query<Message>($"SELECT * FROM Message WHERE CreationTime > ? ORDER BY CreationTime ASC", last_message.Ticks);
             }
         }
         public Message SelectMessage(int message_id)

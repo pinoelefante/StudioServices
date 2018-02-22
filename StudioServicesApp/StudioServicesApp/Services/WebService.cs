@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -12,15 +13,22 @@ namespace StudioServicesApp.Services
     public class WebService
     {
         private HttpClient httpClient;
+        private HttpClientHandler handler;
+        private CookieContainer cookieContainer;
+
         public WebService()
         {
-            httpClient = new HttpClient();
+            cookieContainer = new CookieContainer();
+            handler = new HttpClientHandler() { CookieContainer = cookieContainer, UseCookies = true, AllowAutoRedirect = false };
+            httpClient = new HttpClient(handler);
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "StudioServicesApp/1.0");
+            httpClient.Timeout = TimeSpan.FromSeconds(10);
         }
         public async Task<string> SendGetRequestAsync(string url, params KeyValuePair<string, string>[] parameters)
         {
             try
             {
-                if (parameters.Length > 0)
+                if (parameters?.Length > 0)
                 {
                     FormUrlEncodedContent content = new FormUrlEncodedContent(parameters);
                     string urlContent = await content.ReadAsStringAsync();
@@ -101,7 +109,7 @@ namespace StudioServicesApp.Services
         }
         public async Task<string> SendRequestAsync(string url, HttpMethod method, IEnumerable<KeyValuePair<string, string>> parameters = null, byte[] file = null)
         {
-            KeyValuePair<string, string>[] parameters_enum = Enumerable.ToArray(parameters);
+            KeyValuePair<string, string>[] parameters_enum = parameters !=null ? Enumerable.ToArray(parameters) : null;
             string response = String.Empty;
             switch (method)
             {
@@ -124,6 +132,22 @@ namespace StudioServicesApp.Services
             if (string.IsNullOrEmpty(response))
                 return null;
             return response;
+        }
+        public string GetCookie(string name, string url)
+        {
+            var cookies = cookieContainer.GetCookies(new Uri(url));
+            for(int i = 0; i < cookies.Count; i++)
+            {
+                if (cookies[i].Name.CompareTo(name) == 0)
+                    return cookies[i].Value;
+            }
+            return null;
+        }
+        public void SetCookie(string name, string value, string url)
+        {
+            var uri = new Uri(url);
+            Cookie cookie = new Cookie(name, value, "/", uri.Host);
+            cookieContainer.Add(cookie);
         }
     }
     public enum HttpMethod

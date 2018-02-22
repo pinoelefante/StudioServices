@@ -1,21 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.Views.RegisterPage"
+             xmlns:views="clr-namespace:pinoelefante.Views"
              BindingContext="{Binding RegisterViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="8*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="8*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <ScrollView Grid.Row="1" Grid.Column="1">
+        <Grid Margin="10,10,0,10">
+            <ScrollView Padding="0,0,10,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -28,52 +19,63 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0" VerticalOptions="Center" Text="Username"/>
-                    <Entry Grid.Row="0" Grid.Column="1" Text="{Binding Username, Mode=TwoWay}"/>
-                    <Label Grid.Row="1" Grid.Column="0" VerticalOptions="Center" Text="Password"/>
-                    <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Password, Mode=TwoWay}"/>
-                    <Label Grid.Row="2" Grid.Column="0" VerticalOptions="Center" Text="Verifica password"/>
-                    <Entry Grid.Row="2" Grid.Column="1" Text="{Binding Password2, Mode=TwoWay}"/>
-                    <Label Grid.Row="3" Grid.Column="0" VerticalOptions="Center" Text="Email"/>
-                    <Entry Grid.Row="3" Grid.Column="1" Text="{Binding Email, Mode=TwoWay}"/>
+                    <Label Grid.Row="0" VerticalOptions="Center" Text="Username"/>
+                    <Entry Grid.Row="1" Text="{Binding Username, Mode=TwoWay}"/>
+                    <Label Grid.Row="2" VerticalOptions="Center" Text="Password"/>
+                    <Entry Grid.Row="3" Text="{Binding Password, Mode=TwoWay}"/>
+                    <Label Grid.Row="4" VerticalOptions="Center" Text="Verifica password"/>
+                    <Entry Grid.Row="5" Text="{Binding Password2, Mode=TwoWay}"/>
+                    <Label Grid.Row="6" VerticalOptions="Center" Text="Email"/>
+                    <Entry Grid.Row="7" Text="{Binding Email, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="4" Grid.Column="0" VerticalOptions="Center" Text="Sono già cliente"/>
-                    <Switch Grid.Row="4" Grid.Column="1" IsToggled="{Binding IsClient}" IsEnabled="True"/>
+                    <StackLayout Grid.Row="8" Orientation="Horizontal" Margin="0,15">
+                        <Label VerticalOptions="Center" Text="Sono già cliente"/>
+                        <Switch IsToggled="{Binding IsClient}" IsEnabled="False"/>
+                    </StackLayout>
 
                     <!-- region Cliente -->
-                    <Label Grid.Row="5" Grid.Column="0" VerticalOptions="Center" Text="Codice fiscale" IsVisible="{Binding IsClient}"/>
-                    <Entry Grid.Row="5" Grid.Column="1" Text="{Binding FiscalCode, Mode=TwoWay}" IsVisible="{Binding IsClient}"/>
+                    <Label Grid.Row="9" VerticalOptions="Center" Text="Codice fiscale" IsVisible="{Binding IsClient}"/>
+                    <Entry Grid.Row="10" Text="{Binding FiscalCode, Mode=TwoWay}" IsVisible="{Binding IsClient}"/>
 
-                    <Label Grid.Row="6" Grid.Column="0" VerticalOptions="Center" Text="Codice verifica" IsVisible="{Binding IsClient}"/>
-                    <Entry Grid.Row="6" Grid.Column="1" Text="{Binding VerifyCode, Mode=TwoWay}" IsVisible="{Binding IsClient}"/>
+                    <Label Grid.Row="11" VerticalOptions="Center" Text="Codice verifica" IsVisible="{Binding IsClient}"/>
+                    <Entry Grid.Row="12" Text="{Binding VerifyCode, Mode=TwoWay}" IsVisible="{Binding IsClient}"/>
 
-                    <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" HorizontalOptions="Center" Text="Registra" Command="{Binding RegisterCommand}" IsVisible="{Binding IsClient}" />
+                    <Button Grid.Row="13" HorizontalOptions="Center" Text="Registra" Command="{Binding RegisterCommand}" IsVisible="{Binding IsClient}" />
                     <!-- end region -->
 
                     <!-- region Non cliente -->
-                    <Label Grid.Row="5" Grid.Column="0" VerticalOptions="Center" Text="Nome" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
-                    <Entry Grid.Row="5" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Label Grid.Row="9" VerticalOptions="Center" Text="Nome" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Entry Grid.Row="10" Text="{Binding Name, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
 
-                    <Label Grid.Row="6" Grid.Column="0" VerticalOptions="Center" Text="Cognome" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
-                    <Entry Grid.Row="6" Grid.Column="1" Text="{Binding Surname, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Label Grid.Row="11" VerticalOptions="Center" Text="Cognome" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Entry Grid.Row="12" Text="{Binding Surname, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
                     
-                    <Label Grid.Row="7" Grid.Column="0" VerticalOptions="Center" Text="Nascita" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
-                    <Entry Grid.Row="7" Grid.Column="1" Text="{Binding Birthday, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Label Grid.Row="13" VerticalOptions="Center" Text="Nascita" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Entry Grid.Row="14" Text="{Binding Birthday, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
                     
-                    <Label Grid.Row="8" Grid.Column="0" VerticalOptions="Center" Text="Luogo" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
-                    <Entry Grid.Row="8" Grid.Column="1" Text="{Binding BirthPlace, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Label Grid.Row="15" VerticalOptions="Center" Text="Luogo" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Entry Grid.Row="16" Text="{Binding BirthPlace, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
 
-                    <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" HorizontalOptions="Center" Text="Registra" Command="{Binding RegisterCommand}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}" />
+                    <Label Grid.Row="17" VerticalOptions="Center" Text="Codice fiscale" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Entry Grid.Row="18" Text="{Binding FiscalCode, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+
+                    <Button Grid.Row="19" HorizontalOptions="Center" Text="Registra" Command="{Binding RegisterCommand}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}" />
                     <!-- end region -->
                     
                 </Grid>
             </ScrollView>
         </Grid>
     </ContentPage.Content>
-</ContentPage>
+</views:MyContentPage>

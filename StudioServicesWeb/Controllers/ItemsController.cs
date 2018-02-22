@@ -22,9 +22,9 @@ namespace StudioServicesWeb.Controllers
         public Response<List<PayableItem>> GetItemsList()
         {
             if (!_isLogged())
-                return Create<List<PayableItem>>(null, ResponseCode.REQUIRE_LOGIN);
+                return CreateResponse<List<PayableItem>>(null, ResponseCode.REQUIRE_LOGIN);
             var list = items.ListItems();
-            return Create(list);
+            return CreateResponse(list);
         }
 
         [Route("items")]
@@ -54,7 +54,7 @@ namespace StudioServicesWeb.Controllers
             if (!_isLogged())
                 return CreateLoginRequired<List<ItemRequest>>();
             var list = items.ListRequests(_getPersonId());
-            return Create(list);
+            return CreateResponse(list);
         }
 
         [Route("request")]

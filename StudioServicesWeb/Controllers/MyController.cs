@@ -43,7 +43,7 @@ namespace StudioServicesWeb.Controllers
                 Message = message
             };
         }
-        public Response<T> Create<T>(T data, ResponseCode code = ResponseCode.OK, string message = "")
+        public Response<T> CreateResponse<T>(T data, ResponseCode code = ResponseCode.OK, string message = "")
         {
             return new Response<T>(data)
             {
@@ -53,11 +53,11 @@ namespace StudioServicesWeb.Controllers
         }
         public Response<T> CreateLoginRequired<T>()
         {
-            return Create(default(T), ResponseCode.REQUIRE_LOGIN);
+            return CreateResponse(default(T), ResponseCode.REQUIRE_LOGIN);
         }
         public Response<T> CreateOnlyAdmin<T>()
         {
-            return Create(default(T), ResponseCode.ADMIN_FUNCTION);
+            return CreateResponse(default(T), ResponseCode.ADMIN_FUNCTION);
         }
     }
     public class Response<T>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudioServices.Controllers.Persons;
 
@@ -41,6 +42,15 @@ namespace StudioServicesWeb.Controllers
         {
             bool res = _isLogged();
             return CreateBoolean(res);
+        }
+
+        [Route("logout")]
+        [HttpPost]
+        public Response<bool> Logout()
+        {
+            HttpContext.Session.Clear();
+            HttpContext.Response.Cookies.Delete("SSWSESSID");
+            return CreateBoolean(true);
         }
 
         [HttpGet]

@@ -73,7 +73,7 @@ namespace StudioServices.Controllers.Persons
                 Person person = con.Table<Person>().Where(x => x.FiscalCode.Equals(fc)).FirstOrDefault();
                 if (person == null)
                     return -2;
-                if (person.AuthCode == null)
+                if (person.AuthCode == null || string.IsNullOrEmpty(verify_code))
                     return -1;
                 if (person.AuthCode.CompareTo(verify_code) == 0)
                     return person.Id;

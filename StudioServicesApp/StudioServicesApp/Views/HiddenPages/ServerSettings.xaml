@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="StudioServicesApp.Views.HiddenPages.ServerSettings"
+             xmlns:views="clr-namespace:pinoelefante.Views"
+             BindingContext="{Binding ServerSettingsViewModel, Source={StaticResource Locator}}">
+    <ContentPage.Content>
+        <StackLayout>
+            <Entry Text="{Binding Protocol}" Placeholder="Protocol" />
+            <Entry Text="{Binding ServerAddress}" Placeholder="Server address" />
+            <Entry Text="{Binding Port}" Placeholder="Port" />
+            <Button Text="Salva" Command="{Binding SaveCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</views:MyContentPage>

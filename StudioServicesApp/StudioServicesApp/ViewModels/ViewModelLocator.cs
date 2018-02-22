@@ -1,8 +1,11 @@
-﻿using GalaSoft.MvvmLight.Ioc;
+﻿using AC.Components.Util;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.Services;
 using StudioServicesApp.Services;
+using StudioServicesApp.ViewModels.HiddenPages;
 using StudioServicesApp.Views;
+using StudioServicesApp.Views.HiddenPages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,15 +22,24 @@ namespace StudioServicesApp.ViewModels
             NEWS_PAGE = "NewsPage",
             REGISTER_PAGE = "RegisterPage";
 
+        public const string SERVER_SETTINGS = "ServerSettingsPage";
+
         static ViewModelLocator()
         {
             SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
             SimpleIoc.Default.Register<WebService>();
             SimpleIoc.Default.Register<StudioServicesApi>();
+            SimpleIoc.Default.Register<CacheManager>();
+            var sqlite = DependencyService.Get<ISQLite>();
+            SimpleIoc.Default.Register<ISQLite>(() => sqlite);
+            SimpleIoc.Default.Register<DatabaseService>();
 
             SimpleIoc.Default.Register<MyMasterDetailViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
             SimpleIoc.Default.Register<RegisterViewModel>();
+            SimpleIoc.Default.Register<NewsPageViewModel>();
+
+            SimpleIoc.Default.Register<ServerSettingsViewModel>();
 
             RegisterPages();
         }
@@ -36,6 +48,8 @@ namespace StudioServicesApp.ViewModels
             NavigationService.Configure(LOGIN_PAGE, typeof(LoginPage));
             NavigationService.Configure(NEWS_PAGE, typeof(NewsPage));
             NavigationService.Configure(REGISTER_PAGE, typeof(RegisterPage));
+
+            NavigationService.Configure(SERVER_SETTINGS, typeof(ServerSettings));
         }
 
         public static NavigationService NavigationService => (NavigationService)GetService<INavigationService>();
@@ -44,5 +58,8 @@ namespace StudioServicesApp.ViewModels
         public MyMasterDetailViewModel MyMasterDetailViewModel => GetService<MyMasterDetailViewModel>();
         public LoginViewModel LoginViewModel => GetService<LoginViewModel>();
         public RegisterViewModel RegisterViewModel => GetService<RegisterViewModel>();
+        public NewsPageViewModel NewsPageViewModel => GetService<NewsPageViewModel>();
+
+        public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();
     }
 }

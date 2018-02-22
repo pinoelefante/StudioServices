@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Plugin.SecureStorage;
+using StudioServices.Data.Newsboard;
 using StudioServices.Registry.Data;
 using System;
 using System.Collections.Generic;
@@ -11,18 +13,33 @@ namespace StudioServicesApp.Services
 {
     public class StudioServicesApi
     {
-        private static readonly string WS_ADDRESS = "http://localhost:65240";
+        private const string SESSION_NAME = "SSWSESSID";
+        private static string WS_ADDRESS = "http://localhost:5000";
         private WebService web;
         public StudioServicesApi(WebService w)
         {
             web = w;
+            var session_id = CrossSecureStorage.Current.GetValue("session_id");
+            if (!string.IsNullOrEmpty(session_id))
+                web.SetCookie(SESSION_NAME, session_id, WS_ADDRESS);
         }
+        public void SetNewAddress(string server_name, int port = 80, string protocol = "http") => WS_ADDRESS = $"{protocol}://{server_name}:{port}";
+        public string GetServerAddress() => WS_ADDRESS;
+
         #region Authentication
         public async Task<ResponseMessage<bool>> Authentication_LoginAsync(string username, string password)
         {
             var address = $"{WS_ADDRESS}/api/authentication/login";
             var parameters = new ParametersList("username", username, "password", password);
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
+            var message = await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
+            if (message.Code == ResponseCode.OK && message.Data)
+            {
+                CrossSecureStorage.Current.SetValue("username", username);
+                CrossSecureStorage.Current.SetValue("password", password);
+                var session_id = web.GetCookie(SESSION_NAME, WS_ADDRESS);
+                CrossSecureStorage.Current.SetValue("session_id", session_id);
+            }
+            return message;
         }
         public async Task<ResponseMessage<bool>> Authentication_RegisterAsync(string username, string password, string email, string fiscal_code, string verify_code)
         {
@@ -39,7 +56,12 @@ namespace StudioServicesApp.Services
         public async Task<ResponseMessage<bool>> Authentication_IsLoggedAsync()
         {
             var address = $"{WS_ADDRESS}/api/authentication/is_logged";
-            return await SendRequestAsync<bool>("", HttpMethod.GET);
+            return await SendRequestAsync<bool>($"{WS_ADDRESS}/api/authentication/is_logged", HttpMethod.GET);
+        }
+        public async Task<ResponseMessage<bool>> Authentication_LogoutAsync()
+        {
+            var address = $"{WS_ADDRESS}/api/authentication/logout";
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, null);
         }
         #endregion
 
@@ -56,7 +78,7 @@ namespace StudioServicesApp.Services
         }
         public async Task<ResponseMessage<Person>> Person_GetAsync()
         {
-            var address = $"{WS_ADDRESS}/api/person";
+            var address = $"{WS_ADDRESS}/api/person/get";
             return await SendRequestAsync<Person>(address, HttpMethod.GET);
         }
         public async Task<ResponseMessage<Person>> Person_SetStatusAsync(int person_id, bool status)
@@ -115,15 +137,25 @@ namespace StudioServicesApp.Services
         }
         #endregion
 
-
+        #region News
+        public async Task<ResponseMessage<List<Message>>> News_MessageListAsync(long ticks = 0)
+        {
+            var address = $"{WS_ADDRESS}/api/news/all";
+            var parameters = new ParametersList("time", ticks);
+            var news = await SendRequestAsync<List<Message>>(address, HttpMethod.GET, parameters);
+            return news;
+        }
+        #endregion
 
         private async Task<ResponseMessage<T>> SendRequestAsync<T>(string url, HttpMethod method, IEnumerable<KeyValuePair<string, string>> parameters = null, byte[] file = null)
         {
             var res = await web.SendRequestAsync(url, method, parameters, file);
+            Debug.WriteLine("URL: " + url);
             if (string.IsNullOrEmpty(res))
                 return new ResponseMessage<T>() { Code = ResponseCode.COMMUNICATION_ERROR };
             try
             {
+                Debug.WriteLine("JSON: " + res);
                 return JsonConvert.DeserializeObject<ResponseMessage<T>>(res);
             }
             catch(Exception e)

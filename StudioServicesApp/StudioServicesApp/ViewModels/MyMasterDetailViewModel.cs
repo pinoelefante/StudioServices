@@ -18,10 +18,6 @@ namespace StudioServicesApp.ViewModels
         {
             
         }
-        public override void NavigatedToAsync(object parameter = null)
-        {
-
-        }
         public void Navigate(string pageKey)
         {
             navigation.NavigateTo(pageKey);

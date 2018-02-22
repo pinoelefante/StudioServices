@@ -1,20 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.Views.LoginPage"
+             xmlns:views="clr-namespace:pinoelefante.Views"
              IsBusy="{Binding IsBusyActive, Mode=TwoWay}"
              BindingContext="{Binding LoginViewModel, Source={StaticResource Locator}}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding OpenServerSettings}" Text="Server"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <Grid>
+        <Grid IsVisible="{Binding RequireLogin, Mode=TwoWay}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="6*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="8*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="6*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Row="1" Grid.Column="1">
@@ -22,21 +26,19 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" VerticalOptions="Center" Text="Username"/>
-                <Entry Grid.Row="0" Grid.Column="1" Text="{Binding Username, Mode=TwoWay}"/>
-                <Label Grid.Row="1" Grid.Column="0" VerticalOptions="Center" Text="Password"/>
-                <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Password, Mode=TwoWay}"/>
-                <Button Grid.Row="2" Grid.ColumnSpan="2" HorizontalOptions="Center" Text="Accedi" Command="{Binding LoginCommand}"/>
+                <Label Grid.Row="0" VerticalOptions="Center" Text="Username"/>
+                <Entry Grid.Row="1" Text="{Binding Username, Mode=TwoWay}"/>
+                <Label Grid.Row="2" VerticalOptions="Center" Text="Password"/>
+                <Entry Grid.Row="3" Text="{Binding Password, Mode=TwoWay}"/>
+                <Button Grid.Row="4" HorizontalOptions="Center" Text="Accedi" Command="{Binding LoginCommand}"/>
             </Grid>
 
             <Grid Grid.Row="2" Grid.Column="1">
-                <Label Text="Non hai un account? Iscriviti." FontSize="Medium" TextColor="Blue">
+                <Label Text="Non hai un account? Iscriviti." FontSize="Medium" TextColor="Blue" HorizontalOptions="Center">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding OpenRegisterPageCommand}"/>
                     </Label.GestureRecognizers>
@@ -45,4 +47,4 @@
             
         </Grid>
     </ContentPage.Content>
-</ContentPage>
+</views:MyContentPage>

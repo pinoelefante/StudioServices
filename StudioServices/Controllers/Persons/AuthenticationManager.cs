@@ -25,10 +25,11 @@ namespace StudioServices.Controllers.Persons
                         message = "Codice verifica errato";
                         break;
                     case -1:
-                        message = "Codice fiscale non presente";
+                        message = "Associazione già avvenuta in precedenza";
+
                         break;
                     case -2:
-                        message = "Persona associata ad un altro account";
+                        message = "Codice fiscale non presente";
                         break;
                 }
                 message = "Verifica codice fallita";
