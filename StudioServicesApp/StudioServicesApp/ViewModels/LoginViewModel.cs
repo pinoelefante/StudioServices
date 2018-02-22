@@ -21,18 +21,52 @@ namespace StudioServicesApp.ViewModels
         }
         public override Task NavigatedToAsync(object parameter = null)
         {
+            Username = CrossSecureStorage.Current.GetValue("username", "");
+            Password = CrossSecureStorage.Current.GetValue("password", "");
+
             return Task.Factory.StartNew(async () =>
             {
                 var busy = SetBusy(true, "Verifico accesso in corso");
                 var message = await SendRequestAsync(() => api.Authentication_IsLoggedAsync());
-                if (message.Code == ResponseCode.OK && message.Data)
+                if (message.Code == ResponseCode.OK)
                 {
-                    Device.BeginInvokeOnMainThread(() =>
+                    if (message.Data)
                     {
-                        Debug.WriteLine("Login not required");
-                        RequireLogin = false;
-                        App.Current.MainPage = new MyMasterPage();
-                    });
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            Debug.WriteLine("Login not required");
+                            RequireLogin = false;
+                            App.Current.MainPage = new MyMasterPage();
+                        });
+                    }
+                    else
+                    {
+                        if(!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                        {
+                            await Task.Run(async () =>
+                            {
+                                var res = await SendRequestAsync(async () => await api.Authentication_LoginAsync(Username, Password));
+                                if (res.Code == ResponseCode.OK && res.Data)
+                                {
+                                    Device.BeginInvokeOnMainThread(() =>
+                                    {
+                                        Debug.WriteLine("Login not required");
+                                        RequireLogin = false;
+                                        App.Current.MainPage = new MyMasterPage();
+                                    });
+                                }
+                            });
+
+                        }
+                        else
+                        {
+                            Device.BeginInvokeOnMainThread(() =>
+                            {
+                                Debug.WriteLine("Login required");
+                                RequireLogin = true;
+                            });
+                        }
+                    }
                 }
                 else
                 {
