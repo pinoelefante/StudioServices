@@ -120,7 +120,7 @@ namespace pinoelefante.Converters
             switch(field)
             {
                 case "All":
-                    return $"{dateTime.ToString("d")}\n{dateTime.Hour}:{dateTime.Minute.ToString("D2")}"; //dateTime.ToString().Replace(" ","\n");
+                    return $"{dateTime.ToString("d")} {dateTime.Hour}:{dateTime.Minute.ToString("D2")}"; //dateTime.ToString().Replace(" ","\n");
                 case "Date":
                     return dateTime.ToString("d");
                 case "Time":

@@ -26,6 +26,14 @@ namespace StudioServicesApp.Services
         {
             return conMngr.GetConnection();
         }
+        public void DeleteDatabase()
+        {
+            using (var con = GetConnection())
+            {
+                con.DropTable<Message>();
+            }
+            CreateDatabase();
+        }
         public void SaveItem<T>(T item)
         {
             using (var conn = GetConnection())
@@ -37,7 +45,11 @@ namespace StudioServicesApp.Services
         {
             using (var con = GetConnection())
             {
-                con.InsertAll(list, true);
+                con.RunInTransaction(() =>
+                {
+                    foreach (T item in list)
+                        con.InsertOrReplace(item);
+                });
             }
         }
         public void Delete<T>(T item)
@@ -51,7 +63,7 @@ namespace StudioServicesApp.Services
         {
             using (var con = GetConnection())
             {
-                var news = con.Table<Message>().Where(x => !x.IsPrivate).OrderBy(x => x.CreationTime);
+                var news = con.Table<Message>().Where(x => !x.IsPrivate).OrderByDescending(x => x.CreationTime);
                 return GetEnumerable(news);
             }
         }

@@ -19,7 +19,10 @@ namespace StudioServicesApp.Services
         }
         public void SetValue(string key, object value)
         {
-            dictionary.Add(key, value);
+            if (!dictionary.ContainsKey(key))
+                dictionary.Add(key, value);
+            else
+                dictionary[key] = value;
         }
     }
 }

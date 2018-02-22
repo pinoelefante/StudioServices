@@ -20,7 +20,8 @@ namespace StudioServicesApp.ViewModels
     {
         public const string LOGIN_PAGE = "LoginPage",
             NEWS_PAGE = "NewsPage",
-            REGISTER_PAGE = "RegisterPage";
+            REGISTER_PAGE = "RegisterPage",
+            VIEW_MESSAGE_PAGE = "ViewMessagePage";
 
         public const string SERVER_SETTINGS = "ServerSettingsPage";
 
@@ -38,6 +39,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<LoginViewModel>();
             SimpleIoc.Default.Register<RegisterViewModel>();
             SimpleIoc.Default.Register<NewsPageViewModel>();
+            SimpleIoc.Default.Register<ViewMessageViewModel>();
 
             SimpleIoc.Default.Register<ServerSettingsViewModel>();
 
@@ -48,6 +50,7 @@ namespace StudioServicesApp.ViewModels
             NavigationService.Configure(LOGIN_PAGE, typeof(LoginPage));
             NavigationService.Configure(NEWS_PAGE, typeof(NewsPage));
             NavigationService.Configure(REGISTER_PAGE, typeof(RegisterPage));
+            NavigationService.Configure(VIEW_MESSAGE_PAGE, typeof(ViewMessagePage));
 
             NavigationService.Configure(SERVER_SETTINGS, typeof(ServerSettings));
         }
@@ -59,6 +62,7 @@ namespace StudioServicesApp.ViewModels
         public LoginViewModel LoginViewModel => GetService<LoginViewModel>();
         public RegisterViewModel RegisterViewModel => GetService<RegisterViewModel>();
         public NewsPageViewModel NewsPageViewModel => GetService<NewsPageViewModel>();
+        public ViewMessageViewModel ViewMessageViewModel => GetService<ViewMessageViewModel>();
 
         public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();
     }

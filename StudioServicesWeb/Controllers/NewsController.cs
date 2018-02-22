@@ -23,29 +23,34 @@ namespace StudioServicesWeb.Controllers
         {
             if (!_isLogged())
                 return CreateLoginRequired<List<Message>>();
-            var list = news.ListMessages(_getPersonId(), new DateTime(time));
+            var list = news.GetPublicMessages(_getPersonId(), new DateTime(time));
             return CreateResponse(list);
         }
 
-        [HttpGet("{id}")]
-        public Response<bool> SetRead(int message_id, int mode)
+        [HttpPost("{id}")]
+        public Response<bool> SetRead([FromRoute]int id, [FromForm]int mode)
         {
             if(!_isLogged())
                 return CreateLoginRequired<bool>();
             ReadMode mode_enum = (ReadMode)Enum.ToObject(typeof(ReadMode), mode);
-            var res = news.SetRead(!_isAdmin() ? _getPersonId() : 0, message_id, mode_enum);
+            var message = news.GetMessage(id);
+            if (message == null)
+                return CreateBoolean(false, ResponseCode.FAIL, "Message is not available");
+            if (_isAdmin() && message.IsPrivate)
+                news.SetRead(0, id, mode_enum);
+            var res = news.SetRead(_getPersonId(), id, mode_enum);
             return CreateResponse(res);
         }
 
         [HttpPost]
-        public Response<bool> PostNews(string text, bool is_private, int person_id, bool is_marked, bool expire, int e_year, int e_month, int e_day)
+        public Response<bool> PostNews(string text, string title, bool is_private, int person_id, bool is_marked, bool expire, int e_year, int e_month, int e_day)
         {
             if(!_isAdmin())
             {
                 // TODO log request
                 return CreateOnlyAdmin<bool>();
             }
-            var res = news.SendPublicMessage(text, _getPersonId());
+            var res = news.SendPublicMessage(text, _getPersonId(), title);
             return CreateBoolean(res);
         }
 

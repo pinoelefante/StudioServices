@@ -43,7 +43,18 @@ namespace pinoelefante.ViewModels
             IsBusyActive = status;
             IProgressDialog dialog = null;
             if (status)
+            {
                 dialog = UserDialogs.Instance.Loading(text ?? "");
+                Task.Factory.StartNew(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(15));
+                    if (dialog != null && dialog.IsShowing)
+                    {
+                        Debug.WriteLine("La schermata di caricamento ha impiegato troppo tempo a chiudersi");
+                        dialog.Hide();
+                    }
+                });
+            }
             else
             {
                 if (progress != null)

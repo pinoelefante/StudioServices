@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,15 @@ namespace StudioServices.Data.Newsboard
 {
     public class Message : PersonReference
     {
+        public string Title { get; set; }
         public string Content { get; set; }
         public bool IsPrivate { get; set; }
         public bool IsExpireEnabled { get; set; }
         public DateTime ExpireDate { get; set; }
         public bool IsMarked { get; set; }
         public int SenderId { get; set; }
+
+        [Ignore]
+        public bool IsRead { get; set; } = false;
     }
 }

@@ -10,15 +10,22 @@ namespace StudioServices.Controllers.Newsboard
 {
     public class NewsboardDatabase : Database
     {
-        public List<Message> MessageList(int person_id, DateTime last_message = default(DateTime), bool all = false)
+        public List<Message> GetPublicMessages(int person_id, DateTime last_message = default(DateTime), bool all = false)
         {
             using (var con = GetConnection())
             {
                 //return con.Table<Message>().Where(x => (x.PersonId == person_id || !x.IsPrivate) && x.CreationTime.CompareTo(last_message) > 0 && (all ? true : x.Enabled)).OrderByDescending(x => x.CreationTime).ToList();
-                return con.Query<Message>($"SELECT * FROM Message WHERE CreationTime > ? ORDER BY CreationTime ASC", last_message.Ticks);
+
+                var messages = con.Query<Message>($"SELECT * FROM Message WHERE IsPrivate=0 AND CreationTime > ? ORDER BY CreationTime DESC", last_message.Ticks);
+                messages.ForEach((x) =>
+                {
+                    var readStatus = GetReadStatus(x.Id, person_id);
+                    x.IsRead = readStatus != null && readStatus.IsRead;
+                });
+                return messages;
             }
         }
-        public Message SelectMessage(int message_id)
+        public Message GetMessage(int message_id)
         {
             using (var con = GetConnection())
             {

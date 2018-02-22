@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:pinoelefante.Views"
+             x:Class="StudioServicesApp.Views.ViewMessagePage"
+             BindingContext="{Binding ViewMessageViewModel, Source={StaticResource Locator}}">
+    <ContentPage.Content>
+        <Grid Margin="15,15,0,15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Text="{Binding Message.Title}" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <ScrollView Grid.Row="1" Padding="0,0,15,0">
+                <Label Text="{Binding Message.Content}" />
+            </ScrollView>
+            <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="Center">
+                <Button Text="&lt;-" Command="{Binding NextNewsCommand}"/>
+                <Button Text="-&gt;" Command="{Binding PrevNewsCommand}"/>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</views:MyContentPage>

@@ -4,6 +4,10 @@
              x:Class="StudioServicesApp.Views.NewsPage"
              xmlns:views="clr-namespace:pinoelefante.Views"
              BindingContext="{Binding NewsPageViewModel, Source={StaticResource Locator}}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Aggiorna" Command="{Binding UpdateNews}" />
+        <ToolbarItem Text="Delete" Command="{Binding DeleteDatabaseCommand}" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
             <ListView ItemsSource="{Binding Newsboard}" HasUnevenRows="True">
@@ -16,11 +20,24 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
-                                <Label Grid.Row="1" Text="{Binding ShortContent}" FontAttributes="Italic" FontSize="Small"/>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="{Binding Title}" FontAttributes="Bold" FontSize="18"/>
+                                    <Label Grid.Column="1" Text="{Binding CreationTime, Converter={StaticResource DateTimeString}}" VerticalOptions="Center" FontSize="10"/>
+                                </Grid>
+                                
+                                <Label Grid.Row="1" Text="{Binding ShortContent}" FontAttributes="Italic" FontSize="14" LineBreakMode="CharacterWrap"/>
+                                
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <ListView.Behaviors>
+                    <views:EventToCommandBehavior EventName="ItemTapped" Command="{Binding OpenMessageCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}" />
+                </ListView.Behaviors>
             </ListView>
         </Grid>
     </ContentPage.Content>

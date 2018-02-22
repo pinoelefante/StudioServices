@@ -14,10 +14,11 @@ namespace StudioServices.Controllers.Newsboard
         {
             db = new NewsboardDatabase();
         }
-        public bool SendPublicMessage(string content, int sender_id, bool isMarked = false,  bool isExpire = false, DateTime expireDate = default(DateTime))
+        public bool SendPublicMessage(string content, int sender_id, string title = "", bool isMarked = false,  bool isExpire = false, DateTime expireDate = default(DateTime))
         {
             Message msg = new Message()
             {
+                Title = title,
                 Content = content,
                 ExpireDate = expireDate,
                 IsExpireEnabled = isExpire,
@@ -32,6 +33,10 @@ namespace StudioServices.Controllers.Newsboard
                 return true;
             }
             return false;
+        }
+        public Message GetMessage(int message_id)
+        {
+            return db.GetMessage(message_id);
         }
         public bool SendConversationMessage(string content, int sender_id, int receiver_id)
         {
@@ -59,13 +64,13 @@ namespace StudioServices.Controllers.Newsboard
             
             return false;
         }
-        public List<Message> ListMessages(int person_id, DateTime last_message_date = default(DateTime))
+        public List<Message> GetPublicMessages(int person_id, DateTime last_message_date = default(DateTime))
         {
-            return db.MessageList(person_id, last_message_date);
+            return db.GetPublicMessages(person_id, last_message_date);
         }
         public bool DeleteMessage(int message_id)
         {
-            Message msg = db.SelectMessage(message_id);
+            Message msg = db.GetMessage(message_id);
             if(msg == null)
             {
                 // Impossibile cancellare un messaggio che non esiste

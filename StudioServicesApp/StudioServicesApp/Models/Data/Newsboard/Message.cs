@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,14 +11,15 @@ namespace StudioServices.Data.Newsboard
 {
     public class Message : PersonReference
     {
+        public string Title { get; set; }
         public string Content { get; set; }
         public bool IsPrivate { get; set; }
         public bool IsExpireEnabled { get; set; }
         public DateTime ExpireDate { get; set; }
         public bool IsMarked { get; set; }
         public int SenderId { get; set; }
-
-        [JsonIgnore]
+        
+        [Ignore]
         public string ShortContent
         {
             get
@@ -25,5 +28,7 @@ namespace StudioServices.Data.Newsboard
                 return Content;
             }
         }
+        private bool _readStatus;
+        public bool IsRead { get => _readStatus; set { Set(ref _readStatus, value); } }
     }
 }

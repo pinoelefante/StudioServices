@@ -138,12 +138,18 @@ namespace StudioServicesApp.Services
         #endregion
 
         #region News
-        public async Task<ResponseMessage<List<Message>>> News_MessageListAsync(long ticks = 0)
+        public async Task<ResponseMessage<List<Message>>> News_PublicMessageListAsync(long ticks = 0)
         {
             var address = $"{WS_ADDRESS}/api/news/all";
             var parameters = new ParametersList("time", ticks);
             var news = await SendRequestAsync<List<Message>>(address, HttpMethod.GET, parameters);
             return news;
+        }
+        public async Task<ResponseMessage<bool>> News_SetReadAsync(int message_id)
+        {
+            var address = $"{WS_ADDRESS}/api/news/{message_id}";
+            var parameters = new ParametersList("mode", (int)ReadMode.APP);
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
         }
         #endregion
 

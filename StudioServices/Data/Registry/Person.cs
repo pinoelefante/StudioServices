@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using SQLite;
 using StudioServices.Data;
 using StudioServices.Data.Registry;
@@ -12,9 +13,11 @@ namespace StudioServices.Registry.Data
         public string Surname { get; set; }
         [Unique]
         public string FiscalCode { get; set; }
+        [JsonIgnore]
         public string AuthCode { get; set; }
         public DateTime Birth { get; set; }
         public string BirthPlace { get; set; }
+
         public List<Email> Emails { get; } = new List<Email>(1);
         public List<Address> Addresses { get; } = new List<Address>(1);
         public List<ContactMethod> Contacts { get; } = new List<ContactMethod>(2);

@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,14 @@ namespace StudioServices.Data.Newsboard
         public bool Email { get; set; }
         public bool App { get; set; }
         public bool Web { get; set; }
+        [Ignore, JsonIgnore]
+        public bool IsRead
+        {
+            get
+            {
+                return Whatsapp || Telegram || Email || App || Web;
+            }
+        }
     }
     public enum ReadMode
     {

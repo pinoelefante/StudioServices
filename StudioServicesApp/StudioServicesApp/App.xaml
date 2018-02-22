@@ -9,6 +9,8 @@
             <vm:ViewModelLocator x:Key="Locator" />
 
             <converters:NotBoolean x:Key="NotBoolean"/>
+            <converters:ItemTappedEventArgsConverter x:Key="ItemTappedConverter" />
+            <converters:DateTimeStringConverter x:Key="DateTimeString"/>
 
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="PrimaryDark">#1976D2</Color>
