@@ -5,6 +5,7 @@ using pinoelefante.Services;
 using Plugin.SecureStorage;
 using StudioServicesApp;
 using StudioServicesApp.Services;
+using StudioServicesApp.ViewModels;
 using StudioServicesApp.Views;
 using System;
 using System.Collections.Generic;
@@ -20,13 +21,15 @@ namespace pinoelefante.ViewModels
     {
         private static readonly int LIMIT_TRY = 3;
         protected NavigationService navigation;
+        protected CacheManager cache = ViewModelLocator.GetService<CacheManager>();
         protected StudioServicesApi api;
         public MyViewModel(INavigationService n, StudioServicesApi a)
         {
             navigation = n as NavigationService;
             api = a;
         }
-        private bool busyActive;
+        private bool busyActive, isAdmin;
+        public bool IsAdmin { get => isAdmin; set => Set(ref isAdmin, value); }
         public bool IsBusyActive
         {
             get => busyActive;
@@ -73,10 +76,14 @@ namespace pinoelefante.ViewModels
                 Position = ToastPosition.Bottom,
                 Duration = TimeSpan.FromSeconds(seconds),
             });
-            // UserDialogs.Instance.Toast(message, TimeSpan.FromSeconds(seconds));
         }
 
-        public virtual Task NavigatedToAsync(object parameter = null) => Task.CompletedTask;
+        public virtual Task NavigatedToAsync(object parameter = null)
+        {
+            var admin = cache?.GetValue("is_admin", false);
+            IsAdmin = admin == null ? false : admin.Value;
+            return Task.CompletedTask;   
+        }
         public virtual void NavigatedFrom() { }
         /*
          * OnBackPressed() must return true when override 

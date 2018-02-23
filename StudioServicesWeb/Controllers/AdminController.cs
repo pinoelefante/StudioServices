@@ -15,10 +15,18 @@ namespace StudioServicesWeb.Controllers
         [HttpGet("{person_id}")]
         public Response<bool> ActAs(int person_id)
         {
-            if(!_isAdmin())
-                return CreateBoolean(false, ResponseCode.ADMIN_FUNCTION);
+            if (!_isAdmin())
+                return CreateOnlyAdmin<bool>();
             _setUserSession(_getAccountId(), person_id, true);
             return CreateBoolean(true);
+        }
+        [Route("is_admin")]
+        [HttpGet]
+        public Response<bool> IsAdmin()
+        {
+            if (!_isLogged())
+                return CreateLoginRequired<bool>();
+            return CreateBoolean(_isAdmin());
         }
     }
 }

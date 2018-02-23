@@ -5,6 +5,7 @@
              xmlns:views="clr-namespace:pinoelefante.Views"
              BindingContext="{Binding NewsPageViewModel, Source={StaticResource Locator}}">
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Nuova" Command="{Binding CreatePublicNewsCommand}" IsVisible="{Binding IsAdmin}" />
         <ToolbarItem Text="Aggiorna" Command="{Binding UpdateNews}" />
         <ToolbarItem Text="Delete" Command="{Binding DeleteDatabaseCommand}" />
     </ContentPage.ToolbarItems>

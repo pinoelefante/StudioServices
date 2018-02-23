@@ -56,6 +56,7 @@ namespace StudioServicesApp.ViewModels
             {
                 await LoadPersonAsync();
                 await LoadNewsAsync();
+                await base.NavigatedToAsync(null); // check admin status
             });
         }
         private async Task LoadPersonAsync()
@@ -69,6 +70,12 @@ namespace StudioServicesApp.ViewModels
                     cache.SetValue("person", res.Data);
                 else
                     ShowMessage("Non è stato possibile recuperare le informazioni del profilo", "Informazioni profilo");
+            }
+            if(cache.GetValue<bool?>("is_admin", null) == null)
+            {
+                var res = await SendRequestAsync(async () => await api.Admin_IsAdminAsync());
+                if (res.Code == ResponseCode.OK)
+                    cache.SetValue("is_admin", res.Data);
             }
         }
         private async Task LoadNewsAsync(bool force = false)
@@ -114,7 +121,7 @@ namespace StudioServicesApp.ViewModels
             SetBusy(false, "", progress_news);
         }
 
-        private RelayCommand _newsUpdate, _delDb;
+        private RelayCommand _newsUpdate, _delDb, _newPostCmd;
         private RelayCommand<Message> _openMessageCmd;
 
         public RelayCommand UpdateNews =>
@@ -133,6 +140,11 @@ namespace StudioServicesApp.ViewModels
                 db.DeleteDatabase();
                 Newsboard.Clear();
                 cache.SetValue("last_update_news", 0L);
+            }));
+        public RelayCommand CreatePublicNewsCommand =>
+            _newPostCmd ?? (_newPostCmd = new RelayCommand(() =>
+            {
+                
             }));
     }
 }

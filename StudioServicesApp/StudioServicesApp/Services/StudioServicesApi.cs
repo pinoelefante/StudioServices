@@ -153,6 +153,19 @@ namespace StudioServicesApp.Services
         }
         #endregion
 
+        #region Admin
+        public async Task<ResponseMessage<bool>> Admin_IsAdminAsync()
+        {
+            var address = $"{WS_ADDRESS}/api/admin/is_admin";
+            return await SendRequestAsync<bool>(address, HttpMethod.GET);
+        }
+        public async Task<ResponseMessage<bool>> Admin_ActAsAsync(int person_id)
+        {
+            var address = $"{WS_ADDRESS}/api/admin/act_as/{person_id}";
+            return await SendRequestAsync<bool>(address, HttpMethod.GET);
+        }
+        #endregion
+
         private async Task<ResponseMessage<T>> SendRequestAsync<T>(string url, HttpMethod method, IEnumerable<KeyValuePair<string, string>> parameters = null, byte[] file = null)
         {
             var res = await web.SendRequestAsync(url, method, parameters, file);
