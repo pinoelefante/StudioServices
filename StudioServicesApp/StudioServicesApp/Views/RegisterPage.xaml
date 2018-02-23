@@ -34,9 +34,9 @@
                     <Label Grid.Row="0" VerticalOptions="Center" Text="Username"/>
                     <Entry Grid.Row="1" Text="{Binding Username, Mode=TwoWay}"/>
                     <Label Grid.Row="2" VerticalOptions="Center" Text="Password"/>
-                    <Entry Grid.Row="3" Text="{Binding Password, Mode=TwoWay}"/>
+                    <Entry Grid.Row="3" Text="{Binding Password, Mode=TwoWay}" IsPassword="True"/>
                     <Label Grid.Row="4" VerticalOptions="Center" Text="Verifica password"/>
-                    <Entry Grid.Row="5" Text="{Binding Password2, Mode=TwoWay}"/>
+                    <Entry Grid.Row="5" Text="{Binding Password2, Mode=TwoWay}" IsPassword="True"/>
                     <Label Grid.Row="6" VerticalOptions="Center" Text="Email"/>
                     <Entry Grid.Row="7" Text="{Binding Email, Mode=TwoWay}"/>
 
@@ -62,10 +62,13 @@
                     <Label Grid.Row="11" VerticalOptions="Center" Text="Cognome" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
                     <Entry Grid.Row="12" Text="{Binding Surname, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
                     
-                    <Label Grid.Row="13" VerticalOptions="Center" Text="Nascita" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Label Grid.Row="13" VerticalOptions="Center" Text="Data di nascita" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <DatePicker Grid.Row="14" Date="{Binding Birthday, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <!--
                     <Entry Grid.Row="14" Text="{Binding Birthday, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    -->
                     
-                    <Label Grid.Row="15" VerticalOptions="Center" Text="Luogo" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
+                    <Label Grid.Row="15" VerticalOptions="Center" Text="Luogo di nascita" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
                     <Entry Grid.Row="16" Text="{Binding BirthPlace, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
 
                     <Label Grid.Row="17" VerticalOptions="Center" Text="Codice fiscale" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>

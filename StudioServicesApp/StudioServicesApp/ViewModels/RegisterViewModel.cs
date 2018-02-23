@@ -17,18 +17,20 @@ namespace StudioServicesApp.ViewModels
         public RegisterViewModel(INavigationService n, StudioServicesApi a) : base(n, a) { }
         private bool _isCliente = true;
         private RelayCommand _registerCmd;
-        
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Password2 { get; set; }
-        public string Email { get; set; }
+
+        private string _username, _pass1, _pass2, _email, _fiscalcode, _verifyCode, _name, _surname, _birthplace;
+        private DateTime _birthday;
+        public string Username { get => _username; set => Set(ref _username, value); }
+        public string Password { get => _pass1; set => Set(ref _pass1, value); }
+        public string Password2 { get => _pass2; set => Set(ref _pass2, value); }
+        public string Email { get => _email; set => Set(ref _email, value); }
         public bool IsClient { get => _isCliente; set => Set(ref _isCliente, value); }
-        public string FiscalCode { get; set; }
-        public string VerifyCode { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public DateTime Birthday { get; set; } = new DateTime(DateTime.Now.Subtract(TimeSpan.FromDays(365.25 * 18)).Ticks);
-        public string BirthPlace { get; set; }
+        public string FiscalCode { get => _fiscalcode; set => Set(ref _fiscalcode, value); }
+        public string VerifyCode { get => _verifyCode; set => Set(ref _verifyCode, value); }
+        public string Name { get => _name; set => Set(ref _name, value); }
+        public string Surname { get => _surname; set => Set(ref _surname, value); }
+        public DateTime Birthday { get => _birthday; set => Set(ref _birthday, value); }
+        public string BirthPlace { get => _birthplace; set => Set(ref _birthplace, value); }
 
         private void ResetForm()
         {
