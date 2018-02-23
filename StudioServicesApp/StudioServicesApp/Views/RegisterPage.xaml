@@ -64,9 +64,6 @@
                     
                     <Label Grid.Row="13" VerticalOptions="Center" Text="Data di nascita" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
                     <DatePicker Grid.Row="14" Date="{Binding Birthday, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
-                    <!--
-                    <Entry Grid.Row="14" Text="{Binding Birthday, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
-                    -->
                     
                     <Label Grid.Row="15" VerticalOptions="Center" Text="Luogo di nascita" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
                     <Entry Grid.Row="16" Text="{Binding BirthPlace, Mode=TwoWay}" IsVisible="{Binding IsClient, Converter={StaticResource NotBoolean}}"/>
