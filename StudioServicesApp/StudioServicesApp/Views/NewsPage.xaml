@@ -9,33 +9,54 @@
         <ToolbarItem Text="Aggiorna" Command="{Binding UpdateNews}" />
         <ToolbarItem Text="Delete" Command="{Binding DeleteDatabaseCommand}" />
     </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="NewsNotReaded">
+                <ViewCell>
+                    <Grid HeightRequest="80" Padding="20,15">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="{Binding Title}" FontAttributes="Bold" FontSize="18"/>
+                            <Label Grid.Column="1" Text="{Binding CreationTime, Converter={StaticResource DateTimeString}}" VerticalOptions="Center" FontSize="10"/>
+                        </Grid>
+                        <Label Grid.Row="1" Text="{Binding ShortContent}" FontAttributes="Bold" FontSize="14" LineBreakMode="CharacterWrap"/>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="NewsReaded">
+                <ViewCell>
+                    <Grid HeightRequest="80" Padding="20,15">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="{Binding Title}" FontAttributes="Italic" FontSize="18"/>
+                            <Label Grid.Column="1" Text="{Binding CreationTime, Converter={StaticResource DateTimeString}}" VerticalOptions="Center" FontSize="10"/>
+                        </Grid>
+                        <Label Grid.Row="1" Text="{Binding ShortContent}" FontAttributes="Italic" FontSize="14" LineBreakMode="CharacterWrap"/>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+            <views:NewsboardNewsTemplateSelector x:Key="NewsSelector" NewsReaded="{StaticResource NewsReaded}" NewsNotRead="{StaticResouce NewsNotReaded}" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <Grid>
-            <ListView ItemsSource="{Binding Newsboard}" HasUnevenRows="True">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid HeightRequest="80" Padding="20,15">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Text="{Binding Title}" FontAttributes="Bold" FontSize="18"/>
-                                    <Label Grid.Column="1" Text="{Binding CreationTime, Converter={StaticResource DateTimeString}}" VerticalOptions="Center" FontSize="10"/>
-                                </Grid>
-                                
-                                <Label Grid.Row="1" Text="{Binding ShortContent}" FontAttributes="Italic" FontSize="14" LineBreakMode="CharacterWrap"/>
-                                
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
+            <ListView ItemsSource="{Binding Newsboard}" HasUnevenRows="True" ItemTemplate="{StaticResouce NewsSelector}">
                 <ListView.Behaviors>
                     <views:EventToCommandBehavior EventName="ItemTapped" Command="{Binding OpenMessageCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}" />
                 </ListView.Behaviors>
