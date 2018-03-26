@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.Views.NewsPage"
              xmlns:views="clr-namespace:pinoelefante.Views"
+             xmlns:AppViews="clr-namespace:StudioServicesApp.Views"
              BindingContext="{Binding NewsPageViewModel, Source={StaticResource Locator}}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Nuova" Command="{Binding CreatePublicNewsCommand}" IsVisible="{Binding IsAdmin}" />
+        <ToolbarItem Text="Nuova" Command="{Binding CreatePublicNewsCommand}" />
         <ToolbarItem Text="Aggiorna" Command="{Binding UpdateNews}" />
         <ToolbarItem Text="Delete" Command="{Binding DeleteDatabaseCommand}" />
     </ContentPage.ToolbarItems>
@@ -51,12 +52,12 @@
                     </Grid>
                 </ViewCell>
             </DataTemplate>
-            <views:NewsboardNewsTemplateSelector x:Key="NewsSelector" NewsReaded="{StaticResource NewsReaded}" NewsNotRead="{StaticResouce NewsNotReaded}" />
+            <AppViews:NewsboardNewsTemplateSelector x:Key="NewsSelector" NewsReaded="{StaticResource NewsReaded}" NewsNotRead="{StaticResource NewsNotReaded}" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid>
-            <ListView ItemsSource="{Binding Newsboard}" HasUnevenRows="True" ItemTemplate="{StaticResouce NewsSelector}">
+            <ListView ItemsSource="{Binding Newsboard}" HasUnevenRows="True" ItemTemplate="{StaticResource NewsSelector}">
                 <ListView.Behaviors>
                     <views:EventToCommandBehavior EventName="ItemTapped" Command="{Binding OpenMessageCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}" />
                 </ListView.Behaviors>

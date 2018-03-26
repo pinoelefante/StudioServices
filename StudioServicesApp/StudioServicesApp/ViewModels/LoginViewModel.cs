@@ -28,14 +28,16 @@ namespace StudioServicesApp.ViewModels
             {
                 var busy = SetBusy(true, "Verifico accesso in corso");
                 var message = await SendRequestAsync(() => api.Authentication_IsLoggedAsync());
+                bool login_ok = false;
+                RequireLogin = false;
                 if (message.Code == ResponseCode.OK)
                 {
                     if (message.Data)
                     {
+                        login_ok = true;
                         Device.BeginInvokeOnMainThread(() =>
                         {
                             Debug.WriteLine("Login not required");
-                            RequireLogin = false;
                             App.Current.MainPage = new MyMasterPage();
                         });
                     }
@@ -48,35 +50,20 @@ namespace StudioServicesApp.ViewModels
                                 var res = await SendRequestAsync(async () => await api.Authentication_LoginAsync(Username, Password));
                                 if (res.Code == ResponseCode.OK && res.Data)
                                 {
+                                    login_ok = true;
                                     Device.BeginInvokeOnMainThread(() =>
                                     {
                                         Debug.WriteLine("Login not required");
-                                        RequireLogin = false;
                                         App.Current.MainPage = new MyMasterPage();
                                     });
                                 }
                             });
-
-                        }
-                        else
-                        {
-                            Device.BeginInvokeOnMainThread(() =>
-                            {
-                                Debug.WriteLine("Login required");
-                                RequireLogin = true;
-                            });
                         }
                     }
                 }
-                else
-                {
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        Debug.WriteLine("Login required");
-                        RequireLogin = true;
-                    });
-                }
                 SetBusy(false, "", busy);
+                if (!login_ok)
+                    RequireLogin = true;
             });
             
         }
@@ -86,7 +73,18 @@ namespace StudioServicesApp.ViewModels
 
         public string Username { get => _username; set => Set(ref _username, value); }
         public string Password { get => _password; set => Set(ref _password, value); }
-        public bool RequireLogin { get => _requireLogin; set => Set(ref _requireLogin, value); }
+        public bool RequireLogin
+        {
+            get => _requireLogin;
+            set
+            {
+                _requireLogin = value;
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    RaisePropertyChanged(() => RequireLogin);
+                });
+            }
+        }
         
         public RelayCommand LoginCommand =>
             _loginCmd ?? (_loginCmd = new RelayCommand(async () =>
