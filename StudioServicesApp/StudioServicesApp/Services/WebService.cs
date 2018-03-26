@@ -102,7 +102,7 @@ namespace StudioServicesApp.Services
                     return await res.Content.ReadAsStringAsync();
                 return null;
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }

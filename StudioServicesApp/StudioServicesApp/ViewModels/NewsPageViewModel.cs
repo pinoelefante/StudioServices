@@ -16,11 +16,9 @@ namespace StudioServicesApp.ViewModels
 {
     public class NewsPageViewModel : MyViewModel
     {
-        private CacheManager cache;
         private DatabaseService db;
-        public NewsPageViewModel(INavigationService n, StudioServicesApi a, CacheManager c, DatabaseService d) : base(n, a)
+        public NewsPageViewModel(INavigationService n, StudioServicesApi a, DatabaseService d) : base(n, a)
         {
-            cache = c;
             db = d;
             Newsboard = new ObservableCollection<Message>();
 

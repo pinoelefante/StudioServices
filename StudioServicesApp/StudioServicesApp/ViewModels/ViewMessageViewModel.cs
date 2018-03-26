@@ -14,11 +14,9 @@ namespace StudioServicesApp.ViewModels
 {
     public class ViewMessageViewModel : MyViewModel
     {
-        private CacheManager cache;
         private DatabaseService db;
-        public ViewMessageViewModel(INavigationService n, StudioServicesApi a, CacheManager c, DatabaseService d) : base(n, a)
+        public ViewMessageViewModel(INavigationService n, StudioServicesApi a, DatabaseService d) : base(n, a)
         {
-            cache = c;
             db = d;
             MessengerInstance.Register<Message>(this, "PublicNewsRead", async (message) =>
             {

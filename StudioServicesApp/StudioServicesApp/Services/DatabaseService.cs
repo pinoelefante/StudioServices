@@ -20,6 +20,8 @@ namespace StudioServicesApp.Services
             using (var con = GetConnection())
             {
                 con.CreateTable<Message>();
+
+                con.CreateTable<RequestItem>();
             }
         }
         private SQLiteConnection GetConnection()
@@ -57,6 +59,14 @@ namespace StudioServicesApp.Services
             using (var con = GetConnection())
             {
                 con.Delete(item);
+            }
+        }
+        public List<RequestItem> GetRequestItems()
+        {
+            using (var con = GetConnection())
+            {
+                var reqs = con.Table<RequestItem>().OrderByDescending(x => x.Id);
+                return GetEnumerable(reqs);
             }
         }
         public List<Message> GetMessages()

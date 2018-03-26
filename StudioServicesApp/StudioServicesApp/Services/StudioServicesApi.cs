@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Plugin.SecureStorage;
+using SQLite;
 using StudioServices.Data.Newsboard;
 using StudioServices.Registry.Data;
 using System;
@@ -16,13 +17,29 @@ namespace StudioServicesApp.Services
         private const string SESSION_NAME = "SSWSESSID";
         private static string WS_ADDRESS = "http://localhost:5000";
         private WebService web;
-        public StudioServicesApi(WebService w)
+        private ConnectionStatus connectionStatus;
+        private DatabaseService database;
+        public StudioServicesApi(WebService w, ConnectionStatus conn_stats, DatabaseService db)
         {
             web = w;
+            connectionStatus = conn_stats;
+            database = db;
+
             var session_id = CrossSecureStorage.Current.GetValue("session_id");
             if (!string.IsNullOrEmpty(session_id))
                 web.SetCookie(SESSION_NAME, session_id, WS_ADDRESS);
+
+            // Background requests
+            LoadRequests();
+            connectionStatus.Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
         }
+
+        private void Connectivity_ConnectivityChanged(object sender, Plugin.Connectivity.Abstractions.ConnectivityChangedEventArgs e)
+        {
+            if(e.IsConnected)
+                RunRequests();
+        }
+
         public void SetNewAddress(string server_name, int port = 80, string protocol = "http") => WS_ADDRESS = $"{protocol}://{server_name}:{port}";
         public string GetServerAddress() => WS_ADDRESS;
 
@@ -166,12 +183,23 @@ namespace StudioServicesApp.Services
         }
         #endregion
 
-        private async Task<ResponseMessage<T>> SendRequestAsync<T>(string url, HttpMethod method, IEnumerable<KeyValuePair<string, string>> parameters = null, byte[] file = null)
+        private async Task<ResponseMessage<T>> SendRequestAsync<T>(string url, HttpMethod method, IEnumerable<KeyValuePair<string, string>> parameters = null, byte[] file = null, bool send_later = false)
         {
+            if(!connectionStatus.IsConnected())
+            {
+                if (send_later)
+                    AddRequest(url, method, parameters as ParametersList, file, send_later);
+                return new ResponseMessage<T>() { Code = ResponseCode.INTERNET_NOT_AVAILABLE };
+            }
             var res = await web.SendRequestAsync(url, method, parameters, file);
             Debug.WriteLine("URL: " + url);
             if (string.IsNullOrEmpty(res))
+            {
+                if(send_later)
+                    AddRequest(url, method, parameters as ParametersList, file, send_later);
                 return new ResponseMessage<T>() { Code = ResponseCode.COMMUNICATION_ERROR };
+            }
+                
             try
             {
                 Debug.WriteLine("JSON: " + res);
@@ -183,19 +211,101 @@ namespace StudioServicesApp.Services
                 return new ResponseMessage<T>() { Code = ResponseCode.SERIALIZER_ERROR };
             }
         }
+        private void AddRequest(string url, HttpMethod method, ParametersList parameters, byte[] file, bool later)
+        {
+            RequestItem item = new RequestItem()
+            {
+                Url = url,
+                Method = method,
+                Parameters = parameters,
+                File = file,
+                SendLater = later
+            };
+            database.SaveItem(item);
+        }
+        private void LoadRequests()
+        {
+            var reqs = database.GetRequestItems();
+            while(reqs.Any())
+            {
+                runLaterQueue.Enqueue(reqs.Last());
+                reqs.RemoveAt(reqs.Count - 1);
+            }
+            RunRequests();
+        }
+        private void DeleteRequest(RequestItem item)
+        {
+            database.Delete(item);
+        }
+        private Queue<RequestItem> runLaterQueue = new Queue<RequestItem>(20);
+        private Task taskLater;
+        private async void RunRequests()
+        {
+            if(runLaterQueue.Any())
+            {
+                if (taskLater != null)
+                    await taskLater;
+                taskLater = Task.Run(async () =>
+                {
+                    while(runLaterQueue.Any())
+                    {
+                        var element = runLaterQueue.First();
+                        var resp = await SendRequestAsync<object>(element.Url, element.Method, element.Parameters, element.File);
+                        if(resp.IsOK)
+                        {
+                            runLaterQueue.Dequeue();
+                            DeleteRequest(element);
+                        }
+                    }
+                });
+            }
+        }
     }
-    
+    public class RequestItem
+    {
+        [PrimaryKey]
+        public int Id { get; set; }
+        public HttpMethod Method { get; set; }
+        public string Url { get; set; }
+        [Ignore]
+        public IEnumerable<KeyValuePair<string, string>> Parameters { get; set; }
+        public byte[] File { get; set; }
+        public bool SendLater { get; set; }
+
+        public string ParametersString
+        {
+            get
+            {
+                if (Parameters == null)
+                    return string.Empty;
+                var content = string.Empty;
+                foreach(var item in Parameters)
+                    content += $"{item.Key} {item.Value}";
+                return content;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+                var items = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (items.Length % 2 != 0)
+                    throw new Exception("must be divisible by 2");
+                Parameters = new ParametersList(items);
+            }
+        }
+    }
     public class ResponseMessage<T>
     {
         public long Ticks { get; set; }
         public ResponseCode Code { get; set; }
         public string Message { get; set; }
         public T Data { get; set; }
+
+        public bool IsOK { get { return Code == ResponseCode.OK; } }
     }
     public enum ResponseCode
     {
-
-        COMMUNICATION_ERROR = -1, SERIALIZER_ERROR = -2,
+        COMMUNICATION_ERROR = -1, SERIALIZER_ERROR = -2, INTERNET_NOT_AVAILABLE = -3,
         OK = 0,
         REQUIRE_LOGIN = 1,
         FAIL = 2,
