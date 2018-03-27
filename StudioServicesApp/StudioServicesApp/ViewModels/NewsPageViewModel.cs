@@ -24,34 +24,53 @@ namespace StudioServicesApp.ViewModels
 
             MessengerInstance.Register<int>(this, "PublicNewsPrev", (curr_message) =>
             {
-                for(int i = 0;i<Newsboard.Count;i++)
+                var last_index = markAsRead.Count > 0 ? markAsRead[markAsRead.Count - 1] : 0;
+                for (int i = last_index;i<Newsboard.Count;i++)
                 {
                     var message = Newsboard[i];
                     if(message.Id == curr_message)
                     {
-                        MessengerInstance.Send<Message>((i < Newsboard.Count-1 ? Newsboard[i+1] : null), "PublicNewsRead");
+                        var prev_message = i < Newsboard.Count - 1 ? Newsboard[i + 1] : null;
+                        MessengerInstance.Send<Message>(prev_message, "PublicNewsRead");
+                        if(message != null)
+                        {
+                            lastSelectedNews = i + 1;
+                            if (!message.IsRead)
+                                markAsRead.Add(i + 1);
+                        }
                         break;
                     }
                 }
             });
             MessengerInstance.Register<int>(this, "PublicNewsNext", (curr_message) =>
             {
-                for (int i = 0; i < Newsboard.Count; i++)
+                var last_index = markAsRead.Count > 0 ? markAsRead[markAsRead.Count - 1] : 0;
+                for (int i = last_index; i < Newsboard.Count; i++)
                 {
                     var message = Newsboard[i];
                     if (message.Id == curr_message)
                     {
-                        MessengerInstance.Send<Message>((i > 0 ? Newsboard[i-1] : null), "PublicNewsRead");
+                        var next_msg = i > 0 ? Newsboard[i - 1] : null;
+                        MessengerInstance.Send<Message>((next_msg), "PublicNewsRead");
+                        if (message != null)
+                        {
+                            lastSelectedNews = i - 1;
+                            if (!message.IsRead)
+                                markAsRead.Add(i - 1);
+                        }
                         break;
                     }
                 }
             });
         }
+        private int lastSelectedNews = 0;
+        private List<int> markAsRead = new List<int>(); 
         public ObservableCollection<Message> Newsboard { get; }
         public override Task NavigatedToAsync(object parameter = null)
         {
             return Task.Factory.StartNew(async () =>
             {
+                SetRead();
                 await LoadPersonAsync();
                 await LoadNewsAsync();
                 await base.NavigatedToAsync(null); // check admin status
@@ -118,6 +137,19 @@ namespace StudioServicesApp.ViewModels
             });
             SetBusy(false, "", progress_news);
         }
+        private void SetRead()
+        {
+            foreach (var index in markAsRead)
+            {
+                var msg = Newsboard[index];
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    Newsboard.RemoveAt(index);
+                    Newsboard.Insert(index, msg);
+                });
+            }
+            markAsRead.Clear();
+        }
 
         private RelayCommand _newsUpdate, _delDb, _newPostCmd;
         private RelayCommand<Message> _openMessageCmd;
@@ -130,6 +162,13 @@ namespace StudioServicesApp.ViewModels
         public RelayCommand<Message> OpenMessageCommand =>
             _openMessageCmd ?? (_openMessageCmd = new RelayCommand<Message>((message) =>
             {
+                var index = Newsboard.IndexOf(message);
+                if (index >= 0)
+                {
+                    lastSelectedNews = index;
+                    if (!message.IsRead)
+                        markAsRead.Add(index);
+                }
                 navigation.NavigateTo(ViewModelLocator.VIEW_MESSAGE_PAGE, message);
             }));
         public RelayCommand DeleteDatabaseCommand =>
