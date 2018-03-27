@@ -24,8 +24,7 @@ namespace StudioServicesApp.ViewModels
 
             MessengerInstance.Register<int>(this, "PublicNewsPrev", (curr_message) =>
             {
-                var last_index = markAsRead.Count > 0 ? markAsRead[markAsRead.Count - 1] : 0;
-                for (int i = last_index;i<Newsboard.Count;i++)
+                for (int i = lastSelectedNews;i<Newsboard.Count;i++)
                 {
                     var message = Newsboard[i];
                     if(message.Id == curr_message)
@@ -44,8 +43,7 @@ namespace StudioServicesApp.ViewModels
             });
             MessengerInstance.Register<int>(this, "PublicNewsNext", (curr_message) =>
             {
-                var last_index = markAsRead.Count > 0 ? markAsRead[markAsRead.Count - 1] : 0;
-                for (int i = last_index; i < Newsboard.Count; i++)
+                for (int i = lastSelectedNews; i < Newsboard.Count; i++)
                 {
                     var message = Newsboard[i];
                     if (message.Id == curr_message)
