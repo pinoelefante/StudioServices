@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -178,6 +179,15 @@ namespace pinoelefante.ViewModels
             }
             while (count < LIMIT_TRY);
             return res;
+        }
+        public void SetMT<T>(ref T field, T value, [CallerMemberName]string fieldName="")
+        {
+            var old_value = field;
+            field = value;
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                RaisePropertyChanged(fieldName, old_value, value);
+            });
         }
     }
 }
