@@ -24,41 +24,37 @@ namespace StudioServicesApp.ViewModels
 
             MessengerInstance.Register<int>(this, "PublicNewsPrev", (curr_message) =>
             {
-                for (int i = lastSelectedNews;i<Newsboard.Count;i++)
+                if(lastSelectedNews < Newsboard.Count - 1)
                 {
-                    var message = Newsboard[i];
-                    if(message.Id == curr_message)
+                    if(Newsboard[lastSelectedNews].Id == curr_message)
                     {
-                        var prev_message = i < Newsboard.Count - 1 ? Newsboard[i + 1] : null;
-                        MessengerInstance.Send<Message>(prev_message, "PublicNewsRead");
-                        if(message != null)
-                        {
-                            lastSelectedNews = i + 1;
-                            if (!message.IsRead)
-                                markAsRead.Add(i + 1);
-                        }
-                        break;
+                        var msg = Newsboard[lastSelectedNews + 1];
+                        if (!msg.IsRead)
+                            markAsRead.Add(lastSelectedNews + 1);
+                        MessengerInstance.Send<Message>(msg, "PublicNewsRead");
+                        lastSelectedNews++;
+                        return;
                     }
                 }
+                else
+                    MessengerInstance.Send<Message>(null, "PublicNewsRead");
             });
             MessengerInstance.Register<int>(this, "PublicNewsNext", (curr_message) =>
             {
-                for (int i = lastSelectedNews; i < Newsboard.Count; i++)
+                if (lastSelectedNews > 0)
                 {
-                    var message = Newsboard[i];
-                    if (message.Id == curr_message)
+                    if (Newsboard[lastSelectedNews].Id == curr_message)
                     {
-                        var next_msg = i > 0 ? Newsboard[i - 1] : null;
-                        MessengerInstance.Send<Message>((next_msg), "PublicNewsRead");
-                        if (message != null)
-                        {
-                            lastSelectedNews = i - 1;
-                            if (!message.IsRead)
-                                markAsRead.Add(i - 1);
-                        }
-                        break;
+                        var msg = Newsboard[lastSelectedNews - 1];
+                        if (!msg.IsRead)
+                            markAsRead.Add(lastSelectedNews - 1);
+                        MessengerInstance.Send<Message>(msg, "PublicNewsRead");
+                        lastSelectedNews--;
+                        return;
                     }
                 }
+                else
+                    MessengerInstance.Send<Message>(null, "PublicNewsRead");
             });
         }
         private int lastSelectedNews = 0;
