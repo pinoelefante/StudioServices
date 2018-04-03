@@ -29,19 +29,9 @@ namespace pinoelefante.ViewModels
             navigation = n as NavigationService;
             api = a;
         }
-        private bool busyActive, isAdmin;
-        public bool IsAdmin { get => isAdmin; set => Set(ref isAdmin, value); }
-        public bool IsBusyActive
-        {
-            get => busyActive;
-            set
-            {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    Set(ref busyActive, value);
-                });
-            }
-        }
+        private bool busyActive;
+        public bool IsBusyActive { get => busyActive; set => SetMT(ref busyActive, value); }
+        
         public IProgressDialog SetBusy(bool status, string text = "Attendere...", IProgressDialog progress = null)
         {
             IsBusyActive = status;
@@ -66,6 +56,7 @@ namespace pinoelefante.ViewModels
             }
             return dialog;
         }
+        
         public void ShowMessage(string message, string title = "")
         {
             UserDialogs.Instance.Alert(message, title);
@@ -81,8 +72,6 @@ namespace pinoelefante.ViewModels
 
         public virtual Task NavigatedToAsync(object parameter = null)
         {
-            var admin = cache?.GetValue("is_admin", false);
-            IsAdmin = admin == null ? false : admin.Value;
             return Task.CompletedTask;   
         }
         public virtual void NavigatedFrom() { }

@@ -14,7 +14,7 @@ using Xamarin.Forms;
 
 namespace StudioServicesApp.ViewModels
 {
-    public class NewsPageViewModel : MyViewModel
+    public class NewsPageViewModel : MyAuthViewModel
     {
         private DatabaseService db;
         public NewsPageViewModel(INavigationService n, StudioServicesApi a, DatabaseService d) : base(n, a)
@@ -64,30 +64,11 @@ namespace StudioServicesApp.ViewModels
         {
             return Task.Factory.StartNew(async () =>
             {
-                SetRead();
-                await LoadPersonAsync();
-                await LoadNewsAsync();
                 await base.NavigatedToAsync(null); // check admin status
+
+                SetRead();
+                await LoadNewsAsync();
             });
-        }
-        private async Task LoadPersonAsync()
-        {
-            if (cache.GetValue<Person>("person", null) == null)
-            {
-                var progress_person = SetBusy(true, "Recupero profilo in corso");
-                var res = await SendRequestAsync(async () => await api.Person_GetAsync());
-                SetBusy(false, "", progress_person);
-                if (res.Code == ResponseCode.OK && res.Data != null)
-                    cache.SetValue("person", res.Data);
-                else
-                    ShowMessage("Non è stato possibile recuperare le informazioni del profilo", "Informazioni profilo");
-            }
-            if(cache.GetValue<bool?>("is_admin", null) == null)
-            {
-                var res = await SendRequestAsync(async () => await api.Admin_IsAdminAsync());
-                if (res.Code == ResponseCode.OK)
-                    cache.SetValue("is_admin", res.Data);
-            }
         }
         private async Task LoadNewsAsync(bool force = false)
         {
@@ -117,19 +98,21 @@ namespace StudioServicesApp.ViewModels
             }
             // get news from webservice using ticks
             var res = await SendRequestAsync(async () => await api.News_PublicMessageListAsync(last_ticks));
-            // insert news to db
+            
             if (res.Code == ResponseCode.OK && res.Data != null)
             {
+                // insert news to db
                 db.SaveItems(res.Data);
                 cache.SetValue("last_update_news", now_time.Ticks);
+
+                // insert news to list
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    for (int i = 0; i < res.Data.Count; i++)
+                        Newsboard.Insert(i, res.Data[i]);
+                });
             }
-            // insert news to list
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                for (int i = 0; i < res.Data.Count; i++)
-                    Newsboard.Insert(i, res.Data[i]);
-            });
-            SetBusy(false, "", progress_news);
+            SetBusy(false, null, progress_news);
         }
         private void SetRead()
         {

@@ -21,7 +21,8 @@ namespace StudioServicesApp.ViewModels
         public const string LOGIN_PAGE = "LoginPage",
             NEWS_PAGE = "NewsPage",
             REGISTER_PAGE = "RegisterPage",
-            VIEW_MESSAGE_PAGE = "ViewMessagePage";
+            VIEW_MESSAGE_PAGE = "ViewMessagePage",
+            ADD_IDENTIFICATION_DOC_PAGE = "AddIdentificationDocPage";
 
         public const string SERVER_SETTINGS = "ServerSettingsPage";
 
@@ -41,6 +42,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<RegisterViewModel>();
             SimpleIoc.Default.Register<NewsPageViewModel>();
             SimpleIoc.Default.Register<ViewMessageViewModel>();
+            SimpleIoc.Default.Register<AddIdentificationDocumentViewModel>();
 
             SimpleIoc.Default.Register<ServerSettingsViewModel>();
 
@@ -52,6 +54,7 @@ namespace StudioServicesApp.ViewModels
             NavigationService.Configure(NEWS_PAGE, typeof(NewsPage));
             NavigationService.Configure(REGISTER_PAGE, typeof(RegisterPage));
             NavigationService.Configure(VIEW_MESSAGE_PAGE, typeof(ViewMessagePage));
+            NavigationService.Configure(ADD_IDENTIFICATION_DOC_PAGE, typeof(AddIdentificationDocumentPage));
 
             NavigationService.Configure(SERVER_SETTINGS, typeof(ServerSettings));
         }
