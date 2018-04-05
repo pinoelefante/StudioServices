@@ -11,7 +11,6 @@ namespace StudioServicesApp
 		public App ()
 		{
 			InitializeComponent();
-
             
             var nav = new NavigationPage(new LoginPage());
             MainPage = nav;

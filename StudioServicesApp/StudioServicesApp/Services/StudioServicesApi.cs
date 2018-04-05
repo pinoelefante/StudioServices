@@ -72,6 +72,8 @@ namespace StudioServicesApp.Services
         }
         public async Task<ResponseMessage<bool>> Authentication_IsLoggedAsync()
         {
+            if(!web.HasCookie(SESSION_NAME, WS_ADDRESS))
+                return new ResponseMessage<bool>() { Code = ResponseCode.OK, Data = false };
             var address = $"{WS_ADDRESS}/api/authentication/is_logged";
             return await SendRequestAsync<bool>($"{WS_ADDRESS}/api/authentication/is_logged", HttpMethod.GET);
         }

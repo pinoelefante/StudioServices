@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.Views.AddIdentificationDocumentPage"
              xmlns:effects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
-             Title="Aggiungi documento di riconoscimento">
+             Title="Aggiungi documento di riconoscimento"
+             BindingContext="{Binding AddIdentificationDocumentViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
         <Grid Padding="10">
             <Grid.RowDefinitions>
@@ -16,32 +17,36 @@
 
             <StackLayout Orientation="Vertical" Grid.Row="1">
                 <Label Text="Tipo di documento" />
-                <Picker Grid.Row="0" HorizontalOptions="Start" SelectedIndex="0">
+                <Picker Grid.Row="0" HorizontalOptions="Start" SelectedIndex="{Binding DocumentIndex, Mode=TwoWay}">
                     <Picker.Items>
                         <x:String>Carta d'identità</x:String>
                         <x:String>Passaporto</x:String>
                         <x:String>Patente di guida</x:String>
                     </Picker.Items>
                 </Picker>
+                
                 <Label Text="Numero del documento"/>
-                <Entry>
+                <Entry Text="{Binding DocumentNumber, Mode=TwoWay}">
                     <Entry.Effects>
                         <effects:EntryCapitalizeKeyboard />
                         <effects:EntryClear />
                     </Entry.Effects>
                 </Entry>
+                
                 <Label Text="Data"/>
-                <DatePicker HorizontalOptions="Start" />
+                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentIssue, Mode=TwoWay}"/>
+                
                 <Label Text="Scadenza"/>
-                <DatePicker HorizontalOptions="Start" />
+                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentExpiry, Mode=TwoWay}"/>
+                
                 <Label Text="File"/>
                 <StackLayout Orientation="Horizontal">
-                    <Button Text="Carica..."/>
-                    <Button Text="Foto" />
+                    <Button Text="Carica..." Command="{Binding ImageGalleryCommand}"/>
+                    <Button Text="Foto" Command="{Binding ImageCameraCommand}" IsVisible="{Binding HasCamera, Mode=TwoWay}"/>
                 </StackLayout>
             </StackLayout>
 
-            <Button Text="Avanti" Grid.Row="2" HorizontalOptions="Center"/>
+            <Button Text="Avanti" Grid.Row="2" HorizontalOptions="Center" Command="{Binding AddDocumentCommand}"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

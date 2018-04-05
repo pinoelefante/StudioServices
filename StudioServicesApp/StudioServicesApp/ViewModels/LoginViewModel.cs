@@ -27,7 +27,7 @@ namespace StudioServicesApp.ViewModels
             return Task.Factory.StartNew(async () =>
             {
                 RequireLogin = false;
-                var busy = SetBusy(true, "Verifico accesso in corso");
+                //var busy = SetBusy(true, "Verifico accesso in corso");
                 var message = await SendRequestAsync(() => api.Authentication_IsLoggedAsync());
                 bool login_ok = message.Code == ResponseCode.OK && message.Data;
 
@@ -39,7 +39,7 @@ namespace StudioServicesApp.ViewModels
                         login_ok = res.Code == ResponseCode.OK && res.Data;
                     });
                 }
-                SetBusy(false, "", busy);
+                //SetBusy(false, "", busy);
                 RequireLogin = !login_ok;
                 if(login_ok)
                 {

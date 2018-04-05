@@ -67,6 +67,7 @@ namespace StudioServicesApp.ViewModels
         public RegisterViewModel RegisterViewModel => GetService<RegisterViewModel>();
         public NewsPageViewModel NewsPageViewModel => GetService<NewsPageViewModel>();
         public ViewMessageViewModel ViewMessageViewModel => GetService<ViewMessageViewModel>();
+        public AddIdentificationDocumentViewModel AddIdentificationDocumentViewModel => GetService<AddIdentificationDocumentViewModel>();
 
         public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();
     }

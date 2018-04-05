@@ -133,6 +133,10 @@ namespace StudioServicesApp.Services
                 return null;
             return response;
         }
+        public bool HasCookie(string name, string url)
+        {
+            return GetCookie(name, url) != null;
+        }
         public string GetCookie(string name, string url)
         {
             var cookies = cookieContainer.GetCookies(new Uri(url));
