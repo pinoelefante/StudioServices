@@ -18,7 +18,7 @@ namespace StudioServicesApp.ViewModels
         public bool IsAdmin { get => _isAdmin; set => SetMT(ref _isAdmin, value); }
         public bool VerifyPersonEnabled { get; set; } = true;
 
-        public MyAuthViewModel(INavigationService n, StudioServicesApi a) : base(n, a) { }
+        public MyAuthViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al) { }
 
         public override Task NavigatedToAsync(object parameter = null)
         {
@@ -33,9 +33,10 @@ namespace StudioServicesApp.ViewModels
         {
             if (cache.GetValue<Person>("person", null) == null)
             {
-                var progress = SetBusy(true, "Recupero profilo in corso");
+                var busy_message = "Recupero profilo in corso";
+                SetBusy(true, busy_message);
                 var res = await SendRequestAsync(async () => await api.Person_GetAsync());
-                SetBusy(false, null, progress);
+                SetBusy(false, busy_message);
                 if (res.Code == ResponseCode.OK && res.Data != null)
                     cache.SetValue("person", res.Data);
                 else

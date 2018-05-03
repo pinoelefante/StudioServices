@@ -36,6 +36,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<ISQLite>(() => sqlite);
             SimpleIoc.Default.Register<DatabaseService>();
             SimpleIoc.Default.Register<ConnectionStatus>();
+            SimpleIoc.Default.Register<AlertService>();
 
             SimpleIoc.Default.Register<MyMasterDetailViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();

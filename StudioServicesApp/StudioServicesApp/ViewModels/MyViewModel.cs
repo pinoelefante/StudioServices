@@ -24,42 +24,25 @@ namespace pinoelefante.ViewModels
         protected NavigationService navigation;
         protected CacheManager cache = ViewModelLocator.GetService<CacheManager>();
         protected StudioServicesApi api;
-        public MyViewModel(INavigationService n, StudioServicesApi a)
+        protected AlertService messageService;
+        public MyViewModel(INavigationService n, StudioServicesApi a, AlertService alert)
         {
             navigation = n as NavigationService;
             api = a;
+            messageService = alert;
         }
         private bool busyActive;
         public bool IsBusyActive { get => busyActive; set => SetMT(ref busyActive, value); }
         
-        public IProgressDialog SetBusy(bool status, string text = "Attendere...", IProgressDialog progress = null)
+        public void SetBusy(bool status, string text)
         {
-            IsBusyActive = status;
-            IProgressDialog dialog = null;
-            if (status)
-            {
-                dialog = UserDialogs.Instance.Loading(text ?? "");
-                Task.Factory.StartNew(async () =>
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(15));
-                    if (dialog != null && dialog.IsShowing)
-                    {
-                        Debug.WriteLine("La schermata di caricamento ha impiegato troppo tempo a chiudersi");
-                        dialog.Hide();
-                    }
-                });
-            }
-            else
-            {
-                if (progress != null)
-                    progress.Hide();
-            }
-            return dialog;
+            messageService.SetBusy(text, status);
         }
         
         public void ShowMessage(string message, string title = "")
         {
-            UserDialogs.Instance.Alert(message, title);
+            messageService.ShowMessage(message, title);
+            // UserDialogs.Instance.Alert(message, title);
         }
         public void ShowToast(string message, int seconds = 3)
         {

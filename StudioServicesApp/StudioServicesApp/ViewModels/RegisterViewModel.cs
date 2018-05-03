@@ -14,7 +14,7 @@ namespace StudioServicesApp.ViewModels
 {
     public class RegisterViewModel : MyViewModel
     {
-        public RegisterViewModel(INavigationService n, StudioServicesApi a) : base(n, a) { }
+        public RegisterViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al) { }
         private bool _isCliente = true;
         private RelayCommand _registerCmd;
 

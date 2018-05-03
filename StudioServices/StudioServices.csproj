@@ -51,6 +51,7 @@
     <Compile Include="Controllers\Utils\StringUtils.cs" />
     <Compile Include="Data\Accounting\Company.cs" />
     <Compile Include="Data\Accounting\Invoice.cs" />
+    <Compile Include="Data\Accounting\InvoiceDetail.cs" />
     <Compile Include="Data\Items\PayableItem.cs" />
     <Compile Include="Data\Items\ItemRequest.cs" />
     <Compile Include="Data\Newsboard\Message.cs" />

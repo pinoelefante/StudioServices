@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
+using StudioServicesApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,10 +15,7 @@ namespace StudioServicesApp.ViewModels
 {
     public class MyMasterDetailViewModel : MyViewModel
     {
-        public MyMasterDetailViewModel(INavigationService n, StudioServicesApp.Services.StudioServicesApi a) : base(n, a)
-        {
-            
-        }
+        public MyMasterDetailViewModel(INavigationService n, StudioServicesApp.Services.StudioServicesApi a, AlertService al) : base(n, a, al) { }
         public void Navigate(string pageKey)
         {
             navigation.NavigateTo(pageKey);

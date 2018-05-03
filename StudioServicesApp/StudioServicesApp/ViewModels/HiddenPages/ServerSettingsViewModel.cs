@@ -11,9 +11,7 @@ namespace StudioServicesApp.ViewModels.HiddenPages
 {
     public class ServerSettingsViewModel : MyViewModel
     {
-        public ServerSettingsViewModel(INavigationService n, StudioServicesApi a) : base(n, a)
-        {
-        }
+        public ServerSettingsViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al) { }
         public override Task NavigatedToAsync(object parameter = null)
         {
             string server_addr = api.GetServerAddress();

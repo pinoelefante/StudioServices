@@ -15,7 +15,7 @@ namespace StudioServicesApp.ViewModels
 {
     public class LoginViewModel : MyViewModel
     {
-        public LoginViewModel(INavigationService n, StudioServicesApi a) : base(n, a)
+        public LoginViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al)
         {
 
         }
@@ -26,20 +26,23 @@ namespace StudioServicesApp.ViewModels
 
             return Task.Factory.StartNew(async () =>
             {
+                var busy_message = "Verifico accesso in corso";
+                SetBusy(true, busy_message);
+
                 RequireLogin = false;
-                //var busy = SetBusy(true, "Verifico accesso in corso");
-                var message = await SendRequestAsync(() => api.Authentication_IsLoggedAsync());
-                bool login_ok = message.Code == ResponseCode.OK && message.Data;
+                
+                var isLoggedResponse = await SendRequestAsync(() => api.Authentication_IsLoggedAsync());
+                bool login_ok = isLoggedResponse.Code == ResponseCode.OK && isLoggedResponse.Data;
 
                 if (!login_ok && !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
                 {
                     await Task.Run(async () =>
                     {
-                        var res = await SendRequestAsync(async () => await api.Authentication_LoginAsync(Username, Password));
-                        login_ok = res.Code == ResponseCode.OK && res.Data;
+                        var loginResponse = await SendRequestAsync(async () => await api.Authentication_LoginAsync(Username, Password));
+                        login_ok = loginResponse.Code == ResponseCode.OK && loginResponse.Data;
                     });
                 }
-                //SetBusy(false, "", busy);
+                SetBusy(false, busy_message);
                 RequireLogin = !login_ok;
                 if(login_ok)
                 {
@@ -72,13 +75,14 @@ namespace StudioServicesApp.ViewModels
                     ShowMessage("Inserire la password", "Login");
                     return;
                 }
-                var progress = SetBusy(true, "Accesso in corso...");
+                var busy_message = "Accesso in corso...";
+                SetBusy(true, busy_message);
                 var res = await SendRequestAsync(async () => await api.Authentication_LoginAsync(Username, Password));
                 if (res.Code == ResponseCode.OK && res.Data)
                     App.Current.MainPage = new MyMasterPage();
                 else
                     ShowMessage(res.Message, "Login fallito");
-                SetBusy(false, "", progress);
+                SetBusy(false, busy_message);
             }));
         public RelayCommand OpenRegisterPageCommand =>
             _registerPageCmd ?? (_registerPageCmd = new RelayCommand(() =>

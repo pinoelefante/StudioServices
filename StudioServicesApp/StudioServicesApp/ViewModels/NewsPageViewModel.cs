@@ -17,7 +17,7 @@ namespace StudioServicesApp.ViewModels
     public class NewsPageViewModel : MyAuthViewModel
     {
         private DatabaseService db;
-        public NewsPageViewModel(INavigationService n, StudioServicesApi a, DatabaseService d) : base(n, a)
+        public NewsPageViewModel(INavigationService n, StudioServicesApi a, DatabaseService d, AlertService al) : base(n, a, al)
         {
             db = d;
             Newsboard = new ObservableCollection<Message>();
@@ -79,8 +79,8 @@ namespace StudioServicesApp.ViewModels
 
             if (!canUpdate & !force)
                 return;
-
-            var progress_news = SetBusy(true, "Recupero le ultime news");
+            var busy_message = "Recupero le ultime news";
+            SetBusy(true, busy_message);
             // get ticks from first message
             var last_ticks = Newsboard.Count > 0 ? Newsboard[0].CreationTime.Ticks : 0;
             if (Newsboard.Count == 0) // init Newsboard
@@ -112,7 +112,7 @@ namespace StudioServicesApp.ViewModels
                         Newsboard.Insert(i, res.Data[i]);
                 });
             }
-            SetBusy(false, null, progress_news);
+            SetBusy(false, busy_message);
         }
         private void SetRead()
         {

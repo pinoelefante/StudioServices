@@ -34,7 +34,7 @@ namespace StudioServicesApp.ViewModels
         public bool IsImageLoaded { get => _imageLoaded; set => SetMT(ref _imageLoaded, value); }
         public string FileExtension { get => _fileExt; set => SetMT(ref _fileExt, value); }
 
-        public AddIdentificationDocumentViewModel(INavigationService n, StudioServicesApi a) : base(n, a) { }
+        public AddIdentificationDocumentViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al) { }
         public override Task NavigatedToAsync(object parameter = null)
         {
             Reset();
@@ -62,14 +62,14 @@ namespace StudioServicesApp.ViewModels
                 var storageStatus = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);
                 if (storageStatus != PermissionStatus.Granted)
                 {
-                    UserDialogs.Instance.Alert("Per poter continuare è necessario fornire i permessi di storage", "Storage");
+                    ShowMessage("Per poter continuare è necessario fornire i permessi di storage", "Storage");
                     return;
                 }
 
                 var mediaInit = await CrossMedia.Current.Initialize();
                 if (!mediaInit)
                 {
-                    UserDialogs.Instance.Alert("Impossibile inizializzare la galleria");
+                    ShowMessage("Impossibile inizializzare la galleria");
                     return;
                 }
                 var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions()
@@ -102,25 +102,25 @@ namespace StudioServicesApp.ViewModels
                 var cameraStatus = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Camera);
                 if(cameraStatus != PermissionStatus.Granted)
                 {
-                    UserDialogs.Instance.Alert("Per poter continuare è necessario fornire i permessi alla fotocamera", "Fotocamera");
+                    ShowMessage("Per poter continuare è necessario fornire i permessi alla fotocamera", "Fotocamera");
                     return;
                 }
                 var storageStatus = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);
                 if(storageStatus != PermissionStatus.Granted)
                 {
-                    UserDialogs.Instance.Alert("Per poter continuare è necessario fornire i permessi di storage", "Storage");
+                    ShowMessage("Per poter continuare è necessario fornire i permessi di storage", "Storage");
                     return;
                 }
 
                 var mediaInit = await CrossMedia.Current.Initialize();
                 if(!mediaInit)
                 {
-                    UserDialogs.Instance.Alert("Impossibile inizializzare la fotocamera");
+                    ShowMessage("Impossibile inizializzare la fotocamera");
                     return;
                 }
                 if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
                 {
-                    UserDialogs.Instance.Alert("No Camera", ":( No camera available.", "OK");
+                    ShowMessage("No Camera", "No camera available.\n:(");
                     return;
                 }
 
