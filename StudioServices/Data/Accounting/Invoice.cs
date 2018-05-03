@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StudioServices.Data.Accounting
 {
-    public class Invoice : PersonReference
+    public class Invoice : DataFile
     {
         public int Sender { get; set; }
         public int Recipient { get; set; }
@@ -17,6 +17,7 @@ namespace StudioServices.Data.Accounting
         public int Number { get; set; }
         public string NumberExtra { get; set; }
         public double Transport { get; set; }
+        public string Note { get; set; }
         public List<InvoiceDetail> InvoiceDetails { get; } = new List<InvoiceDetail>();
     }
     public enum InvoiceType

@@ -12,6 +12,8 @@
             <converters:ItemTappedEventArgsConverter x:Key="ItemTappedConverter" />
             <converters:DateTimeStringConverter x:Key="DateTimeString"/>
 
+            <converters:IntEqualsConverter x:Key="IntEquals"/>
+
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="PrimaryDark">#1976D2</Color>
             <Color x:Key="Accent">#96d1ff</Color>

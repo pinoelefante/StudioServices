@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="StudioServicesApp.Views.InvoiceCreationHome">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Picker Grid.Row="0" x:Name="InvoiceType">
+                <Picker.Items>
+                    <x:String>Vendita</x:String>
+                    <x:String>Acquisto</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <Label Grid.Row="1" Text="Clienti" FontAttributes="Bold" HorizontalOptions="Center" BindingContext="{x:Reference InvoiceType}" IsVisible="{Binding Path=SelectedIndex, Converter={StaticResource IntEquals}, ConverterParameter=0}"/>
+            <Label Grid.Row="1" Text="Fornitori" FontAttributes="Bold" HorizontalOptions="Center" BindingContext="{x:Reference InvoiceType}" IsVisible="{Binding Path=SelectedIndex, Converter={StaticResource IntEquals}, ConverterParameter=1}"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
