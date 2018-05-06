@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,31 @@ namespace pinoelefante.Views
             if (ViewModel!=null)
                 return ViewModel.OnBackPressed();
             return false;
+        }
+        protected void Entry_CheckInt(object sender, TextChangedEventArgs e)
+        {
+            var entry = sender as Entry;
+            if (entry == null)
+            {
+                Debug.WriteLine("Entry_CheckInt - sender is not an entry");
+                return;
+            }
+            if (string.IsNullOrEmpty(e.NewTextValue))
+                return;
+            // Debug.WriteLine($"Entry_CheckInt: OldValue={e.OldTextValue}; NewValue={e.NewTextValue}");
+            if (!Int32.TryParse(e.NewTextValue, out int newValue))
+                entry.Text = string.IsNullOrEmpty(e.OldTextValue) ? "" : e.OldTextValue;
+        }
+        protected void ListView_ItemSelectionDisable(object sender, SelectedItemChangedEventArgs e)
+        {
+            var listView = (sender as ListView);
+            if (listView != null)
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    listView.SelectedItem = null;
+                });
+            }
         }
     }
 }

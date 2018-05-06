@@ -11,8 +11,8 @@
             <converters:NotBoolean x:Key="NotBoolean"/>
             <converters:ItemTappedEventArgsConverter x:Key="ItemTappedConverter" />
             <converters:DateTimeStringConverter x:Key="DateTimeString"/>
-
             <converters:IntEqualsConverter x:Key="IntEquals"/>
+            <converters:IntGreaterThan x:Key="IntGreater"/>
 
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="PrimaryDark">#1976D2</Color>
@@ -30,6 +30,14 @@
             <Style TargetType="Label">
                 <Setter Property="TextColor" Value="Red" />
                 <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Style.Triggers>
+                    <Trigger  TargetType="Entry" Property="IsFocused" Value="True">
+                        <Setter Property="BackgroundColor" Value="Yellow" />
+                    </Trigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

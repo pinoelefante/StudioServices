@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
-using SQLite;
+﻿using SQLite;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +16,7 @@ namespace StudioServices.Data.Newsboard
         public DateTime ExpireDate { get; set; }
         public bool IsMarked { get; set; }
         public int SenderId { get; set; }
-        
+
         [Ignore]
         public string ShortContent
         {
@@ -29,6 +27,7 @@ namespace StudioServices.Data.Newsboard
             }
         }
         private bool _readStatus;
+        [Ignore]
         public bool IsRead { get => _readStatus; set { Set(ref _readStatus, value); } }
     }
 }

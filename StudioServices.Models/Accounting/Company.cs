@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace StudioServices.Data.Accounting
 {
-    public class Invoice
+    public class Company : DataFile
     {
+        public string Name { get; set; }
+        public string VATNumber { get; set; }
+        public string Address { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using pinoelefante.Views;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,16 +11,14 @@ using Xamarin.Forms.Xaml;
 namespace StudioServicesApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class InvoiceCreationHome : MyContentPage
+	public partial class InvoiceCreationDetails : MyContentPage
 	{
-		public InvoiceCreationHome ()
+		public InvoiceCreationDetails ()
 		{
 			InitializeComponent ();
 		}
-
-        private void Entry_Completed(object sender, EventArgs e)
+        protected override void OnAppearing()
         {
-            Debug.WriteLine("Entry completed");
         }
     }
 }

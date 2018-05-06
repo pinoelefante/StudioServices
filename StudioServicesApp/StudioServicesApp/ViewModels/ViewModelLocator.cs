@@ -22,7 +22,9 @@ namespace StudioServicesApp.ViewModels
             NEWS_PAGE = "NewsPage",
             REGISTER_PAGE = "RegisterPage",
             VIEW_MESSAGE_PAGE = "ViewMessagePage",
-            ADD_IDENTIFICATION_DOC_PAGE = "AddIdentificationDocPage";
+            ADD_IDENTIFICATION_DOC_PAGE = "AddIdentificationDocPage",
+            INVOICE_CREATION_HOME = "InvoiceCreationHomePage",
+            INVOICE_CREATION_DETAILS = "InvoiceCreationDetailsPage";
 
         public const string SERVER_SETTINGS = "ServerSettingsPage";
 
@@ -44,6 +46,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<NewsPageViewModel>();
             SimpleIoc.Default.Register<ViewMessageViewModel>();
             SimpleIoc.Default.Register<AddIdentificationDocumentViewModel>();
+            SimpleIoc.Default.Register<InvoiceCreationViewModel>();
 
             SimpleIoc.Default.Register<ServerSettingsViewModel>();
 
@@ -56,6 +59,8 @@ namespace StudioServicesApp.ViewModels
             NavigationService.Configure(REGISTER_PAGE, typeof(RegisterPage));
             NavigationService.Configure(VIEW_MESSAGE_PAGE, typeof(ViewMessagePage));
             NavigationService.Configure(ADD_IDENTIFICATION_DOC_PAGE, typeof(AddIdentificationDocumentPage));
+            NavigationService.Configure(INVOICE_CREATION_HOME, typeof(InvoiceCreationHome));
+            NavigationService.Configure(INVOICE_CREATION_DETAILS, typeof(InvoiceCreationDetails));
 
             NavigationService.Configure(SERVER_SETTINGS, typeof(ServerSettings));
         }
@@ -69,6 +74,7 @@ namespace StudioServicesApp.ViewModels
         public NewsPageViewModel NewsPageViewModel => GetService<NewsPageViewModel>();
         public ViewMessageViewModel ViewMessageViewModel => GetService<ViewMessageViewModel>();
         public AddIdentificationDocumentViewModel AddIdentificationDocumentViewModel => GetService<AddIdentificationDocumentViewModel>();
+        public InvoiceCreationViewModel InvoiceCreationViewModel => GetService<InvoiceCreationViewModel>();
 
         public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();
     }

@@ -37,7 +37,7 @@
                 <DatePicker HorizontalOptions="Start" Date="{Binding DocumentIssue, Mode=TwoWay}"/>
                 
                 <Label Text="Scadenza"/>
-                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentExpiry, Mode=TwoWay}"/>
+                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentExpiry, Mode=TwoWay}" MaximumDate="{Binding x:Static sys.DateTime.Now}"/>
                 
                 <Label Text="File"/>
                 <StackLayout Orientation="Horizontal">

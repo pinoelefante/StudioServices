@@ -1,25 +1,143 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="StudioServicesApp.Views.InvoiceCreationHome">
+<views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                     x:Class="StudioServicesApp.Views.InvoiceCreationHome"
+                     xmlns:views="clr-namespace:pinoelefante.Views"
+                     xmlns:sys="clr-namespace:System;assembly=netstandard"
+                     xmlns:effects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
+                     Title="Creazione fattura"
+                     BindingContext="{Binding InvoiceCreationViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
-        <Grid>
+        <Grid Padding="5">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <!-- Header -->
+            <Grid Grid.Row="0" Padding="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-            <Picker Grid.Row="0" x:Name="InvoiceType">
-                <Picker.Items>
-                    <x:String>Vendita</x:String>
-                    <x:String>Acquisto</x:String>
-                </Picker.Items>
-            </Picker>
+                <Label Grid.Row="0" Grid.Column="0" Text="Azienda" VerticalOptions="Center"/>
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Picker Grid.Column="0" ItemsSource="{Binding MyCompanies}" SelectedItem="{Binding SelectedMyCompany, Mode=TwoWay}" ItemDisplayBinding="{Binding Name}"/>
+                    <Button Grid.Column="1" Text="R" Command="{Binding ReloadMyCompaniesCommand}" />
+                </Grid>
 
-            <Label Grid.Row="1" Text="Clienti" FontAttributes="Bold" HorizontalOptions="Center" BindingContext="{x:Reference InvoiceType}" IsVisible="{Binding Path=SelectedIndex, Converter={StaticResource IntEquals}, ConverterParameter=0}"/>
-            <Label Grid.Row="1" Text="Fornitori" FontAttributes="Bold" HorizontalOptions="Center" BindingContext="{x:Reference InvoiceType}" IsVisible="{Binding Path=SelectedIndex, Converter={StaticResource IntEquals}, ConverterParameter=1}"/>
+                <Label Grid.Row="1" Grid.Column="0" Text="Tipo di fattura" VerticalOptions="Center"/>
+                <Picker Grid.Row="1" Grid.Column="1" x:Name="InvoiceType" SelectedIndex="{Binding SelectedIndexInvoiceType, Mode=TwoWay}">
+                    <Picker.Items>
+                        <x:String>Vendita</x:String>
+                        <x:String>Acquisto</x:String>
+                    </Picker.Items>
+                </Picker>
+
+                <Label Grid.Row="2" Grid.Column="0" Text="Data" VerticalOptions="Center"/>
+                <DatePicker Grid.Row="2" Grid.Column="1" HorizontalOptions="Start" Date="{Binding InvoiceDate, Mode=TwoWay}" MaximumDate="{x:Static sys:DateTime.Now}">
+                    <DatePicker.Format>dd-MM-yyyy</DatePicker.Format>
+                    <DatePicker.MinimumDate>
+                        <sys:DateTime x:FactoryMethod="Parse">
+                            <x:Arguments>
+                                <x:String>Jan 1 2018</x:String>
+                            </x:Arguments>
+                        </sys:DateTime>
+                    </DatePicker.MinimumDate>
+                </DatePicker>
+
+                <Label Grid.Row="3" Grid.Column="0" Text="Numero fattura" VerticalOptions="Center"/>
+                <Grid Grid.Row="3" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="70*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="30*"/>
+                    </Grid.ColumnDefinitions>
+                    <Entry Grid.Column="0" Text="{Binding InvoiceNumberText, Mode=TwoWay}" Keyboard="Numeric" HorizontalTextAlignment="End" TextChanged="Entry_CheckInt">
+                        <Entry.Effects>
+                            <!-- <effects:EntryCapitalizeKeyboard /> -->
+                            <!--<effects:EntryClear />-->
+                        </Entry.Effects>
+                    </Entry>
+                    <Label Grid.Column="1" Text="/" VerticalOptions="End"/>
+                    <Entry Grid.Column="2" Text="{Binding InvoiceNumberExtraText, Mode=TwoWay}" HorizontalTextAlignment="Center">
+                        
+                        <Entry.Effects>
+                            <effects:EntryCapitalizeKeyboard />
+                            <!-- <effects:EntryClear /> -->
+                        </Entry.Effects>
+                        
+                    </Entry>
+                </Grid>
+            </Grid>
+            
+            <!-- Lista aziende -->
+            <Label Grid.Row="1" FontAttributes="Bold" HorizontalOptions="Center">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding SelectedIndexInvoiceType}" Value="0">
+                        <Setter Property="Text" Value="Clienti"/>
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label" Binding="{Binding SelectedIndexInvoiceType}" Value="1">
+                        <Setter Property="Text" Value="Fornitori"/>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+            <SearchBar Grid.Row="2" Placeholder="Cerca per ragione sociale o partita iva"/>
+
+            <ListView Grid.Row="3" ItemsSource="{Binding CompanyList}" SelectedItem="{Binding SelectedCompany, Mode=TwoWay}">
+                <ListView.Header>
+                    <Grid Padding="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="Ragione sociale" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="P.IVA" FontAttributes="Bold" HorizontalOptions="End"/>
+                    </Grid>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Text="{Binding Name}"/>
+                                <Label Grid.Column="1" Text="{Binding VATNumber}" HorizontalOptions="End"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+            <!-- Buttons -->
+            <StackLayout Grid.Row="4">
+                <Button Text="Avanti" Command="{Binding NextInvoicePageCommand}" CommandParameter="invoice_details">
+                    <Button.Triggers>
+                        <MultiTrigger TargetType="Button">
+                            <MultiTrigger.Conditions>
+                                
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiTrigger>
+                    </Button.Triggers>
+                </Button>
+            </StackLayout>
         </Grid>
     </ContentPage.Content>
-</ContentPage>
+</views:MyContentPage>
