@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using StudioServices.Data.Newsboard;
 using StudioServices.Data.Items;
 using StudioServices.Data.Payment;
+using StudioServices.Data.Accounting;
+using StudioServices.Models.Accounting;
 
 namespace StudioServices.Controllers.Utils
 {
@@ -26,6 +28,10 @@ namespace StudioServices.Controllers.Utils
                 // connection.Execute("PRAGMA foreign_keys = ON");
 
                 /* Accounting */
+                connection.CreateTable<Company>();
+                connection.CreateTable<CompanyProduct>();
+                connection.CreateTable<Invoice>();
+                connection.CreateTable<InvoiceDetail>();
                 
                 /* Items */
                 connection.CreateTable<PayableItem>();

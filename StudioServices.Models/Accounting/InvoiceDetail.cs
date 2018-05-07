@@ -2,7 +2,6 @@
 {
     public class InvoiceDetail
     {
-        public int InvoiceId { get; set; }
         public int ProductId { get; set; }
         public double UnitPrice { get; set; }
         public float Quantity { get; set; }

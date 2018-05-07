@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StudioServices.Controllers.Accounting;
 using StudioServices.Controllers.Items;
 using StudioServices.Controllers.Newsboard;
 using StudioServices.Controllers.Persons;
@@ -36,6 +37,7 @@ namespace StudioServicesWeb
             services.AddSingleton<PersonsManager>();
             services.AddSingleton<ItemsManager>();
             services.AddSingleton<NewsboardManager>();
+            services.AddSingleton<WarehouseManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

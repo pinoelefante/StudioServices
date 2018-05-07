@@ -93,6 +93,6 @@ namespace StudioServicesApp.ViewModels
             }));
         public RelayCommand ReloadMyCompaniesCommand => null;
 
-        public MyObservableCollection<string> InvoiceDetails { get; } = new MyObservableCollection<string>() { "Mele", "Pere", "Banane" };
+        public MyObservableCollection<string> InvoiceDetails { get; } = new MyObservableCollection<string>();
     }
 }

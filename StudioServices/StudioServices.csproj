@@ -37,6 +37,8 @@
     <Folder Include="Services\UMA\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Accounting\WarehouseDatabase.cs" />
+    <Compile Include="Controllers\Accounting\WarehouseManager.cs" />
     <Compile Include="Controllers\Items\ItemsDatabase.cs" />
     <Compile Include="Controllers\Items\ItemsManager.cs" />
     <Compile Include="Controllers\Newsboard\NewsboardManager.cs" />

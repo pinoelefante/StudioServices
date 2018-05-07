@@ -7,6 +7,9 @@
              xmlns:effects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
              Title="Creazione fattura - Dettagli"
              BindingContext="{Binding InvoiceCreationViewModel, Source={StaticResource Locator}}">
+    <views:MyContentPage.ToolbarItems>
+        <ToolbarItem Text="Aggiungi" Icon="add_icon.png" Command="{Binding OpenAddInvoiceDetailCommand}"/>
+    </views:MyContentPage.ToolbarItems>
     <Grid Padding="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
