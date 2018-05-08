@@ -61,7 +61,7 @@ namespace StudioServices.Controllers.Accounting
         }
         public Company GetCompany(int company_id)
         {
-
+            return db.GetCompanyById(company_id);
         }
         public bool SaveProduct(int companyId, int personId, string productName, double unitPrice = 1.0, InvoiceQuantity unitMeasure = InvoiceQuantity.PZ, double tax = 22.0, double quantity = 0, string productCode = null, int id = 0)
         {
