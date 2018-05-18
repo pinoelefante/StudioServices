@@ -1,5 +1,6 @@
 ﻿using Acr.UserDialogs;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.Services;
 using Plugin.SecureStorage;
@@ -161,5 +162,37 @@ namespace pinoelefante.ViewModels
                 RaisePropertyChanged(fieldName, old_value, value);
             });
         }
+        public string IntValidation(string oldValue, string newValue, bool allowEmpty=true, int? ifEmptyValue=null)
+        {
+            if (string.IsNullOrEmpty(newValue?.Trim()))
+            {
+                if (allowEmpty || ifEmptyValue == null)
+                    return string.Empty;
+                else
+                    return ifEmptyValue.ToString();
+            }
+            if (Int32.TryParse(newValue, out int intValue))
+                return newValue;
+            return oldValue;
+        }
+        public string StringValidation(string oldValue, string newValue, int maxLen, Func<string, bool> validationFunc = null)
+        {
+            if (string.IsNullOrEmpty(newValue))
+                return string.Empty;
+            if (maxLen > 0 && newValue.Length > maxLen)
+                return oldValue;
+            if (validationFunc != null && !validationFunc(newValue))
+                return oldValue;
+            return newValue;
+        }
+        private RelayCommand<FocusEventArgs> entryIntUnfocused;
+        public RelayCommand<FocusEventArgs> EntryIntUnfocused =>
+            entryIntUnfocused ?? 
+            (entryIntUnfocused = new RelayCommand<FocusEventArgs>((eventArgs) =>
+            {
+                var entry = eventArgs.VisualElement as Entry;
+                if (entry != null && string.IsNullOrEmpty(entry.Text?.Trim()))
+                    entry.Text = "0";
+            }));
     }
 }

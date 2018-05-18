@@ -49,8 +49,8 @@ namespace StudioServicesApp.ViewModels
         public Company SelectedCompany { get => selectedCompany; set => SetMT(ref selectedCompany, value); }
         public MyObservableCollection<Company> MyCompanies { get; } = new MyObservableCollection<Company>() { new Company() { Name = "Azienda di prova", VATNumber = "0123456789" } };
         public MyObservableCollection<Company> CompanyList { get; } = new MyObservableCollection<Company>();
-        public string InvoiceNumberText { get => invoiceNumberText; set => SetMT(ref invoiceNumberText, value); }
-        public string InvoiceNumberExtraText { get => invoiceNumberTextExtra; set => SetMT(ref invoiceNumberTextExtra, value); }
+        public string InvoiceNumberText { get => invoiceNumberText; set => SetMT(ref invoiceNumberText, IntValidation(invoiceNumberText, value)); }
+        public string InvoiceNumberExtraText { get => invoiceNumberTextExtra; set => SetMT(ref invoiceNumberTextExtra, StringValidation(InvoiceNumberExtraText, value, 5)); }
 
         private List<Company> fullListSell, fullListPurchase;
         private void PopulateCompanyList(InvoiceType invoiceType)
@@ -80,19 +80,31 @@ namespace StudioServicesApp.ViewModels
         {
 
         }
+        private int GetNextInvoiceNumber()
+        {
+            // TODO implement
+            return 1;
+        }
         public RelayCommand<string> NextInvoicePageCommand => nextPageCommand ??
             (nextPageCommand = new RelayCommand<string>((pageIndex) =>
             {
                 switch (pageIndex)
                 {
                     case "invoice_details":
+                        // TODO: verifica che il numero della fattura non esista
                         navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_DETAILS);
                         break;
                 }
                 Debug.WriteLine($"PageIndex: {pageIndex}");
             }));
         public RelayCommand ReloadMyCompaniesCommand => null;
-
+        private RelayCommand createMyNewCompanyCmd;
+        public RelayCommand CreateMyNewCompanyCommand =>
+            createMyNewCompanyCmd ??
+            (createMyNewCompanyCmd = new RelayCommand(() =>
+            {
+                navigation.NavigateTo(ViewModelLocator.INVOICE_ADD_MY_COMPANY);
+            }));
         public MyObservableCollection<string> InvoiceDetails { get; } = new MyObservableCollection<string>();
     }
 }

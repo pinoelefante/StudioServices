@@ -10,6 +10,11 @@ namespace StudioServices.Data.Registry
         public string CivicNumber { get; set; }
         public AddressType AddressType { get; set; }
         public string Description { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Street},{CivicNumber} {City} ({Province} - {Country})";
+        }
     }
     public enum AddressType
     {

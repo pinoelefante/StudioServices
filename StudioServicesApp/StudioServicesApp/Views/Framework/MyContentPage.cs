@@ -43,9 +43,14 @@ namespace pinoelefante.Views
             }
             if (string.IsNullOrEmpty(e.NewTextValue))
                 return;
-            // Debug.WriteLine($"Entry_CheckInt: OldValue={e.OldTextValue}; NewValue={e.NewTextValue}");
             if (!Int32.TryParse(e.NewTextValue, out int newValue))
                 entry.Text = string.IsNullOrEmpty(e.OldTextValue) ? "" : e.OldTextValue;
+        }
+        protected void Entry_UnfocusedInt(object sender, FocusEventArgs e)
+        {
+            var entry = sender as Entry;
+            if (entry != null && string.IsNullOrEmpty(entry.Text?.Trim()))
+                entry.Text = "0";
         }
         protected void ListView_ItemSelectionDisable(object sender, SelectedItemChangedEventArgs e)
         {

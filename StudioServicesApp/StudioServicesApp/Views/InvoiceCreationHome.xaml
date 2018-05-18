@@ -7,6 +7,9 @@
                      xmlns:effects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
                      Title="Creazione fattura"
                      BindingContext="{Binding InvoiceCreationViewModel, Source={StaticResource Locator}}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="add.png" Text="Aggiungi" Command="{Binding CreateMyNewCompanyCommand}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid Padding="5">
             <Grid.RowDefinitions>
@@ -66,7 +69,12 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="30*"/>
                     </Grid.ColumnDefinitions>
-                    <Entry Grid.Column="0" Text="{Binding InvoiceNumberText, Mode=TwoWay}" Keyboard="Numeric" HorizontalTextAlignment="End" TextChanged="Entry_CheckInt">
+                    <Entry Grid.Column="0" Text="{Binding InvoiceNumberText, Mode=TwoWay}" Keyboard="Numeric" HorizontalTextAlignment="End">
+                        <!--
+                        <Entry.Behaviors>
+                            <views:EventToCommandBehavior EventName="Unfocused" Command="{Binding EntryIntUnfocused}" CommandParameter="Unfocused event" />
+                        </Entry.Behaviors>
+                        -->
                         <Entry.Effects>
                             <!-- <effects:EntryCapitalizeKeyboard /> -->
                             <!--<effects:EntryClear />-->
