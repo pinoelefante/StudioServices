@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="add_icon.png" />
+    <Content Include="close_circle_button.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-100.png" />
     <Content Include="Assets\LockScreenLogo.scale-125.png" />
@@ -163,6 +164,9 @@
     </PackageReference>
     <PackageReference Include="Plugin.Permissions">
       <Version>2.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>1.1.4.158-pre</Version>
     </PackageReference>
     <PackageReference Include="sameerIOTApps.Plugin.SecureStorage">
       <Version>2.0.1</Version>

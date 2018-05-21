@@ -157,7 +157,12 @@ namespace StudioServicesApp.ViewModels
                 var res = await UserDialogs.Instance.ConfirmAsync($"Vuoi salvare il documento?\nNumero: {DocumentNumber}\nEmesso il {DocumentIssue.ToShortDateString()}", "Conferma inserimento", "Salva", "Annulla");
                 if (!res)
                     return;
-
+                var response = await SendRequestAsync(() => api.Person_AddDocumentAsync(DocumentIndex, DocumentNumber, DocumentIssue, DocumentExpiry, _imageData, FileExtension));
+                if (response.IsOK)
+                {
+                    await LoadPersonAsync(true);
+                    Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
+                }
             }));
         
     }

@@ -18,7 +18,7 @@ namespace StudioServicesApp.ViewModels
         public MyMasterDetailViewModel(INavigationService n, StudioServicesApp.Services.StudioServicesApi a, AlertService al) : base(n, a, al) { }
         public void Navigate(string pageKey)
         {
-            navigation.NavigateTo(pageKey);
+            Navigation.NavigateTo(pageKey);
         }
         public RelayCommand CloseMasterPage { get; set; }
 

@@ -57,7 +57,7 @@ namespace StudioServices.Controllers.Persons
             bool isUpdate = document.CreationTime.CompareTo(timestamp) < 0;
 
             // Salvataggio file e generazione nome
-            string filename = document.Filename ?? String.Format("%04d_%04d_%s", person_id, document_type, StringUtils.RandomString(), file_ext);
+            string filename = document.Filename ?? String.Format("{0:D4}_{1:D2}_{2}", person_id, document_type, StringUtils.RandomString(), file_ext);
             document.Filename = filename;
             if (FileUtils.WriteFile("", filename, file))
             {
@@ -109,7 +109,7 @@ namespace StudioServices.Controllers.Persons
             contact.SetAttivo(false);
             return db.SaveItem(contact);
         }
-        public bool AddAddress(int id_persona, int tipo_indirizzo, string nazione, string citta, string provincia, string indirizzo, string numero, string descrizione = null)
+        public bool AddAddress(int id_persona, int tipo_indirizzo, string nazione, string citta, string provincia, string indirizzo, string numero, string cap, string descrizione = null)
         {
             var address = db.AddressSelect(id_persona, indirizzo, numero, citta, provincia, nazione) ?? new Address();
             address.AddressType = (AddressType)Enum.ToObject(typeof(AddressType), tipo_indirizzo);
@@ -120,6 +120,7 @@ namespace StudioServices.Controllers.Persons
             address.PersonId = id_persona;
             address.Province = provincia;
             address.Street = indirizzo;
+            address.ZipCode = cap;
             address.SetAttivo(true);
 
             return db.SaveItem(address);

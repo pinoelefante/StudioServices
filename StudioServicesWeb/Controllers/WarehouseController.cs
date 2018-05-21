@@ -31,9 +31,9 @@ namespace StudioServicesWeb.Controllers.Warehouse
             bool res = manager.SaveProduct(companyId, _getPersonId(), productName, unitPrice, unit, tax, quantity, productCode, id);
             return CreateBoolean(res);
         }
-        [Route("products")]
+        [Route("products/{companyId}")]
         [HttpGet]
-        public Response<List<CompanyProduct>> GetProducts([FromQuery]int companyId, [FromQuery]bool all=false)
+        public Response<List<CompanyProduct>> GetProducts([FromRoute]int companyId, [FromQuery]bool all=false)
         {
             if (!_isLogged())
                 return CreateLoginRequired<List<CompanyProduct>>();
@@ -65,6 +65,23 @@ namespace StudioServicesWeb.Controllers.Warehouse
 
             var res = manager.SaveCompany(_getPersonId(), name, vat, addressId, out string message, id);
             return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL, message);
+        }
+        [Route("company")]
+        [HttpGet]
+        public Response<List<Company>> GetMyCompanies()
+        {
+            if (!_isLogged())
+                return CreateLoginRequired<List<Company>>();
+            return CreateResponse(manager.GetUserCompanies(_getPersonId()));
+        }
+        [Route("productcode_new")]
+        [HttpGet]
+        public Response<string> GenerateProductCode(string productName, int company)
+        {
+            if (!_isLogged())
+                return CreateLoginRequired<string>();
+            // TODO verifica azienda - person id
+            return CreateResponse(manager.GenerateProductCode(productName, company));
         }
     }
 }

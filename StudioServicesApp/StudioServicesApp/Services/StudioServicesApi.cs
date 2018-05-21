@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Plugin.SecureStorage;
 using SQLite;
+using StudioServices.Data.Accounting;
 using StudioServices.Data.Newsboard;
+using StudioServices.Models.Accounting;
 using StudioServices.Registry.Data;
 using System;
 using System.Collections.Generic;
@@ -186,11 +188,33 @@ namespace StudioServicesApp.Services
         #endregion
 
         #region Warehouse
-        public async Task<ResponseMessage<bool>> CreateCompanyAsync(string name, string vat, int address_id)
+        public async Task<ResponseMessage<bool>> Warehouse_SaveCompanyAsync(string name, string vat, int address_id, int company_id = 0)
         {
-            var address = $"{WS_ADDRESS}/api/company";
+            var address = $"{WS_ADDRESS}/api/warehouse/company/{(company_id > 0 ? company_id.ToString() : "")}";
             var parameters = new ParametersList("name",name,"vat",vat,"address_id",address_id);
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters, null, true);
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
+        }
+        public async Task<ResponseMessage<List<Company>>> Warehouse_GetMyCompaniesAsync()
+        {
+            var address = $"{WS_ADDRESS}/api/warehouse/company";
+            return await SendRequestAsync<List<Company>>(address, HttpMethod.GET);
+        }
+        public async Task<ResponseMessage<string>> Warehouse_GenerateProductCode(string productName, int companyId)
+        {
+            var address = $"{WS_ADDRESS}/api/warehouse/productcode_new";
+            var parameters = new ParametersList("productName", productName, "company", companyId);
+            return await SendRequestAsync<string>(address, HttpMethod.GET, parameters);
+        }
+        public async Task<ResponseMessage<List<CompanyProduct>>> Warehouse_GetCompanyProducts(int companyId)
+        {
+            var address = $"{WS_ADDRESS}/api/warehouse/products/{companyId}";
+            return await SendRequestAsync<List<CompanyProduct>>(address, HttpMethod.GET);
+        }
+        public async Task<ResponseMessage<bool>> Warehouse_SaveProduct(int companyId, string productName, double unitPrice, InvoiceQuantity unitMeasure, double tax, double quantity, string productCode, int productId=0)
+        {
+            var address = $"{WS_ADDRESS}/api/warehouse/product";
+            var parameters = new ParametersList("companyId", companyId, "productName", productName, "unitPrice", unitPrice, "unitMeasure", unitMeasure, "tax", tax, "quantity", quantity, "productCode", productCode, "id", productId);
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
         }
         #endregion
 
@@ -267,6 +291,7 @@ namespace StudioServicesApp.Services
                             runLaterQueue.Dequeue();
                             DeleteRequest(element);
                         }
+                        await Task.Delay(1000);
                     }
                 });
             }

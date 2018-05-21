@@ -1,4 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Views;
+using Rg.Plugins.Popup.Pages;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,7 +40,11 @@ namespace pinoelefante.Services
         public Action ExitAction { get; set; }
         public void GoBack()
         {
-            if (_navigation.Navigation.NavigationStack.Count > 1)
+            if(popupNavigation.PopupStack.Count > 0)
+            {
+                PopPopupAsync();
+            }
+            else if (_navigation.Navigation.NavigationStack.Count > 1)
             {
                 var taskNav = _navigation.PopAsync();
                 taskNav.ContinueWith((task) =>
@@ -96,7 +102,9 @@ namespace pinoelefante.Services
                     }
                     var page = constructor.Invoke(parameters) as Page;
                     var lastPage = _navigation.Navigation.NavigationStack.LastOrDefault();
-                    
+
+                    PopAllPopupAsync();
+
                     var task = _navigation.PushAsync(page);
                     task.ContinueWith((c) =>
                     {
@@ -132,8 +140,9 @@ namespace pinoelefante.Services
         }
         public void ClearBackstack()
         {
-            Device.BeginInvokeOnMainThread(() =>
+            Device.BeginInvokeOnMainThread(async () =>
             {
+                await PopAllPopupAsync();
                 var stack = _navigation.Navigation.NavigationStack.ToList();
                 for (int i = 0; i < stack.Count-1; i++)
                     _navigation.Navigation.RemovePage(stack[i]);
@@ -172,6 +181,37 @@ namespace pinoelefante.Services
                         break;
                 }
             }
+        }
+
+        private readonly Rg.Plugins.Popup.Contracts.IPopupNavigation popupNavigation = PopupNavigation.Instance;
+        public Task PushPopupAsync(PopupPage page, bool animate = true)
+        {
+            return popupNavigation.PushAsync(page, animate);
+        }
+        
+        public Task PopPopupAsync(bool animate = true)
+        {
+            if(popupNavigation.PopupStack.Any())
+                return popupNavigation.PopAsync(animate);
+            return Task.CompletedTask;
+        }
+        
+        public Task PopAllPopupAsync(bool animate = true)
+        {
+            return popupNavigation.PopAllAsync(animate);
+        }
+        public bool IsShowingPopup()
+        {
+            return popupNavigation.PopupStack.Any();
+        }
+        public bool IsShowingPopup(PopupPage popup)
+        {
+            foreach (var p in popupNavigation.PopupStack)
+            {
+                if (p == popup)
+                    return true;
+            }
+            return false;
         }
     }
 }

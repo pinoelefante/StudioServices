@@ -8,12 +8,13 @@ namespace StudioServices.Data.Registry
         public string Province { get; set; }
         public string Street { get; set; }
         public string CivicNumber { get; set; }
+        public string ZipCode { get; set; }
         public AddressType AddressType { get; set; }
         public string Description { get; set; }
 
         public override string ToString()
         {
-            return $"{Street},{CivicNumber} {City} ({Province} - {Country})";
+            return $"{Street},{CivicNumber}, {City} ({Province}) {Country}";
         }
     }
     public enum AddressType

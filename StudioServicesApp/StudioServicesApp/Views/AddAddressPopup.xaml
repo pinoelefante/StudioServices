@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popup:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                 x:Class="StudioServicesApp.Views.AddAddressPopup"
+                 BindingContext="{Binding AddAddressViewModel, Source={StaticResource Locator}}">
+    <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
+        <AbsoluteLayout>
+            <ContentView AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ClosePopupCommand}"/>
+                </ContentView.GestureRecognizers>
+                <Image x:Name="CloseImage" HeightRequest="30" WidthRequest="30" Source="close_circle_button.png" />
+            </ContentView>
+            <Frame Margin="15" HorizontalOptions="Center" BackgroundColor="White">
+                <Grid Padding="10,10,10,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Text="Tipo"/>
+                    <Picker Grid.Row="0" Grid.Column="1">
+                        <Picker.Items>
+                            <x:String>Casa</x:String>
+                            <x:String>Lavoro</x:String>
+                        </Picker.Items>
+                    </Picker>
+                    <Label Grid.Row="1" Text="Indirizzo"/>
+                    <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Address, Mode=TwoWay}" WidthRequest="200"/>
+                    <Label Grid.Row="2" Text="Numero" />
+                    <Entry Grid.Row="2" Grid.Column="1" Text="{Binding CivicNumber, Mode=TwoWay}" WidthRequest="200"/>
+                    <Label Grid.Row="3" Text="Città"/>
+                    <Entry Grid.Row="3" Grid.Column="1" Text="{Binding City, Mode=TwoWay}" WidthRequest="200"/>
+                    <Label Grid.Row="4" Text="Prov."/>
+                    <Entry Grid.Row="4" Grid.Column="1" Text="{Binding Province, Mode=TwoWay}" WidthRequest="200"/>
+                    <Label Grid.Row="5" Text="CAP"/>
+                    <Entry Grid.Row="5" Grid.Column="1" Text="{Binding ZIPCode, Mode=TwoWay}" WidthRequest="200"/>
+                    <Label Grid.Row="6" Text="Nazione"/>
+                    <Entry Grid.Row="6" Grid.Column="1" Text="{Binding Country, Mode=TwoWay}" WidthRequest="200" IsEnabled="False"/>
+                    <Label Grid.Row="7" Text="Note"/>
+                    <Entry Grid.Row="7" Grid.Column="1" Text="{Binding Description, Mode=TwoWay}" WidthRequest="200"/>
+                    
+                    <Button Grid.Row="8" Grid.ColumnSpan="2" Text="Aggiungi" Command="{Binding AddAddressCommand}"/>
+                </Grid>
+            </Frame>
+        </AbsoluteLayout>
+    </ScrollView>
+</popup:PopupPage>

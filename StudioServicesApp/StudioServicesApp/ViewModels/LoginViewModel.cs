@@ -96,12 +96,12 @@ namespace StudioServicesApp.ViewModels
                     MessengerInstance.Unregister<Tuple<string, string>>(this, "RegistrationComplete");
                     ShowMessage("Registrazione completata con successo.\nPotrebbero essere necessari fino a 2 giorni lavorativi affinché l'account sia attivo", "Registrazione completata");
                 });
-                navigation.NavigateTo(ViewModelLocator.REGISTER_PAGE);
+                Navigation.NavigateTo(ViewModelLocator.REGISTER_PAGE);
             }));
         public RelayCommand OpenServerSettings =>
             _serverCmd ?? (_serverCmd = new RelayCommand(() =>
             {
-                navigation.NavigateTo(ViewModelLocator.SERVER_SETTINGS);
+                Navigation.NavigateTo(ViewModelLocator.SERVER_SETTINGS);
             }));
     }
 }

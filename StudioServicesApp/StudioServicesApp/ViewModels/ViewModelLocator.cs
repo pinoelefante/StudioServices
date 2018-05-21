@@ -24,8 +24,7 @@ namespace StudioServicesApp.ViewModels
             VIEW_MESSAGE_PAGE = "ViewMessagePage",
             ADD_IDENTIFICATION_DOC_PAGE = "AddIdentificationDocPage",
             INVOICE_CREATION_HOME = "InvoiceCreationHomePage",
-            INVOICE_CREATION_DETAILS = "InvoiceCreationDetailsPage",
-            INVOICE_ADD_MY_COMPANY = "InvoiceAddMyCompany";
+            INVOICE_CREATION_DETAILS = "InvoiceCreationDetailsPage";
 
         public const string SERVER_SETTINGS = "ServerSettingsPage";
 
@@ -49,6 +48,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<AddIdentificationDocumentViewModel>();
             SimpleIoc.Default.Register<InvoiceCreationViewModel>();
             SimpleIoc.Default.Register<InvoiceCreateCompanyViewModel>();
+            SimpleIoc.Default.Register<AddAddressViewModel>();
 
             SimpleIoc.Default.Register<ServerSettingsViewModel>();
 
@@ -63,7 +63,6 @@ namespace StudioServicesApp.ViewModels
             NavigationService.Configure(ADD_IDENTIFICATION_DOC_PAGE, typeof(AddIdentificationDocumentPage));
             NavigationService.Configure(INVOICE_CREATION_HOME, typeof(InvoiceCreationHome));
             NavigationService.Configure(INVOICE_CREATION_DETAILS, typeof(InvoiceCreationDetails));
-            NavigationService.Configure(INVOICE_ADD_MY_COMPANY, typeof(InvoiceCreateCompany));
 
             NavigationService.Configure(SERVER_SETTINGS, typeof(ServerSettings));
         }
@@ -79,6 +78,7 @@ namespace StudioServicesApp.ViewModels
         public AddIdentificationDocumentViewModel AddIdentificationDocumentViewModel => GetService<AddIdentificationDocumentViewModel>();
         public InvoiceCreationViewModel InvoiceCreationViewModel => GetService<InvoiceCreationViewModel>();
         public InvoiceCreateCompanyViewModel InvoiceCreateCompanyViewModel => GetService<InvoiceCreateCompanyViewModel>();
+        public AddAddressViewModel AddAddressViewModel => GetService<AddAddressViewModel>();
 
         public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();
     }

@@ -62,6 +62,9 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>2.2.1</Version>
     </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>1.1.4.158-pre</Version>
+    </PackageReference>
     <PackageReference Include="sameerIOTApps.Plugin.SecureStorage">
       <Version>2.0.1</Version>
     </PackageReference>
@@ -118,6 +121,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\add_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\close_circle_button.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

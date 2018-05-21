@@ -70,7 +70,7 @@ namespace StudioServicesApp.ViewModels
                 if (res.Code == ResponseCode.OK && res.Data)
                 {
                     MessengerInstance.Send(new Tuple<string, string>(Username, Password), "RegistrationComplete");
-                    navigation.GoBack();
+                    Navigation.GoBack();
                 }
                 else
                     ShowMessage($"{res.Code}: {res.Message}", "Registrazione");

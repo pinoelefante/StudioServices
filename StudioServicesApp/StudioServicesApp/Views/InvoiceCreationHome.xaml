@@ -8,7 +8,7 @@
                      Title="Creazione fattura"
                      BindingContext="{Binding InvoiceCreationViewModel, Source={StaticResource Locator}}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="add.png" Text="Aggiungi" Command="{Binding CreateMyNewCompanyCommand}"/>
+        <ToolbarItem Icon="add_icon.png" Text="Aggiungi" Command="{Binding CreateMyNewCompanyCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid Padding="5">
@@ -38,7 +38,7 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Picker Grid.Column="0" ItemsSource="{Binding MyCompanies}" SelectedItem="{Binding SelectedMyCompany, Mode=TwoWay}" ItemDisplayBinding="{Binding Name}"/>
+                    <Picker Grid.Column="0" ItemsSource="{Binding ListCompanies}" SelectedItem="{Binding SelectedMyCompany, Mode=TwoWay}" ItemDisplayBinding="{Binding Name}"/>
                     <Button Grid.Column="1" Text="R" Command="{Binding ReloadMyCompaniesCommand}" />
                 </Grid>
 

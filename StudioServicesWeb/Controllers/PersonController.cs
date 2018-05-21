@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -61,14 +62,15 @@ namespace StudioServicesWeb.Controllers
 
         [Route("document")]
         [HttpPost]
-        public Response<bool> AddDocument(int type, string number, long i_ticks, long e_ticks, byte[] file, string file_ext)
+        public Response<bool> AddDocument([FromForm]int type, [FromForm]string number, [FromForm]long i_ticks, [FromForm]long e_ticks, [FromForm]/*byte[]*/string file, [FromForm]string file_ext)
         {
             if (!_isLogged())
                 return CreateBoolean(false, ResponseCode.REQUIRE_LOGIN);
             number = number.ToUpper();
             DateTime issue_date = new DateTime(i_ticks);
             DateTime expire_date = new DateTime(e_ticks);
-            bool res = persons.AddIdentificationDocument(_getPersonId(), type, number, issue_date, expire_date, file, file_ext);
+            var fileContent = System.Convert.FromBase64String(file);
+            bool res = persons.AddIdentificationDocument(_getPersonId(), type, number, issue_date, expire_date, fileContent, file_ext);
             return CreateBoolean(res);
         }
 
@@ -99,9 +101,9 @@ namespace StudioServicesWeb.Controllers
 
         [Route("address")]
         [HttpPost]
-        public Response<bool> AddAddress(int type, string country, string city, string province, string address, string number, string description)
+        public Response<bool> AddAddress(int type, string country, string city, string province, string address, string number, string zip, string description)
         {
-            var res = persons.AddAddress(_getPersonId(), type, country, city, province, address, number, description);
+            var res = persons.AddAddress(_getPersonId(), type, country, city, province, address, number, zip, description);
             return CreateBoolean(res);
         }
 

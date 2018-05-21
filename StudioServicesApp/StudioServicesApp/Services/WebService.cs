@@ -70,7 +70,10 @@ namespace StudioServicesApp.Services
             {
                 MultipartFormDataContent content = new MultipartFormDataContent();
                 if (file_content != null && file_content.Length > 0)
-                    content.Add(new ByteArrayContent(file_content), "file");
+                {
+                    var base64content = Convert.ToBase64String(file_content);
+                    content.Add(new StringContent(base64content), "file");
+                }
                 foreach (var kv in parameters)
                     content.Add(new StringContent(kv.Value), kv.Key);
 

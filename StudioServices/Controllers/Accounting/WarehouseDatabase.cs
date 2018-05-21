@@ -22,7 +22,7 @@ namespace StudioServices.Controllers.Accounting
         {
             using (var conn = GetConnection())
             {
-                return conn.Table<CompanyProduct>().Where(x => x.CompanyId == company && (all ? true : x.Enabled == true)).OrderBy(x => x.Name).ToList();
+                return conn.Table<CompanyProduct>().Where(x => x.CompanyId == company && (all ? true : x.Enabled)).OrderBy(x => x.Name).ToList();
             }
         }
         public Company GetCompanyById(int company_id)
@@ -30,6 +30,14 @@ namespace StudioServices.Controllers.Accounting
             using (var conn = GetConnection())
             {
                 return conn.Get<Company>(company_id);
+            }
+        }
+        public List<Company> GetCompanyByUser(int person_id, bool all = false)
+        {
+            using (var conn = GetConnection())
+            {
+                var content = conn.Table<Company>().Where(x => x.PersonId == person_id/* && (all ? true : x.Enabled)*/);
+                return content.ToList();
             }
         }
         public Company GetCompanyByVAT(string vat)

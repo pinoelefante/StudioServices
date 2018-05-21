@@ -12,11 +12,11 @@ namespace StudioServicesApp
 		{
 			InitializeComponent();
 
-            var nav = new NavigationPage(new InvoiceCreationHome());
-            ConfigureNavigation(nav, ViewModelLocator.INVOICE_CREATION_HOME);
-            //var nav = new NavigationPage(new LoginPage());
+            //var nav = new NavigationPage(new InvoiceCreationHome());
+            //ConfigureNavigation(nav, ViewModelLocator.INVOICE_CREATION_HOME);
+            var nav = new NavigationPage(new LoginPage());
             MainPage = nav;
-            //ConfigureNavigation(nav, ViewModelLocator.LOGIN_PAGE);
+            ConfigureNavigation(nav, ViewModelLocator.LOGIN_PAGE);
         }
         public static void ConfigureNavigation(NavigationPage nav, string homePageKey, bool askToClose = false)
         {

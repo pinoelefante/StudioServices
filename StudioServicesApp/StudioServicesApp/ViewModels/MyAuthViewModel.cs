@@ -1,5 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
+using StudioServices.Data.Accounting;
+using StudioServices.Models.Accounting;
 using StudioServices.Registry.Data;
 using StudioServicesApp.Services;
 using System;
@@ -14,6 +16,8 @@ namespace StudioServicesApp.ViewModels
     {
         private Person _person;
         public Person Persona { get => _person; set => SetMT(ref _person, value); }
+        public Dictionary<Company, List<CompanyProduct>> MyCompanies { get; private set; } = new Dictionary<Company, List<CompanyProduct>>();
+
         private bool _isAdmin;
         public bool IsAdmin { get => _isAdmin; set => SetMT(ref _isAdmin, value); }
         public bool VerifyPersonEnabled { get; set; } = true;
@@ -24,14 +28,16 @@ namespace StudioServicesApp.ViewModels
         {
             return Task.Factory.StartNew(async () =>
             {
+                
                 await LoadPersonAsync();
+                await LoadCompaniesAsync();
                 if(VerifyPersonEnabled)
                     CheckPerson();
             });
         }
-        private async Task LoadPersonAsync()
+        protected async Task LoadPersonAsync(bool force = false)
         {
-            if (cache.GetValue<Person>("person", null) == null)
+            if (force || cache.GetValue<Person>("person", null) == null)
             {
                 var busy_message = "Recupero profilo in corso";
                 SetBusy(true, busy_message);
@@ -53,19 +59,45 @@ namespace StudioServicesApp.ViewModels
             var admin = cache.GetValue("is_admin", false);
             IsAdmin = admin;
         }
-        private void CheckPerson()
+        protected async Task LoadCompaniesAsync(bool force = false)
         {
-            var person = cache.GetValue<Person>("person");
-            if (person == null)
+            if(force || cache.GetValue<Dictionary<Company,List<CompanyProduct>>>("my_companies",null) == null)
+            {
+                var res = await SendRequestAsync(async () => await api.Warehouse_GetMyCompaniesAsync());
+                if (res.Code == ResponseCode.OK && res.Data != null)
+                {
+                    MyCompanies.Clear();
+                    foreach(var c in res.Data)
+                        MyCompanies.Add(c, new List<CompanyProduct>());
+                    cache.SetValue("my_companies", MyCompanies);
+                }
+                else
+                    ShowMessage("Non è stato possibile recuperare le informazioni delle aziende", "Aziende");
+            }
+            else
+                MyCompanies = cache.GetValue<Dictionary<Company, List<CompanyProduct>>>("my_companies", new Dictionary<Company, List<CompanyProduct>>());
+        }
+        public List<Company> GetListCompanies()
+        {
+            List<Company> list = new List<Company>();
+            if(MyCompanies!=null)
+            {
+                foreach (var company in MyCompanies.Keys)
+                    list.Add(company);
+            }
+            list.TrimExcess();
+            return list;
+        }
+        protected void CheckPerson()
+        {
+            if (Persona == null)
                 throw new Exception("Person is null, but can't be null");
-
-            if (person.Identifications.Count == 0)
+            if(Persona.Identifications.Count == 0)
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    navigation.NavigateTo(ViewModelLocator.ADD_IDENTIFICATION_DOC_PAGE);
+                    Navigation.NavigateTo(ViewModelLocator.ADD_IDENTIFICATION_DOC_PAGE);
                 });
-                
             }
         }
     }

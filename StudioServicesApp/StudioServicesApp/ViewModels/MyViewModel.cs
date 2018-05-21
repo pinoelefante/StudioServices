@@ -22,28 +22,30 @@ namespace pinoelefante.ViewModels
     public class MyViewModel : ViewModelBase
     {
         private static readonly int LIMIT_TRY = 3;
-        protected NavigationService navigation;
+        public NavigationService Navigation { get; private set; }
         protected CacheManager cache = ViewModelLocator.GetService<CacheManager>();
         protected StudioServicesApi api;
         protected AlertService messageService;
         public MyViewModel(INavigationService n, StudioServicesApi a, AlertService alert)
         {
-            navigation = n as NavigationService;
+            Navigation = n as NavigationService;
             api = a;
             messageService = alert;
         }
         private bool busyActive;
+        private string busyMsg;
         public bool IsBusyActive { get => busyActive; set => SetMT(ref busyActive, value); }
+        public string BusyMessage { get => busyMsg; set => SetMT(ref busyMsg, value); }
         
         public void SetBusy(bool status, string text)
         {
-            messageService.SetBusy(text, status);
+            BusyMessage = text;
+            IsBusyActive = status;
         }
         
-        public void ShowMessage(string message, string title = "")
+        public void ShowMessage(string message, string title = "", Action okAction=null)
         {
-            messageService.ShowMessage(message, title);
-            // UserDialogs.Instance.Alert(message, title);
+            messageService.ShowMessage(message, title, okAction);
         }
         public void ShowToast(string message, int seconds = 3)
         {
@@ -64,7 +66,7 @@ namespace pinoelefante.ViewModels
          */
         public virtual bool OnBackPressed()
         {
-            navigation.GoBack();
+            Navigation.GoBack();
             return true;
         }
         public void ShowLoginPrompt()
@@ -193,6 +195,13 @@ namespace pinoelefante.ViewModels
                 var entry = eventArgs.VisualElement as Entry;
                 if (entry != null && string.IsNullOrEmpty(entry.Text?.Trim()))
                     entry.Text = "0";
+            }));
+        private RelayCommand closePopupCmd;
+        public RelayCommand ClosePopupCommand =>
+            closePopupCmd ??
+            (closePopupCmd = new RelayCommand(() =>
+            {
+                Navigation.PopPopupAsync();
             }));
     }
 }

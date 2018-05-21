@@ -8,20 +8,43 @@ using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
 using StudioServices.Data.Accounting;
 using StudioServicesApp.Services;
+using StudioServicesApp.Views;
 using Xamarin.Forms;
 
 namespace StudioServicesApp.ViewModels
 {
-    public class InvoiceCreationViewModel : MyViewModel
+    public class InvoiceCreationViewModel : MyAuthViewModel
     {
         private RelayCommand<string> nextPageCommand;
         public InvoiceCreationViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al) { }
 
-        public override Task NavigatedToAsync(object parameter = null)
+        public override async Task NavigatedToAsync(object parameter = null)
         {
-            if (SelectedIndexInvoiceType < 0)
-                SelectedIndexInvoiceType = 0;
-            return base.NavigatedToAsync(parameter);
+            await base.NavigatedToAsync();
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                ListCompanies?.Clear();
+                ListCompanies.AddRange(GetListCompanies());
+
+                if (ListCompanies.Count == 0)
+                {
+                    ShowMessage("Non sono presenti aziende.", "Aggiungi azienda", () =>
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            Navigation.PushPopupAsync(new InvoiceCreateCompany());
+                        });
+                    });
+                }
+
+                if (SelectedIndexInvoiceType < 0)
+                    SelectedIndexInvoiceType = 0;
+            });
+            
+        }
+        public override void NavigatedFrom()
+        {
+            base.NavigatedFrom();
         }
 
         private DateTime invoiceDate = DateTime.Now;
@@ -47,7 +70,7 @@ namespace StudioServicesApp.ViewModels
         public DateTime InvoiceDate { get => invoiceDate; set => SetMT(ref invoiceDate, value); }
         public Company SelectedMyCompany { get => myCompany; set => SetMT(ref myCompany, value); }
         public Company SelectedCompany { get => selectedCompany; set => SetMT(ref selectedCompany, value); }
-        public MyObservableCollection<Company> MyCompanies { get; } = new MyObservableCollection<Company>() { new Company() { Name = "Azienda di prova", VATNumber = "0123456789" } };
+        public MyObservableCollection<Company> ListCompanies { get; } = new MyObservableCollection<Company>();
         public MyObservableCollection<Company> CompanyList { get; } = new MyObservableCollection<Company>();
         public string InvoiceNumberText { get => invoiceNumberText; set => SetMT(ref invoiceNumberText, IntValidation(invoiceNumberText, value)); }
         public string InvoiceNumberExtraText { get => invoiceNumberTextExtra; set => SetMT(ref invoiceNumberTextExtra, StringValidation(InvoiceNumberExtraText, value, 5)); }
@@ -92,9 +115,10 @@ namespace StudioServicesApp.ViewModels
                 {
                     case "invoice_details":
                         // TODO: verifica che il numero della fattura non esista
-                        navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_DETAILS);
+                        Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_DETAILS);
                         break;
                 }
+                //ShowMessage("PROVA");
                 Debug.WriteLine($"PageIndex: {pageIndex}");
             }));
         public RelayCommand ReloadMyCompaniesCommand => null;
@@ -103,7 +127,7 @@ namespace StudioServicesApp.ViewModels
             createMyNewCompanyCmd ??
             (createMyNewCompanyCmd = new RelayCommand(() =>
             {
-                navigation.NavigateTo(ViewModelLocator.INVOICE_ADD_MY_COMPANY);
+                Navigation.PushPopupAsync(new InvoiceCreateCompany());
             }));
         public MyObservableCollection<string> InvoiceDetails { get; } = new MyObservableCollection<string>();
     }

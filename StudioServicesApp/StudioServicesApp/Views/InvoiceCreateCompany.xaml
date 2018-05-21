@@ -1,29 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="StudioServicesApp.Views.InvoiceCreateCompany"
-             Title="Aggiungi azienda"
-             BindingContext="{Binding InvoiceCreateCompanyViewModel, Source={StaticResource Locator}}">
-    <ContentPage.Content>
-        <Grid Padding="10,10,10,5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition />
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Text="Nome azienda"/>
-            <Entry Grid.Row="0" Grid.Column="1" Text="{Binding CompanyName, Mode=TwoWay}"/>
-            <Label Grid.Row="1" Text="Partita IVA"/>
-            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding VatNumber, Mode=TwoWay}"/>
-            <Label Grid.Row="2" Text="Indirizzo"/>
-            <Picker Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ListAddresses}" SelectedItem="{Binding SelectedAddress}"/>
-            <Button Grid.Row="4" Grid.ColumnSpan="2" Text="Aggiungi" Command="{Binding AddCompanyCommand}"/>
-        </Grid>
-    </ContentPage.Content>
-</ContentPage>
+<views:MyPopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 x:Class="StudioServicesApp.Views.InvoiceCreateCompany"
+                 xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                 xmlns:popupAnimation="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+                 xmlns:views="clr-namespace:StudioServicesApp.Views.Framework"
+                 BindingContext="{Binding InvoiceCreateCompanyViewModel, Source={StaticResource Locator}}"
+                 CloseWhenBackgroundIsClicked="False"
+                 HasSystemPadding="False"
+                 InputTransparent="False"
+                 BackgroundColor="Gray">
+    <popup:PopupPage.Animation>
+        <!--
+        <popupAnimation:MoveAnimation PositionIn="Center" PositionOut="Bottom" DurationIn="1000" DurationOut="1000" EasingIn="BounceIn" EasingOut="BounceOut"/>
+        -->
+        <popupAnimation:ScaleAnimation PositionIn="Bottom" PositionOut="Center" ScaleIn="1" ScaleOut="0.7" DurationIn="700" EasingIn="BounceOut"/>
+    </popup:PopupPage.Animation>
+    <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
+        <AbsoluteLayout>
+            <Frame Margin="15" HorizontalOptions="Center" BackgroundColor="White">
+                <Grid Padding="10,10,10,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Text="Nome azienda"/>
+                    <Entry Grid.Row="0" Grid.Column="1" Text="{Binding CompanyName, Mode=TwoWay}" WidthRequest="200"/>
+                    <Label Grid.Row="1" Text="Partita IVA"/>
+                    <Entry Grid.Row="1" Grid.Column="1" Text="{Binding VatNumber, Mode=TwoWay}" WidthRequest="200"/>
+                    <Label Grid.Row="2" Text="Indirizzo"/>
+                    <Picker Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ListAddresses}" SelectedItem="{Binding SelectedAddress}" WidthRequest="200"/>
+                    <Button Grid.Row="3" Grid.ColumnSpan="2" Text="Aggiungi" Command="{Binding AddCompanyCommand}"/>
+                </Grid>
+            </Frame>
+            <ContentView AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ClosePopupCommand}"/>
+                </ContentView.GestureRecognizers>
+                <Image x:Name="CloseImage" HeightRequest="30" WidthRequest="30" Source="close_circle_button.png"/>
+            </ContentView>
+        </AbsoluteLayout>
+        
+    </ScrollView>
+    
+</views:MyPopupPage>

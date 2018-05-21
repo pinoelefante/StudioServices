@@ -33,7 +33,7 @@ namespace StudioServicesApp.ViewModels.HiddenPages
             _saveCmd ?? (_saveCmd = new RelayCommand(() =>
             {
                 api.SetNewAddress(ServerAddress, Port, Protocol);
-                navigation.GoBack();
+                Navigation.GoBack();
             }));
     }
 }

@@ -40,6 +40,10 @@ namespace StudioServices.Controllers.Accounting
         {
             return db.GetCompanyById(company_id);
         }
+        public List<Company> GetUserCompanies(int user_id)
+        {
+            return db.GetCompanyByUser(user_id);
+        }
         public bool SaveProduct(int companyId, int personId, string productName, double unitPrice = 1.0, InvoiceQuantity unitMeasure = InvoiceQuantity.PZ, double tax = 22.0, double quantity = 0, string productCode = null, int id = 0)
         {
             if (string.IsNullOrEmpty(productCode))

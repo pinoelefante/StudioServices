@@ -5,23 +5,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using pinoelefante.ViewModels;
+using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 
 namespace pinoelefante.Views
 {
     public class MyContentPage : ContentPage
     {
+        private MyPopupMessage busyPopup;
         public MyContentPage(object parameter = null)
         {
             navigationParameter = parameter;
+            busyPopup = new MyPopupMessage();
         }
         protected MyViewModel ViewModel => this.BindingContext as MyViewModel;
         protected object navigationParameter = null;
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel?.NavigatedToAsync(navigationParameter);
         }
+
+        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            /*
+            switch(e.PropertyName)
+            {
+                case nameof(ViewModel.IsBusyActive):
+                    if(ViewModel.IsBusyActive)
+                    {
+                        busyPopup.SetMessage(ViewModel.BusyMessage);
+                        if (!ViewModel.Navigation.IsShowingPopup(busyPopup))
+                            ViewModel.Navigation.PushPopupAsync(busyPopup);
+                    }
+                    else
+                        ViewModel.Navigation.PopPopupAsync();
+                    break;
+            }
+            */
+        }
+
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
@@ -61,6 +85,32 @@ namespace pinoelefante.Views
                 {
                     listView.SelectedItem = null;
                 });
+            }
+        }
+        
+        public class MyPopupMessage : PopupPage
+        {
+            private Label lbl;
+            public MyPopupMessage() : base()
+            {
+                lbl = new Label()
+                {
+                    FontSize = 14,
+                    TextColor = Color.Black
+                };
+                StackLayout layout = new StackLayout()
+                {
+                    Orientation = StackOrientation.Horizontal,
+                    BackgroundColor = Color.FromHex("#43A047"),
+                    VerticalOptions = LayoutOptions.Start,
+                    HeightRequest = 50,
+                    Padding = new Thickness(20, 0),
+                };
+                layout.Children.Add(lbl);
+            }
+            public void SetMessage(string msg)
+            {
+                lbl.Text = msg;
             }
         }
     }

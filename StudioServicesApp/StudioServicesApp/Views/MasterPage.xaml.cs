@@ -29,18 +29,12 @@ namespace StudioServicesApp.Views
                     PageKey = ViewModelLocator.NEWS_PAGE,
                     //IconSource = "home.png"
                 },
-                /*
                 new MasterPageItem()
                 {
-                    Title = "Activities",
-                    PageKey = ViewModelLocator.Activities
-                },
-                new MasterPageItem()
-                {
-                    Title = "Friends",
-                    PageKey = ViewModelLocator.FriendsPage
+                    Title = "Contabilità",
+                    PageKey = ViewModelLocator.INVOICE_CREATION_HOME,
+                    IconSource = "add_icon.png"
                 }
-                */
             };
 
             (ViewModel as MyMasterDetailViewModel).CloseMasterPage = new RelayCommand(() =>

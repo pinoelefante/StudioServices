@@ -146,7 +146,7 @@ namespace StudioServicesApp.ViewModels
                     if (!message.IsRead)
                         markAsRead.Add(index);
                 }
-                navigation.NavigateTo(ViewModelLocator.VIEW_MESSAGE_PAGE, message);
+                Navigation.NavigateTo(ViewModelLocator.VIEW_MESSAGE_PAGE, message);
             }));
         public RelayCommand DeleteDatabaseCommand =>
             _delDb ?? (_delDb = new RelayCommand(() =>
