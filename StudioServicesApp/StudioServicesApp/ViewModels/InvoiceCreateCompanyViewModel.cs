@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
 using StudioServices.Data.Registry;
 using StudioServicesApp.Services;
+using StudioServicesApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -39,13 +40,32 @@ namespace StudioServicesApp.ViewModels
         public string VatNumber { get => vatNumber; set => SetMT(ref vatNumber, StringValidation(vatNumber, value, 16)); }
         public Address SelectedAddress { get => selectedAddress; set => SetMT(ref selectedAddress, value); }
         public MyObservableCollection<Address> ListAddresses { get; } = new MyObservableCollection<Address>();
-        private RelayCommand addCompanyCmd;
+        private RelayCommand addCompanyCmd, openAddAddressCmd;
         public RelayCommand AddCompanyCommand =>
             addCompanyCmd ??
             (addCompanyCmd = new RelayCommand(async () =>
             {
                 // TODO controllare che non esista già
-                await SendRequestAsync(async () => await api.Warehouse_SaveCompanyAsync(CompanyName, VatNumber, SelectedAddress.Id));
+                var res = await SendRequestAsync(async () => await api.Warehouse_SaveCompanyAsync(CompanyName, VatNumber, SelectedAddress.Id));
+                if (res.IsOK)
+                {
+                    MessengerInstance.Send<bool>(res.Data, "AddCompanyStatus");
+                    await Navigation.PopPopupAsync();
+                }
+                else
+                    ShowMessage("Azienda non aggiunta");
+            }));
+        public RelayCommand OpenAddAddressPopup =>
+            openAddAddressCmd ??
+            (openAddAddressCmd = new RelayCommand(() =>
+            {
+                MessengerInstance.Register<bool>(this, "AddAddressStatus", async (x) => 
+                {
+                    MessengerInstance.Unregister<bool>(this, "AddAddressStatus");
+                    await LoadPersonAsync(true);
+                    await NavigatedToAsync();
+                });
+                Navigation.PushPopupAsync(new AddAddressPopup());
             }));
     }
 }

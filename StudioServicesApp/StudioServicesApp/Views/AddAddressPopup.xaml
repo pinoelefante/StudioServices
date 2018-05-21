@@ -1,17 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<popup:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:MyPopupPage xmlns="http://xamarin.com/schemas/2014/forms"
                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                  xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                 xmlns:views="clr-namespace:pinoelefante.Views"
                  x:Class="StudioServicesApp.Views.AddAddressPopup"
                  BindingContext="{Binding AddAddressViewModel, Source={StaticResource Locator}}">
     <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
         <AbsoluteLayout>
-            <ContentView AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
-                <ContentView.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ClosePopupCommand}"/>
-                </ContentView.GestureRecognizers>
-                <Image x:Name="CloseImage" HeightRequest="30" WidthRequest="30" Source="close_circle_button.png" />
-            </ContentView>
             <Frame Margin="15" HorizontalOptions="Center" BackgroundColor="White">
                 <Grid Padding="10,10,10,5">
                     <Grid.RowDefinitions>
@@ -30,7 +25,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Label Grid.Row="0" Text="Tipo"/>
-                    <Picker Grid.Row="0" Grid.Column="1">
+                    <Picker Grid.Row="0" Grid.Column="1" SelectedIndex="{Binding TypeIndex, Mode=TwoWay}">
                         <Picker.Items>
                             <x:String>Casa</x:String>
                             <x:String>Lavoro</x:String>
@@ -54,6 +49,12 @@
                     <Button Grid.Row="8" Grid.ColumnSpan="2" Text="Aggiungi" Command="{Binding AddAddressCommand}"/>
                 </Grid>
             </Frame>
+            <ContentView AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ClosePopupCommand}"/>
+                </ContentView.GestureRecognizers>
+                <Image x:Name="CloseImage" HeightRequest="30" WidthRequest="30" Source="close_circle_button.png" />
+            </ContentView>
         </AbsoluteLayout>
     </ScrollView>
-</popup:PopupPage>
+</views:MyPopupPage>

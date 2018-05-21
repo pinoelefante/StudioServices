@@ -1,4 +1,5 @@
-﻿using Rg.Plugins.Popup.Pages;
+﻿using pinoelefante.Views;
+using Rg.Plugins.Popup.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using Xamarin.Forms.Xaml;
 namespace StudioServicesApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class AddAddressPopup : PopupPage
+	public partial class AddAddressPopup : MyPopupPage
 	{
 		public AddAddressPopup ()
 		{

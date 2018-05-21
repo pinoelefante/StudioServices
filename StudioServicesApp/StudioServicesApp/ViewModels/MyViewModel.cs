@@ -187,15 +187,6 @@ namespace pinoelefante.ViewModels
                 return oldValue;
             return newValue;
         }
-        private RelayCommand<FocusEventArgs> entryIntUnfocused;
-        public RelayCommand<FocusEventArgs> EntryIntUnfocused =>
-            entryIntUnfocused ?? 
-            (entryIntUnfocused = new RelayCommand<FocusEventArgs>((eventArgs) =>
-            {
-                var entry = eventArgs.VisualElement as Entry;
-                if (entry != null && string.IsNullOrEmpty(entry.Text?.Trim()))
-                    entry.Text = "0";
-            }));
         private RelayCommand closePopupCmd;
         public RelayCommand ClosePopupCommand =>
             closePopupCmd ??

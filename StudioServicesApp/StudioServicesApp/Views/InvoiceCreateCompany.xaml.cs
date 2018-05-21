@@ -1,5 +1,5 @@
-﻿using Rg.Plugins.Popup.Pages;
-using StudioServicesApp.Views.Framework;
+﻿using pinoelefante.Views;
+using Rg.Plugins.Popup.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;

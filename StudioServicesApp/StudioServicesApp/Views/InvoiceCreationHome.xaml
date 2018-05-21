@@ -7,9 +7,6 @@
                      xmlns:effects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
                      Title="Creazione fattura"
                      BindingContext="{Binding InvoiceCreationViewModel, Source={StaticResource Locator}}">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="add_icon.png" Text="Aggiungi" Command="{Binding CreateMyNewCompanyCommand}"/>
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid Padding="5">
             <Grid.RowDefinitions>
@@ -39,7 +36,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Picker Grid.Column="0" ItemsSource="{Binding ListCompanies}" SelectedItem="{Binding SelectedMyCompany, Mode=TwoWay}" ItemDisplayBinding="{Binding Name}"/>
-                    <Button Grid.Column="1" Text="R" Command="{Binding ReloadMyCompaniesCommand}" />
+                    <Button Grid.Column="1" Text="+" Command="{Binding CreateMyNewCompanyCommand}" />
                 </Grid>
 
                 <Label Grid.Row="1" Grid.Column="0" Text="Tipo di fattura" VerticalOptions="Center"/>

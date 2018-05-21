@@ -183,7 +183,7 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<Address>().Where(x => x.PersonId == person_id && (all ? true : x.Enabled)).AsEnumerable();
+                return con.Table<Address>().Where(x => x.PersonId == person_id /*&& (all ? true : x.Enabled)*/).AsEnumerable().Where(x => (all ? true : x.Enabled)).ToList();
             }
         }
         public Email EmailSelect(int email_id)

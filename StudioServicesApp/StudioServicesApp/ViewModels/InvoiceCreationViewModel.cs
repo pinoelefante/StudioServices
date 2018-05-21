@@ -39,12 +39,15 @@ namespace StudioServicesApp.ViewModels
 
                 if (SelectedIndexInvoiceType < 0)
                     SelectedIndexInvoiceType = 0;
+
+                if (ListCompanies.Count > 0 && SelectedCompany == null)
+                    SelectedCompany = ListCompanies[0];
             });
             
         }
         public override void NavigatedFrom()
         {
-            base.NavigatedFrom();
+            Debug.WriteLine("NavigatedFrom");
         }
 
         private DateTime invoiceDate = DateTime.Now;
@@ -69,7 +72,15 @@ namespace StudioServicesApp.ViewModels
         }
         public DateTime InvoiceDate { get => invoiceDate; set => SetMT(ref invoiceDate, value); }
         public Company SelectedMyCompany { get => myCompany; set => SetMT(ref myCompany, value); }
-        public Company SelectedCompany { get => selectedCompany; set => SetMT(ref selectedCompany, value); }
+        public Company SelectedCompany
+        {
+            get => selectedCompany;
+            set
+            {
+                SetMT(ref selectedCompany, value);
+                InitFields();
+            }
+        }
         public MyObservableCollection<Company> ListCompanies { get; } = new MyObservableCollection<Company>();
         public MyObservableCollection<Company> CompanyList { get; } = new MyObservableCollection<Company>();
         public string InvoiceNumberText { get => invoiceNumberText; set => SetMT(ref invoiceNumberText, IntValidation(invoiceNumberText, value)); }
@@ -118,15 +129,20 @@ namespace StudioServicesApp.ViewModels
                         Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_DETAILS);
                         break;
                 }
-                //ShowMessage("PROVA");
                 Debug.WriteLine($"PageIndex: {pageIndex}");
             }));
-        public RelayCommand ReloadMyCompaniesCommand => null;
+
         private RelayCommand createMyNewCompanyCmd;
         public RelayCommand CreateMyNewCompanyCommand =>
             createMyNewCompanyCmd ??
             (createMyNewCompanyCmd = new RelayCommand(() =>
             {
+                MessengerInstance.Register<bool>(this, "AddCompanyStatus", async (status) =>
+                {
+                    MessengerInstance.Unregister("AddCompanyStatus");
+                    await LoadCompaniesAsync(true);
+                    await NavigatedToAsync();
+                });
                 Navigation.PushPopupAsync(new InvoiceCreateCompany());
             }));
         public MyObservableCollection<string> InvoiceDetails { get; } = new MyObservableCollection<string>();

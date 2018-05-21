@@ -29,7 +29,10 @@ namespace StudioServicesApp.Services
                     while (messageQueue.Count > 0)
                     {
                         var currItem = messageQueue.Dequeue();
-                        var dialog = UserDialogs.Instance.Alert(new AlertConfig() { Message = currItem.Item1, Title = currItem.Item2, OnAction = currItem.Item3, OkText = "OK" });
+                        if (currItem.Item3 != null)
+                            UserDialogs.Instance.Alert(new AlertConfig() { Message = currItem.Item1, Title = currItem.Item2, OnAction = currItem.Item3, OkText = "OK" });
+                        else
+                            await UserDialogs.Instance.AlertAsync(new AlertConfig() { Message = currItem.Item1, Title = currItem.Item2 });
                         
                     }
                     showing_message = false;

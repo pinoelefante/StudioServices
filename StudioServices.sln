@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioServicesApp.UWP", "St
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioServicesApp", "StudioServicesApp\StudioServicesApp\StudioServicesApp.csproj", "{7AD6A478-53E5-4348-B39F-36E2CC1E4C37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioServices.Models", "StudioServices.Models\StudioServices.Models.csproj", "{6483B5FD-F74E-4304-A920-DA018AE56220}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioServices.Models", "StudioServices.Models\StudioServices.Models.csproj", "{6483B5FD-F74E-4304-A920-DA018AE56220}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

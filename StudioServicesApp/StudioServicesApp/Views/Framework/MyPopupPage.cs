@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace StudioServicesApp.Views.Framework
+namespace pinoelefante.Views
 {
     public class MyPopupPage : PopupPage
     {
