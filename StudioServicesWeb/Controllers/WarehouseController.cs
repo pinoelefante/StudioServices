@@ -46,16 +46,16 @@ namespace StudioServicesWeb.Controllers.Warehouse
         }
         [Route("company")]
         [HttpPost]
-        public Response<bool> CreateCompany(string name, string vat, string country, string city, string province, string street, string civicNumber)
+        public Response<bool> CreateCompany(string name, string vat, int address_id)
         {
             if (!_isLogged())
                 return CreateLoginRequired<bool>();
-            var res = manager.SaveCompany(_getPersonId(), name, vat, country, city, province, street, civicNumber, out string message);
+            var res = manager.SaveCompany(_getPersonId(), name, vat, address_id, out string message);
             return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL, message);
         }
         [Route("company/{id}")]
         [HttpPost]
-        public Response<bool> UpdateCompany([FromRoute]int id, string name, string vat, int addressId, string country, string city, string province, string street, string civicNumber)
+        public Response<bool> UpdateCompany([FromRoute]int id, string name, string vat, int addressId)
         {
             if (!_isLogged())
                 return CreateLoginRequired<bool>();
@@ -63,7 +63,7 @@ namespace StudioServicesWeb.Controllers.Warehouse
             if (company == null || company.PersonId != _getPersonId())
                 return CreateBoolean(false, ResponseCode.FAIL, "Operazione non autorizzata");
 
-            var res = manager.SaveCompany(_getPersonId(), name, vat, country, city, province, street, civicNumber, out string message, id, addressId);
+            var res = manager.SaveCompany(_getPersonId(), name, vat, addressId, out string message, id);
             return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL, message);
         }
     }

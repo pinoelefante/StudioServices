@@ -53,6 +53,7 @@
     <Compile Include="Controllers\Persons\AuthenticationManager.cs" />
     <Compile Include="Controllers\Persons\PersonsManager.cs" />
     <Compile Include="Controllers\Utils\PasswordStorage.cs" />
+    <Compile Include="Services\NullaostaLavoro\NullaostaLavoroAPI.cs" />
     <Compile Include="StudioServices.cs" />
   </ItemGroup>
   <ItemGroup>

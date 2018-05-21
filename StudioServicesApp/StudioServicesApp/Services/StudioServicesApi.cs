@@ -185,6 +185,15 @@ namespace StudioServicesApp.Services
         }
         #endregion
 
+        #region Warehouse
+        public async Task<ResponseMessage<bool>> CreateCompanyAsync(string name, string vat, int address_id)
+        {
+            var address = $"{WS_ADDRESS}/api/company";
+            var parameters = new ParametersList("name",name,"vat",vat,"address_id",address_id);
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters, null, true);
+        }
+        #endregion
+
         private async Task<ResponseMessage<T>> SendRequestAsync<T>(string url, HttpMethod method, IEnumerable<KeyValuePair<string, string>> parameters = null, byte[] file = null, bool send_later = false)
         {
             if(!connectionStatus.IsConnected())

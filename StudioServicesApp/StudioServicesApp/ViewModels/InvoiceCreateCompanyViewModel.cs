@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight.Views;
+﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
 using StudioServices.Data.Registry;
 using StudioServicesApp.Services;
@@ -39,5 +40,13 @@ namespace StudioServicesApp.ViewModels
                 Street = "Via Visitazione"
             }
         };
+        private RelayCommand addCompanyCmd;
+        public RelayCommand AddCompanyCommand =>
+            addCompanyCmd ??
+            (addCompanyCmd = new RelayCommand(() =>
+            {
+                // TODO controllare che non esista già
+
+            }));
     }
 }

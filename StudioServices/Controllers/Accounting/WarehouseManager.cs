@@ -21,43 +21,20 @@ namespace StudioServices.Controllers.Accounting
             random = new Random();
         }
         // TODO add warehouse log (file saving all operations)
-        public bool SaveCompany(int personId, string companyName, string vatnumber, string country, string city, string province, string street, string civicnumber, out string message, int company_id = 0, int address_id = 0)
+        public bool SaveCompany(int personId, string companyName, string vatnumber, int address_id, out string message, int company_id = 0)
         {
             message = string.Empty;
-            Address addr = new Address()
-            {
-                Id = address_id,
-                AddressType = AddressType.WORK,
-                City = city,
-                CivicNumber = civicnumber,
-                Country = country,
-                Enabled = true,
-                PersonId = personId,
-                Province = province,
-                Street = street
-            };
-            if (!db.SaveItem(addr))
-            {
-                message = "Impossibile salvare l'indirizzo";
-                return false;
-            }
+            //TODO verifica address_id
             Company company = new Company()
             {
                 Id = company_id,
-                AddressId = addr.Id,
+                AddressId = address_id,
                 Enabled = true,
                 Name = companyName,
                 VATNumber = vatnumber,
                 PersonId = personId
             };
-            if (db.SaveItem(company))
-            {
-                message = "Impossibile salvare la compagnia";
-                if (company_id > 0)
-                    db.Delete<Address>(addr);
-                return false;
-            }
-            return true;
+            return db.SaveItem(company);
         }
         public Company GetCompany(int company_id)
         {

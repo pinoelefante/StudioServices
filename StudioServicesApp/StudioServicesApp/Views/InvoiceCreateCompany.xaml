@@ -23,7 +23,7 @@
             <Entry Grid.Row="1" Grid.Column="1" Text="{Binding VatNumber, Mode=TwoWay}"/>
             <Label Grid.Row="2" Text="Indirizzo"/>
             <Picker Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ListAddresses}" SelectedItem="{Binding SelectedAddress}"/>
-            <Button Grid.Row="4" Grid.ColumnSpan="2" Text="Aggiungi"/>
+            <Button Grid.Row="4" Grid.ColumnSpan="2" Text="Aggiungi" Command="{Binding AddCompanyCommand}"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
