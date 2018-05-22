@@ -34,7 +34,7 @@ namespace StudioServicesApp.ViewModels
         public bool IsImageLoaded { get => _imageLoaded; set => SetMT(ref _imageLoaded, value); }
         public string FileExtension { get => _fileExt; set => SetMT(ref _fileExt, value); }
 
-        public AddIdentificationDocumentViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al) { }
+        public AddIdentificationDocumentViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
         public override Task NavigatedToAsync(object parameter = null)
         {
             Reset();

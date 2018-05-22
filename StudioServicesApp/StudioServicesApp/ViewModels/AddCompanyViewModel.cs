@@ -12,11 +12,14 @@ using Xamarin.Forms;
 
 namespace StudioServicesApp.ViewModels
 {
-    public class InvoiceCreateCompanyViewModel : MyAuthViewModel
+    public class AddCompanyViewModel : MyAuthViewModel
     {
         private string companyName, vatNumber;
         private Address selectedAddress;
-        public InvoiceCreateCompanyViewModel(INavigationService n, StudioServicesApi a, AlertService alert) : base(n, a, alert) { }
+        public AddCompanyViewModel(INavigationService n, StudioServicesApi a, AlertService alert, KeyValueService k) : base(n, a, alert, k)
+        {
+            OnClosePopupMessengerToken = "AddCompanyStatus";
+        }
 
         public override async Task NavigatedToAsync(object parameter = null)
         {

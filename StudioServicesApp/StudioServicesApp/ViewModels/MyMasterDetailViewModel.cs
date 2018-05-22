@@ -15,7 +15,7 @@ namespace StudioServicesApp.ViewModels
 {
     public class MyMasterDetailViewModel : MyViewModel
     {
-        public MyMasterDetailViewModel(INavigationService n, StudioServicesApp.Services.StudioServicesApi a, AlertService al) : base(n, a, al) { }
+        public MyMasterDetailViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
         public void Navigate(string pageKey)
         {
             Navigation.NavigateTo(pageKey);

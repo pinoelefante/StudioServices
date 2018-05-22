@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Plugin.SecureStorage;
 using SQLite;
 using StudioServices.Data.Accounting;
 using StudioServices.Data.Newsboard;
@@ -21,13 +20,15 @@ namespace StudioServicesApp.Services
         private WebService web;
         private ConnectionStatus connectionStatus;
         private DatabaseService database;
-        public StudioServicesApi(WebService w, ConnectionStatus conn_stats, DatabaseService db)
+        private KeyValueService kvSettings;
+        public StudioServicesApi(WebService w, ConnectionStatus conn_stats, DatabaseService db, KeyValueService kv)
         {
             web = w;
             connectionStatus = conn_stats;
             database = db;
+            kvSettings = kv;
 
-            var session_id = CrossSecureStorage.Current.GetValue("session_id");
+            var session_id = kvSettings.Get("session_id");
             if (!string.IsNullOrEmpty(session_id))
                 web.SetCookie(SESSION_NAME, session_id, WS_ADDRESS);
 
@@ -53,10 +54,10 @@ namespace StudioServicesApp.Services
             var message = await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
             if (message.Code == ResponseCode.OK && message.Data)
             {
-                CrossSecureStorage.Current.SetValue("username", username);
-                CrossSecureStorage.Current.SetValue("password", password);
+                kvSettings.Add("username", username);
+                kvSettings.Add("password", password);
                 var session_id = web.GetCookie(SESSION_NAME, WS_ADDRESS);
-                CrossSecureStorage.Current.SetValue("session_id", session_id);
+                kvSettings.Add("session_id", session_id);
             }
             return message;
         }

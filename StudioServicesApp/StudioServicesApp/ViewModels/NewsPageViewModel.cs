@@ -17,7 +17,7 @@ namespace StudioServicesApp.ViewModels
     public class NewsPageViewModel : MyAuthViewModel
     {
         private DatabaseService db;
-        public NewsPageViewModel(INavigationService n, StudioServicesApi a, DatabaseService d, AlertService al) : base(n, a, al)
+        public NewsPageViewModel(INavigationService n, StudioServicesApi a, DatabaseService d, AlertService al, KeyValueService k) : base(n, a, al, k)
         {
             db = d;
             Newsboard = new ObservableCollection<Message>();

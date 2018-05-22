@@ -48,7 +48,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<ViewMessageViewModel>();
             SimpleIoc.Default.Register<AddIdentificationDocumentViewModel>();
             SimpleIoc.Default.Register<InvoiceCreationViewModel>();
-            SimpleIoc.Default.Register<InvoiceCreateCompanyViewModel>();
+            SimpleIoc.Default.Register<AddCompanyViewModel>();
             SimpleIoc.Default.Register<AddAddressViewModel>();
 
             SimpleIoc.Default.Register<ServerSettingsViewModel>();
@@ -78,7 +78,7 @@ namespace StudioServicesApp.ViewModels
         public ViewMessageViewModel ViewMessageViewModel => GetService<ViewMessageViewModel>();
         public AddIdentificationDocumentViewModel AddIdentificationDocumentViewModel => GetService<AddIdentificationDocumentViewModel>();
         public InvoiceCreationViewModel InvoiceCreationViewModel => GetService<InvoiceCreationViewModel>();
-        public InvoiceCreateCompanyViewModel InvoiceCreateCompanyViewModel => GetService<InvoiceCreateCompanyViewModel>();
+        public AddCompanyViewModel AddCompanyViewModel => GetService<AddCompanyViewModel>();
         public AddAddressViewModel AddAddressViewModel => GetService<AddAddressViewModel>();
 
         public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();

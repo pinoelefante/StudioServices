@@ -3,7 +3,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.Services;
-using Plugin.SecureStorage;
 using StudioServicesApp;
 using StudioServicesApp.Services;
 using StudioServicesApp.ViewModels;
@@ -26,11 +25,13 @@ namespace pinoelefante.ViewModels
         protected CacheManager cache = ViewModelLocator.GetService<CacheManager>();
         protected StudioServicesApi api;
         protected AlertService messageService;
-        public MyViewModel(INavigationService n, StudioServicesApi a, AlertService alert)
+        protected KeyValueService kvSettings;
+        public MyViewModel(INavigationService n, StudioServicesApi a, AlertService alert, KeyValueService kv)
         {
             Navigation = n as NavigationService;
             api = a;
             messageService = alert;
+            kvSettings = kv;
         }
         private bool busyActive;
         private string busyMsg;
@@ -76,7 +77,7 @@ namespace pinoelefante.ViewModels
                 Title = "Login StudioServices",
                 Message = "Per poter completare l'operazione, è necessario effettuare il login",
                 LoginPlaceholder = "Username",
-                LoginValue = CrossSecureStorage.Current.GetValue("username", string.Empty),
+                LoginValue = kvSettings.Get("username", string.Empty),
                 PasswordPlaceholder = "Password",
                 OkText = "Accedi",
                 OnAction = async (login) => 
@@ -125,11 +126,11 @@ namespace pinoelefante.ViewModels
         }
         private async Task<bool> LoginAsync()
         {
-            if (!CrossSecureStorage.Current.HasKey("username") || !CrossSecureStorage.Current.HasKey("password"))
+            if (string.IsNullOrEmpty(kvSettings.Get("username")) || string.IsNullOrEmpty(kvSettings.Get("password")))
                 return false;
             
-            string username = CrossSecureStorage.Current.GetValue("username");
-            string password = CrossSecureStorage.Current.GetValue("password");
+            string username = kvSettings.Get("username");
+            string password = kvSettings.Get("password");
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return false;
             var res = await api.Authentication_LoginAsync(username, password);
@@ -187,11 +188,14 @@ namespace pinoelefante.ViewModels
                 return oldValue;
             return newValue;
         }
+        public string OnClosePopupMessengerToken { get; set; }
         private RelayCommand closePopupCmd;
         public RelayCommand ClosePopupCommand =>
             closePopupCmd ??
             (closePopupCmd = new RelayCommand(() =>
             {
+                if (!string.IsNullOrEmpty(OnClosePopupMessengerToken))
+                    MessengerInstance.Send(false, OnClosePopupMessengerToken);
                 Navigation.PopPopupAsync();
             }));
     }

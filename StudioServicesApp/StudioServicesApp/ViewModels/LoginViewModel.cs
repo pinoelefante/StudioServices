@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
-using Plugin.SecureStorage;
 using StudioServicesApp.Services;
 using StudioServicesApp.Views;
 using System;
@@ -15,14 +14,14 @@ namespace StudioServicesApp.ViewModels
 {
     public class LoginViewModel : MyViewModel
     {
-        public LoginViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al)
+        public LoginViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k)
         {
 
         }
         public override Task NavigatedToAsync(object parameter = null)
         {
-            Username = CrossSecureStorage.Current.GetValue("username", "");
-            Password = CrossSecureStorage.Current.GetValue("password", "");
+            Username = kvSettings.Get("username", "");
+            Password = kvSettings.Get("password", "");
 
             return Task.Factory.StartNew(async () =>
             {
@@ -89,8 +88,8 @@ namespace StudioServicesApp.ViewModels
             {
                 MessengerInstance.Register<Tuple<string, string>>(this, "RegistrationComplete", (x) =>
                 {
-                    CrossSecureStorage.Current.SetValue("username", x.Item1);
-                    CrossSecureStorage.Current.SetValue("password", x.Item1);
+                    kvSettings.Add("username", x.Item1);
+                    kvSettings.Add("password", x.Item1);
                     Username = x.Item1;
                     Password = x.Item2;
                     MessengerInstance.Unregister<Tuple<string, string>>(this, "RegistrationComplete");

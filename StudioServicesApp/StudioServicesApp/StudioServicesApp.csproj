@@ -13,7 +13,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="10.0.1" />
     <PackageReference Include="Plugin.Permissions" Version="2.2.1" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.1.4.158-pre" />
-    <PackageReference Include="sameerIOTApps.Plugin.SecureStorage" Version="2.0.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.166-beta" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.1.1" />
     <PackageReference Include="Xam.Plugin.Media" Version="3.2.0.242-beta" />
@@ -26,6 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\AddCompanyPopup.xaml.cs">
+      <DependentUpon>AddCompanyPopup.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Views\AddAddressPopup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -35,7 +40,7 @@
     <EmbeddedResource Update="Views\HiddenPages\ServerSettings.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\InvoiceCreateCompany.xaml">
+    <EmbeddedResource Update="Views\AddCompanyPopup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\InvoiceCreationDetails.xaml">

@@ -12,9 +12,9 @@ using Xamarin.Forms.Xaml;
 namespace StudioServicesApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class InvoiceCreateCompany : MyPopupPage
+	public partial class AddCompanyPopup : MyPopupPage
 	{
-		public InvoiceCreateCompany ()
+		public AddCompanyPopup ()
 		{
 			InitializeComponent ();
 		}

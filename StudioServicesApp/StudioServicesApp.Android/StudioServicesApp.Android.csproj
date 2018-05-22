@@ -65,9 +65,6 @@
     <PackageReference Include="Rg.Plugins.Popup">
       <Version>1.1.4.158-pre</Version>
     </PackageReference>
-    <PackageReference Include="sameerIOTApps.Plugin.SecureStorage">
-      <Version>2.0.1</Version>
-    </PackageReference>
     <PackageReference Include="SQLitePCLRaw.bundle_sqlcipher">
       <Version>1.1.11</Version>
     </PackageReference>

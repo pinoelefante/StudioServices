@@ -3,6 +3,7 @@ using SQLite;
 using StudioServices.Data.Newsboard;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace StudioServicesApp.Services
@@ -96,10 +97,17 @@ namespace StudioServicesApp.Services
         }
         public T GetByPk<T>(object pk)
         {
-            using (var con = GetConnection())
+            try
             {
-                var mapping = con.GetMapping<T>();
-                return (T)con.Get(pk, mapping);
+                using (var con = GetConnection())
+                {
+                    var mapping = con.GetMapping<T>();
+                    return (T)con.Get(pk, mapping);
+                }
+            }
+            catch
+            {
+                return default(T);
             }
         }
         public bool DeleteByPk<T>(object pk)

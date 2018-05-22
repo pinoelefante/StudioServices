@@ -22,7 +22,7 @@ namespace StudioServicesApp.ViewModels
         public bool IsAdmin { get => _isAdmin; set => SetMT(ref _isAdmin, value); }
         public bool VerifyPersonEnabled { get; set; } = true;
 
-        public MyAuthViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al) { }
+        public MyAuthViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
 
         public override Task NavigatedToAsync(object parameter = null)
         {

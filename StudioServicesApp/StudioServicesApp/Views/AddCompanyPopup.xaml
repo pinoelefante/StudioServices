@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:MyPopupPage xmlns="http://xamarin.com/schemas/2014/forms"
                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                 x:Class="StudioServicesApp.Views.InvoiceCreateCompany"
+                 x:Class="StudioServicesApp.Views.AddCompanyPopup"
                  xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
                  xmlns:popupAnimation="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
                  xmlns:views="clr-namespace:pinoelefante.Views"
-                 BindingContext="{Binding InvoiceCreateCompanyViewModel, Source={StaticResource Locator}}"
+                 BindingContext="{Binding AddCompanyViewModel, Source={StaticResource Locator}}"
                  CloseWhenBackgroundIsClicked="False"
                  HasSystemPadding="False"
-                 InputTransparent="False"
-                 BackgroundColor="Gray">
+                 InputTransparent="False">
     <popup:PopupPage.Animation>
         <!--
         <popupAnimation:MoveAnimation PositionIn="Center" PositionOut="Bottom" DurationIn="1000" DurationOut="1000" EasingIn="BounceIn" EasingOut="BounceOut"/>

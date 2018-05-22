@@ -16,7 +16,7 @@ namespace StudioServicesApp.ViewModels
     public class InvoiceCreationViewModel : MyAuthViewModel
     {
         private RelayCommand<string> nextPageCommand;
-        public InvoiceCreationViewModel(INavigationService n, StudioServicesApi a, AlertService al) : base(n, a, al) { }
+        public InvoiceCreationViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
 
         public override async Task NavigatedToAsync(object parameter = null)
         {
@@ -32,7 +32,7 @@ namespace StudioServicesApp.ViewModels
                     {
                         Device.BeginInvokeOnMainThread(() =>
                         {
-                            Navigation.PushPopupAsync(new InvoiceCreateCompany());
+                            Navigation.PushPopupAsync(new AddCompanyPopup());
                         });
                     });
                 }
@@ -141,9 +141,10 @@ namespace StudioServicesApp.ViewModels
                 {
                     MessengerInstance.Unregister("AddCompanyStatus");
                     await LoadCompaniesAsync(true);
-                    await NavigatedToAsync();
+                    if (MyCompanies.Count == 0)
+                        Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
                 });
-                Navigation.PushPopupAsync(new InvoiceCreateCompany());
+                Navigation.PushPopupAsync(new AddCompanyPopup());
             }));
         public MyObservableCollection<string> InvoiceDetails { get; } = new MyObservableCollection<string>();
     }
