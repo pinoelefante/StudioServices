@@ -143,8 +143,8 @@
     <PackageReference Include="sameerIOTApps.Plugin.SecureStorage">
       <Version>2.0.1</Version>
     </PackageReference>
-    <PackageReference Include="sqlite-net-pcl">
-      <Version>1.5.166-beta</Version>
+    <PackageReference Include="SQLitePCLRaw.bundle_sqlcipher">
+      <Version>1.1.11</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.Media">
       <Version>3.2.0.242-beta</Version>

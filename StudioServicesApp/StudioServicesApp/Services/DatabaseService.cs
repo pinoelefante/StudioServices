@@ -22,6 +22,8 @@ namespace StudioServicesApp.Services
                 con.CreateTable<Message>();
 
                 con.CreateTable<RequestItem>();
+
+                con.CreateTable<KVSetting>();
             }
         }
         private SQLiteConnection GetConnection()
@@ -90,6 +92,22 @@ namespace StudioServicesApp.Services
             {
                 var news = con.Table<Message>().Where(x => x.IsPrivate && (x.SenderId == person_id || x.PersonId == person_id)).OrderBy(x => x.CreationTime.Ticks);
                 return news;
+            }
+        }
+        public T GetByPk<T>(object pk)
+        {
+            using (var con = GetConnection())
+            {
+                var mapping = con.GetMapping<T>();
+                return (T)con.Get(pk, mapping);
+            }
+        }
+        public bool DeleteByPk<T>(object pk)
+        {
+            using (var con = GetConnection())
+            {
+                var mapping = con.GetMapping<T>();
+                return con.Delete(pk, mapping) > 0;
             }
         }
     }
