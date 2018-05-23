@@ -1,4 +1,5 @@
-﻿using StudioServices.Controllers.Utils;
+﻿using StudioServices.Controllers.Persons;
+using StudioServices.Controllers.Utils;
 using StudioServices.Data.Accounting;
 using StudioServices.Data.Registry;
 using StudioServices.Models.Accounting;
@@ -14,6 +15,7 @@ namespace StudioServices.Controllers.Accounting
     {
         private const int PRODUCT_CODE_LENGTH = 3;
         private WarehouseDatabase db;
+        private RegistryDatabase registry;
         private Random random;
         public WarehouseManager()
         {
@@ -35,6 +37,39 @@ namespace StudioServices.Controllers.Accounting
                 PersonId = personId
             };
             return db.SaveItem(company);
+        }
+        public int SaveCompanyForInvoice(int person_id, string companyName, string vatNumber,string country, string city, string province, string street, string civicNum, string zipCode, out string message, int address_id = 0, int company_id = 0)
+        {
+            message = string.Empty;
+            Address addr = new Address()
+            {
+                AddressType = AddressType.WORK,
+                City = city,
+                CivicNumber = civicNum,
+                Country = country,
+                Description = $"Added by {person_id}",
+                Id = address_id,
+                PersonId = -person_id,
+                Province = province,
+                Street = street,
+                ZipCode = zipCode
+            };
+            if (!db.SaveItem(addr))
+            {
+                message = "Salvataggio indirizzo fallito";
+                return 0;
+            }
+            Company company = new Company()
+            {
+                AddressId = addr.Id,
+                Id = company_id,
+                Name = companyName,
+                PersonId = -person_id,
+                VATNumber = vatNumber
+            };
+            if (db.SaveItem(company))
+                return company.Id;
+            return 0;
         }
         public Company GetCompany(int company_id)
         {
@@ -110,6 +145,20 @@ namespace StudioServices.Controllers.Accounting
                 }
             }
             return code;
+        }
+        /*
+        public List<Company> GetClients(int companyId)
+        {
+            return db.GetClients(companyId);
+        }
+        public List<Company> GetSuppliers(int companyId)
+        {
+            return db.GetSuppliers(companyId);
+        }
+        */
+        public List<Company> GetClientsSuppliers(int personId)
+        {
+            return db.GetClientsSuppliets(personId);
         }
     }
 }

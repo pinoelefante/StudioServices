@@ -1,4 +1,5 @@
-﻿using StudioServices.Data.Registry;
+﻿using SQLite;
+using StudioServices.Data.Registry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,10 @@ namespace StudioServices.Data.Accounting
 {
     public class Company : PersonReference
     {
+        [Indexed(Name = "CompanyIndex", Order = 1, Unique = true)]
+        public override int PersonId { get => base.PersonId; set => base.PersonId = value; }
         public string Name { get; set; }
+        [Indexed(Name = "CompanyIndex", Order = 2, Unique = true)]
         public string VATNumber { get; set; }
         public int AddressId { get; set; }
     }

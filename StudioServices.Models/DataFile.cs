@@ -8,7 +8,7 @@ namespace StudioServices.Data
     public class DataFile : INotifyPropertyChanged
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
         public bool Enabled { get; set; } = true;
         public DateTime CreationTime { get; set; }
         public DateTime DisabledTime { get; set; }

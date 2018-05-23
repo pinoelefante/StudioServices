@@ -28,6 +28,8 @@ namespace StudioServicesApp.Services
             database = db;
             kvSettings = kv;
 
+            WS_ADDRESS = kvSettings.Get("server_address", WS_ADDRESS);
+
             var session_id = kvSettings.Get("session_id");
             if (!string.IsNullOrEmpty(session_id))
                 web.SetCookie(SESSION_NAME, session_id, WS_ADDRESS);
@@ -43,7 +45,11 @@ namespace StudioServicesApp.Services
                 RunRequests();
         }
 
-        public void SetNewAddress(string server_name, int port = 80, string protocol = "http") => WS_ADDRESS = $"{protocol}://{server_name}:{port}";
+        public void SetNewAddress(string server_name, int port = 80, string protocol = "http")
+        {
+            WS_ADDRESS = $"{protocol}://{server_name}:{port}";
+            kvSettings.Add("server_address", WS_ADDRESS);
+        }
         public string GetServerAddress() => WS_ADDRESS;
 
         #region Authentication
@@ -216,6 +222,18 @@ namespace StudioServicesApp.Services
             var address = $"{WS_ADDRESS}/api/warehouse/product";
             var parameters = new ParametersList("companyId", companyId, "productName", productName, "unitPrice", unitPrice, "unitMeasure", unitMeasure, "tax", tax, "quantity", quantity, "productCode", productCode, "id", productId);
             return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
+        }
+        /*
+        public async Task<ResponseMessage<List<Company>>> Warehouse_SuppliersList(int companyId)
+        {
+            var address = $"{WS_ADDRESS}/api/warehouse/suppliers/{companyId}";
+            return await SendRequestAsync<List<Company>>(address, HttpMethod.GET);
+        }
+        */
+        public async Task<ResponseMessage<List<Company>>> Warehouse_ClientsSuppliersList(int personId)
+        {
+            var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers/{personId}";
+            return await SendRequestAsync<List<Company>>(address, HttpMethod.GET);
         }
         #endregion
 

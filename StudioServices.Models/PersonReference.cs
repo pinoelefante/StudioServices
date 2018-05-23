@@ -8,6 +8,6 @@ namespace StudioServices.Data
 {
     public class PersonReference : DataFile
     {
-        public int PersonId { get; set; }
+        public virtual int PersonId { get; set; }
     }
 }

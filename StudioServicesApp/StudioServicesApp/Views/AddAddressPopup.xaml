@@ -4,7 +4,10 @@
                  xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
                  xmlns:views="clr-namespace:pinoelefante.Views"
                  x:Class="StudioServicesApp.Views.AddAddressPopup"
-                 BindingContext="{Binding AddAddressViewModel, Source={StaticResource Locator}}">
+                 BindingContext="{Binding AddAddressViewModel, Source={StaticResource Locator}}"
+                 CloseWhenBackgroundIsClicked="False"
+                 HasSystemPadding="False"
+                 InputTransparent="False">
     <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
         <AbsoluteLayout>
             <Frame Margin="15" HorizontalOptions="Center" BackgroundColor="White">

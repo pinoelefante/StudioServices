@@ -83,12 +83,38 @@ namespace StudioServicesWeb.Controllers.Warehouse
             // TODO verifica azienda - person id
             return CreateResponse(manager.GenerateProductCode(productName, company));
         }
+        /*
         [Route("suppliers/{id}")]
         [HttpGet]
         public Response<List<Company>> GetSuppliers([FromRoute]int companyId)
         {
             var list = new List<Company>();
             return CreateResponse(list);
+        }
+        [Route("clients/{id}")]
+        [HttpGet]
+        public Response<List<Company>> GetClients([FromRoute]int companyId)
+        {
+            var list = new List<Company>();
+            return CreateResponse(list);
+        }
+        */
+        [Route("clients_suppliers")]
+        [HttpGet]
+        public Response<List<Company>> GetClientsSuppliers()
+        {
+            if (!_isLogged())
+                return CreateLoginRequired<List<Company>>();
+            return CreateResponse(manager.GetClientsSuppliers(_getPersonId()));
+        }
+        [Route("clients_suppliers")]
+        [HttpPost]
+        public Response<int> SaveClientSupplier(string companyName, string vat, string country, string city, string province, string street, string civicNumber, string zipCode, int addressId, int companyId)
+        {
+            if (!_isLogged())
+                return CreateLoginRequired<int>();
+            var res = manager.SaveCompanyForInvoice(_getPersonId(), companyName, vat, country, city, province, street, civicNumber, zipCode, out string message, addressId, companyId);
+            return CreateResponse(res, res > 0 ? ResponseCode.OK : ResponseCode.FAIL, message);
         }
     }
 }

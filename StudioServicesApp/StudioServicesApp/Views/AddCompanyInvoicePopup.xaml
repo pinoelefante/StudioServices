@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MyPopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:pinoelefante.Views"
+             x:Class="StudioServicesApp.Views.AddCompanyInvoicePopup"
+             CloseWhenBackgroundIsClicked="False"
+             HasSystemPadding="False"
+             InputTransparent="False">
+    
+    <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
+        <AbsoluteLayout>
+            <Frame Margin="15" HorizontalOptions="Center" BackgroundColor="White">
+                <Grid Padding="10,10,10,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Text="Dati generali" FontAttributes="Bold" />
+                    <Label Grid.Row="1" Text="Nome azienda"/>
+                    <Entry Grid.Row="2" Text="{Binding CompanyName, Mode=TwoWay}"/>
+                    <Label Grid.Row="3" Text="Partita IVA"/>
+                    <Entry Grid.Row="4" Text="{Binding VatNumber, Mode=TwoWay}"/>
+                    <Label Grid.Row="5" Text="Indirizzo" />
+                    <Entry Grid.Row="6" Text="{Binding Street}"/>
+                    <Label Grid.Row="7" Text="Numero civico" />
+                    <Label Grid.Row="9" Text="Città" />
+                    <Label Grid.Row="11" Text="Provincia" />
+                    <Label Grid.Row="13" Text="CAP" />
+                    <Label Grid.Row="15" Text="Nazione" />
+                    <Button Grid.Row="17" Text="Salva" Command="{Binding AddCompanyCommand}"/>
+                </Grid>
+            </Frame>
+            <ContentView AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ClosePopupCommand}"/>
+                </ContentView.GestureRecognizers>
+                <Image x:Name="CloseImage" HeightRequest="30" WidthRequest="30" Source="close_circle_button.png"/>
+            </ContentView>
+        </AbsoluteLayout>
+
+    </ScrollView>
+</views:MyPopupPage>

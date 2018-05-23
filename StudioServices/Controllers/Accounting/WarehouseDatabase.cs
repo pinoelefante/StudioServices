@@ -47,5 +47,30 @@ namespace StudioServices.Controllers.Accounting
                 return conn.Table<Company>().Where(x => x.VATNumber == vat).FirstOrDefault();
             }
         }
+        /*
+        public List<Company> GetClients(int companyId)
+        {
+            using (var conn = GetConnection())
+            {
+                var companies = conn.Table<Invoice>().Where(x => x.Sender == companyId && x.Type==InvoiceType.SELL).GroupBy(x => x.Recipient).Select(x => x.First()).Select(x => x.Recipient);
+                return conn.Table<Company>().Where(z => companies.Contains(z.Id)).ToList();
+            }
+        }
+        public List<Company> GetSuppliers(int companyId)
+        {
+            using (var conn = GetConnection())
+            {
+                var companies = conn.Table<Invoice>().Where(x => x.Sender == companyId && x.Type == InvoiceType.PURCHASE).GroupBy(x => x.Recipient).Select(x => x.First()).Select(x => x.Recipient);
+                return conn.Table<Company>().Where(z => companies.Contains(z.Id)).ToList();
+            }
+        }
+        */
+        public List<Company> GetClientsSuppliets(int personId)
+        {
+            using (var conn = GetConnection())
+            {
+                return conn.Table<Company>().Where(x => x.PersonId == -personId).ToList();
+            }
+        }
     }
 }
