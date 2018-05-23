@@ -40,7 +40,7 @@ namespace pinoelefante.Services
         public Action ExitAction { get; set; }
         public void GoBack()
         {
-            if(popupNavigation.PopupStack.Count > 0)
+            if (popupNavigation.PopupStack.Count > 0)
             {
                 PopPopupAsync();
             }
@@ -60,7 +60,12 @@ namespace pinoelefante.Services
                 });
             }
             else
-                ExitAction?.Invoke();
+            {
+                if (ExitAction != null)
+                    ExitAction.Invoke();
+                else
+                    Application.Current.Quit();
+            }
         }
 
         public void NavigateTo(string pageKey)

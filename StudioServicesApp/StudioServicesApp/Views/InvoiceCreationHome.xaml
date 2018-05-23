@@ -35,7 +35,7 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Picker Grid.Column="0" ItemsSource="{Binding ListCompanies}" SelectedItem="{Binding SelectedMyCompany, Mode=TwoWay}" ItemDisplayBinding="{Binding Name}"/>
+                    <Picker Grid.Column="0" ItemsSource="{Binding ListCompanies}" SelectedIndex="{Binding SelectedMyCompanyIndex, Mode=TwoWay}" SelectedItem="{Binding SelectedMyCompany, Mode=TwoWay}" ItemDisplayBinding="{Binding Name}"/>
                     <Button Grid.Column="1" Text="+" Command="{Binding CreateMyNewCompanyCommand}" />
                 </Grid>
 

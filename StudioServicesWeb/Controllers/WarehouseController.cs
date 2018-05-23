@@ -83,5 +83,12 @@ namespace StudioServicesWeb.Controllers.Warehouse
             // TODO verifica azienda - person id
             return CreateResponse(manager.GenerateProductCode(productName, company));
         }
+        [Route("suppliers/{id}")]
+        [HttpGet]
+        public Response<List<Company>> GetSuppliers([FromRoute]int companyId)
+        {
+            var list = new List<Company>();
+            return CreateResponse(list);
+        }
     }
 }

@@ -23,12 +23,21 @@ namespace StudioServicesApp.ViewModels
 
         public override async Task NavigatedToAsync(object parameter = null)
         {
+            MessengerInstance.Register<bool>(this, "AddAddressStatus", async (x) =>
+            {
+                await LoadPersonAsync(true);
+                await NavigatedToAsync();
+            });
             await base.NavigatedToAsync();
             Device.BeginInvokeOnMainThread(() =>
             {
                 ListAddresses.Clear();
                 ListAddresses.AddRange(Persona?.Addresses);
             });
+        }
+        public override void NavigatedFrom()
+        {
+            MessengerInstance.Unregister<bool>(this, "AddAddressStatus");
         }
 
         public string CompanyName
@@ -62,12 +71,6 @@ namespace StudioServicesApp.ViewModels
             openAddAddressCmd ??
             (openAddAddressCmd = new RelayCommand(() =>
             {
-                MessengerInstance.Register<bool>(this, "AddAddressStatus", async (x) => 
-                {
-                    MessengerInstance.Unregister<bool>(this, "AddAddressStatus");
-                    await LoadPersonAsync(true);
-                    await NavigatedToAsync();
-                });
                 Navigation.PushPopupAsync(new AddAddressPopup());
             }));
     }

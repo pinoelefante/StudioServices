@@ -51,7 +51,7 @@ namespace StudioServicesApp.UWP
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
-
+                //SQLitePCL.Batteries_V2.Init();
                 Rg.Plugins.Popup.Popup.Init();
 
                 Xamarin.Forms.Forms.Init(e);
