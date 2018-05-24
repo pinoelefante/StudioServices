@@ -13,6 +13,8 @@ using StudioServices.Controllers.Accounting;
 using StudioServices.Controllers.Items;
 using StudioServices.Controllers.Newsboard;
 using StudioServices.Controllers.Persons;
+using StudioServices;
+using Microsoft.AspNetCore.Http;
 
 namespace StudioServicesWeb
 {
@@ -28,9 +30,20 @@ namespace StudioServicesWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            StudioServicesConfig.Init();
             services.AddMvc();
-            services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
-            services.AddSession();
+            //services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
+            services.AddSession(o =>
+            {
+                o.Cookie.Name = "SSCookie";
+                o.Cookie.HttpOnly = true;
+                o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                
+            });
+            services.AddDistributedRedisCache(o =>
+            {
+                o.Configuration = Configuration.GetConnectionString("Redis");
+            });
             services.AddResponseCompression();
 
             services.AddSingleton<AuthenticationManager>();

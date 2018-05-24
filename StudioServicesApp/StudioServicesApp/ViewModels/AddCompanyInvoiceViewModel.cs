@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using StudioServices.Data.Accounting;
 using StudioServicesApp.Services;
 
 namespace StudioServicesApp.ViewModels
@@ -25,9 +26,16 @@ namespace StudioServicesApp.ViewModels
         private RelayCommand addCompanyCmd;
         public RelayCommand AddCompanyCommand =>
             addCompanyCmd ??
-            (addCompanyCmd = new RelayCommand(() =>
+            (addCompanyCmd = new RelayCommand(async () =>
             {
-                
+                var res = await SendRequestAsync(async () => await api.Warehouse_SaveClientSupplier(CompanyName, VatNumber, Country, City, Province, Street, CivicNumber, ZipCode, 0, 0));
+                if (res.IsOK && res.Data != null)
+                {
+                    MessengerInstance.Send(res.Data, "AddCompanyInvoiceStatus");
+                    await Navigation.PopPopupAsync();
+                }
+                else
+                    ShowMessage("Non è stato possibile aggiungere l'azienda","Errore");
             }));
     }
 }

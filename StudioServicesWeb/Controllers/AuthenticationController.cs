@@ -19,12 +19,12 @@ namespace StudioServicesWeb.Controllers
 
         [Route("login")]
         [HttpPost]
-        public Response<bool> Login([FromForm]string username, [FromForm]string password)
+        public async Task<Response<bool>> LoginAsync([FromForm]string username, [FromForm]string password)
         {
             int account_id = auth.Login(username, password, out int person_id, out bool admin, out string message);
             bool response = account_id > 0;
             if (response)
-                _setUserSession(account_id, person_id, admin);
+                await _setUserSessionAsync(account_id, person_id, admin);
             return CreateBoolean(response, ResponseCode.OK, message);
         }
         

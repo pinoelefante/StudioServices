@@ -17,6 +17,7 @@ namespace StudioServicesApp.ViewModels
         private Person _person;
         public Person Persona { get => _person; set => SetMT(ref _person, value); }
         public Dictionary<Company, List<CompanyProduct>> MyCompanies { get; private set; } = new Dictionary<Company, List<CompanyProduct>>();
+        public List<Company> ClientsSuppliers { get; private set; } = new List<Company>();
 
         private bool _isAdmin;
         public bool IsAdmin { get => _isAdmin; set => SetMT(ref _isAdmin, value); }
@@ -31,6 +32,7 @@ namespace StudioServicesApp.ViewModels
                 
                 await LoadPersonAsync();
                 await LoadCompaniesAsync();
+                await LoadClientsSuppliersAsync();
                 if(VerifyPersonEnabled)
                     CheckPerson();
             });
@@ -76,6 +78,21 @@ namespace StudioServicesApp.ViewModels
             }
             else
                 MyCompanies = cache.GetValue<Dictionary<Company, List<CompanyProduct>>>("my_companies", new Dictionary<Company, List<CompanyProduct>>());
+        }
+        protected async Task LoadClientsSuppliersAsync(bool force = false)
+        {
+            if (force || cache.GetValue<List<Company>>("clients_suppliers", null) == null)
+            {
+                var res = await SendRequestAsync(async () => await api.Warehouse_ClientsSuppliersList());
+                if (res.IsOK && res.Data != null)
+                {
+                    cache.SetValue("clients_suppliers", res.Data);
+                    ClientsSuppliers.Clear();
+                    ClientsSuppliers.AddRange(res.Data);
+                }
+            }
+            else
+                ClientsSuppliers = cache.GetValue<List<Company>>("clients_suppliers");
         }
         public List<Company> GetListCompanies()
         {

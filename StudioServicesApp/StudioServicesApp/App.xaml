@@ -10,6 +10,7 @@
 
             <converters:NotBoolean x:Key="NotBoolean"/>
             <converters:ItemTappedEventArgsConverter x:Key="ItemTappedConverter" />
+            <converters:TextChangedEventArgsConverter x:Key="TextChangedConverter"/>
             <converters:DateTimeStringConverter x:Key="DateTimeString"/>
             <converters:IntEqualsConverter x:Key="IntEquals"/>
             <converters:IntGreaterThan x:Key="IntGreater"/>

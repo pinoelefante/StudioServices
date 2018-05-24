@@ -69,7 +69,7 @@ namespace StudioServices.Controllers.Accounting
         {
             using (var conn = GetConnection())
             {
-                return conn.Table<Company>().Where(x => x.PersonId == -personId).ToList();
+                return conn.Table<Company>().Where(x => x.PersonId == personId).ToList();
             }
         }
     }

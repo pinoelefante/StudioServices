@@ -223,23 +223,16 @@ namespace StudioServicesApp.Services
             var parameters = new ParametersList("companyId", companyId, "productName", productName, "unitPrice", unitPrice, "unitMeasure", unitMeasure, "tax", tax, "quantity", quantity, "productCode", productCode, "id", productId);
             return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
         }
-        /*
-        public async Task<ResponseMessage<List<Company>>> Warehouse_SuppliersList(int companyId)
-        {
-            var address = $"{WS_ADDRESS}/api/warehouse/suppliers/{companyId}";
-            return await SendRequestAsync<List<Company>>(address, HttpMethod.GET);
-        }
-        */
-        public async Task<ResponseMessage<List<Company>>> Warehouse_ClientsSuppliersList(int personId)
+        public async Task<ResponseMessage<List<Company>>> Warehouse_ClientsSuppliersList()
         {
             var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers";
             return await SendRequestAsync<List<Company>>(address, HttpMethod.GET);
         }
-        public async Task<ResponseMessage<int>> Warehouse_SaveClientSupplier(string companyName, string vat, string country, string city, string province, string street, string civicNumber, string zipCode, int addressId, int companyId)
+        public async Task<ResponseMessage<Company>> Warehouse_SaveClientSupplier(string companyName, string vat, string country, string city, string province, string street, string civicNumber, string zipCode, int addressId, int companyId)
         {
             var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers";
             var parameters = new ParametersList("companyName", companyName, "vat", vat, "country", country, "city", city, "province", province, "street", street, "civicNumber", civicNumber, "zipCode", zipCode, "addressId", addressId, "companyId", companyId);
-            return await SendRequestAsync<int>(address, HttpMethod.POST, parameters);
+            return await SendRequestAsync<Company>(address, HttpMethod.POST, parameters);
         }
         #endregion
 

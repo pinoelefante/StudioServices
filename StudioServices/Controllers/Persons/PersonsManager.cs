@@ -58,7 +58,7 @@ namespace StudioServices.Controllers.Persons
             // Salvataggio file e generazione nome
             string filename = document.Filename ?? String.Format("{0:D4}_{1:D2}_{2}", person_id, document_type, StringUtils.RandomString(), file_ext);
             document.Filename = filename;
-            if (FileUtils.WriteFile("", filename, file))
+            if (FileUtils.WriteFile(StudioServicesConfig.IDENTIFICATIONS_FOLDER, filename, file))
             {
                 if (db.SaveItem(document))
                     return true;

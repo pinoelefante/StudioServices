@@ -29,11 +29,12 @@ namespace StudioServicesWeb.Controllers
             var account_id = HttpContext.Session.GetInt32("PersonId");
             return account_id != null ? account_id.Value : -1;
         }
-        protected void _setUserSession(int account_id, int person_id, bool admin)
+        protected async Task _setUserSessionAsync(int account_id, int person_id, bool admin)
         {
             HttpContext.Session.SetInt32("AccountId", account_id);
             HttpContext.Session.SetInt32("PersonId", person_id);
             HttpContext.Session.SetInt32("IsAdmin", admin ? 1 : 0);
+            await HttpContext.Session.CommitAsync();
         }
         public Response<Boolean> CreateBoolean(bool resp, ResponseCode code = ResponseCode.OK, string message = "")
         {

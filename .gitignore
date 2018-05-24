@@ -44,3 +44,4 @@ Thumbs.db
 /StudioServicesWeb/database.sqlite
 .vscode/tasks.json
 *.bat
+/StudioServicesWeb/studio_config.json

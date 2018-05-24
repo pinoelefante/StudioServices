@@ -12,6 +12,7 @@ namespace StudioServices.Controllers.Utils
         public static bool WriteFile(string folder_path, string filename, byte[] content)
         {
             string destination = Path.Combine(folder_path, filename);
+            CreateDirectoryFromFilePath(destination);
             try
             {
                 File.WriteAllBytes(destination, content);
@@ -22,6 +23,12 @@ namespace StudioServices.Controllers.Utils
                 Console.WriteLine(e.Message);
                 return false;
             }
+        }
+        public static bool CreateDirectoryFromFilePath(string file_path)
+        {
+            var dir_path = file_path.Substring(0, file_path.LastIndexOf(Path.DirectorySeparatorChar));
+            var dir = Directory.CreateDirectory(dir_path);
+            return (dir != null && dir.Exists);
         }
         public static bool Exists(string folder_path, string filename)
         {

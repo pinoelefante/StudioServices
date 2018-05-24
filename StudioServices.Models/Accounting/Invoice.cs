@@ -22,7 +22,7 @@ namespace StudioServices.Data.Accounting
     }
     public enum InvoiceType
     {
-        SELL=1,
-        PURCHASE = 2
+        SELL = 0,
+        PURCHASE = 1
     }
 }

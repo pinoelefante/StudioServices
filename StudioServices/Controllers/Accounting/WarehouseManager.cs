@@ -157,7 +157,7 @@ namespace StudioServices.Controllers.Accounting
         */
         public List<Company> GetClientsSuppliers(int personId)
         {
-            return db.GetClientsSuppliets(personId);
+            return db.GetClientsSuppliets(-personId);
         }
     }
 }

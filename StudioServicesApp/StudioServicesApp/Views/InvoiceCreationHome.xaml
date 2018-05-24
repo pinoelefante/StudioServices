@@ -106,7 +106,11 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <SearchBar Grid.Column="0" Placeholder="Cerca per ragione sociale o partita iva"/>
+                <SearchBar x:Name="searchClientSupplier" Grid.Column="0" Placeholder="Cerca per ragione sociale o partita iva" SearchCommand="{Binding SearchClientSupplierCommand}" SearchCommandParameter="{Binding Source={x:Reference searchClientSupplier}, Path=Text}">
+                    <SearchBar.Behaviors>
+                        <views:EventToCommandBehavior EventName="TextChanged" EventArgsConverter="{Binding Source={StaticResource TextChangedConverter}}" Command="{Binding SearchClientSupplierCommand}"/>
+                    </SearchBar.Behaviors>
+                </SearchBar>
                 <Button Grid.Column="1" Text="+" Command="{Binding OpenAddInvoiceCompanyCommand}"/>
             </Grid>
             

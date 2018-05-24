@@ -9,12 +9,14 @@ using pinoelefante.ViewModels;
 using StudioServices.Data.Accounting;
 using StudioServicesApp.Services;
 using StudioServicesApp.Views;
+using StudioServicesApp.Views.Framework;
 using Xamarin.Forms;
 
 namespace StudioServicesApp.ViewModels
 {
     public class InvoiceCreationViewModel : MyAuthViewModel
     {
+        private CompanyComparerByName comparerByName = new CompanyComparerByName();
         private RelayCommand<string> nextPageCommand;
         public InvoiceCreationViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
 
@@ -28,11 +30,13 @@ namespace StudioServicesApp.ViewModels
                 else if (MyCompanies.Count == 0)
                     Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
             });
-            MessengerInstance.Register<int>(this, "AddCompanyInvoiceStatus", async (companyId) =>
+            MessengerInstance.Register<Company>(this, "AddCompanyInvoiceStatus", (company) =>
             {
-                if (companyId <= 0)
+                if (company == null)
                     return;
-
+                ClientsSuppliers.Add(company);
+                ClientsSuppliers.Sort(comparerByName);
+                SearchClientSupplierCommand.Execute(null);
             });
             await base.NavigatedToAsync();
             Device.BeginInvokeOnMainThread(() =>
@@ -60,7 +64,7 @@ namespace StudioServicesApp.ViewModels
         }
         public override void NavigatedFrom()
         {
-            MessengerInstance.Unregister<bool>(this, "AddCompanyStatus");
+            Cleanup();
         }
 
         private DateTime invoiceDate = DateTime.Now;
@@ -88,8 +92,6 @@ namespace StudioServicesApp.ViewModels
                 {
                     SetMT(ref invoiceTypeIndex, value);
                     SelectedCompany = null;
-                    if (value >= 0)
-                        PopulateCompanyList(value == 0 ? InvoiceType.SELL : InvoiceType.PURCHASE);
                     InitFields();
                 }
             }
@@ -122,30 +124,6 @@ namespace StudioServicesApp.ViewModels
         public string InvoiceNumberText { get => invoiceNumberText; set => SetMT(ref invoiceNumberText, IntValidation(invoiceNumberText, value)); }
         public string InvoiceNumberExtraText { get => invoiceNumberTextExtra; set => SetMT(ref invoiceNumberTextExtra, StringValidation(InvoiceNumberExtraText, value, 5)); }
 
-        private List<Company> fullListSell, fullListPurchase;
-        private void PopulateCompanyList(InvoiceType invoiceType)
-        {
-            CompanyList.Clear();
-            switch (invoiceType)
-            {
-                case InvoiceType.PURCHASE:
-                    fullListPurchase = new List<Company>()
-                    {
-                        new Company(){Name="Elesoft", VATNumber="012345678912345" },
-                        new Company(){Name="Softele", VATNumber="012345678912345" }
-                    };
-                    CompanyList.AddRange(fullListPurchase);
-                    break;
-                case InvoiceType.SELL:
-                    fullListSell = new List<Company>()
-                    {
-                        new Company(){Name="Elesell", VATNumber="012345678912345" },
-                        new Company(){Name="Softell", VATNumber="012345678912345" }
-                    };
-                    CompanyList.AddRange(fullListSell);
-                    break;
-            }
-        }
         private void InitFields()
         {
             var invoiceType = (InvoiceType)Enum.ToObject(typeof(InvoiceType), SelectedIndexInvoiceType);
@@ -153,10 +131,16 @@ namespace StudioServicesApp.ViewModels
             switch(invoiceType)
             {
                 case InvoiceType.PURCHASE:
+                    InvoiceNumberText = string.Empty;
+                    InvoiceNumberExtraText = string.Empty;
                     break;
                 case InvoiceType.SELL:
+                    //get next invoice number
+                    InvoiceNumberExtraText = string.Empty;
                     break;
             }
+            if (CompanyList.Count == 0)
+                CompanyList.AddRange(ClientsSuppliers);
             /**
              - Selezionare lista clienti o fornitori
              - Inizializzare il campo prossima fattura
@@ -174,12 +158,41 @@ namespace StudioServicesApp.ViewModels
                 switch (pageIndex)
                 {
                     case "invoice_details":
-                        // TODO: verifica che il numero della fattura non esista
-                        Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_DETAILS);
+                        
+                        if(VerifyInvoiceHome())
+                            Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_DETAILS);
                         break;
                 }
                 Debug.WriteLine($"PageIndex: {pageIndex}");
             }));
+        private bool VerifyInvoiceHome()
+        {
+            if(SelectedMyCompany == null)
+            {
+                ShowMessage("Seleziona la tua azienda");
+                return false;
+            }
+            if(SelectedIndexInvoiceType < 0 || SelectedIndexInvoiceType > 1)
+            {
+                ShowMessage("Seleziona il tipo di fattura");
+                return false;
+            }
+            //DataFattura
+
+            // TODO: verifica che il numero della fattura non esista
+            if (string.IsNullOrEmpty(IntValidation(string.Empty, InvoiceNumberText, false)))
+            {
+                ShowMessage("Inserisci un numero di fattura valido");
+                return false;
+            }
+            //NumeroExtra
+            if(SelectedCompany == null)
+            {
+                ShowMessage("Seleziona il cliente/fornitore");
+                return false;
+            }
+            return true;
+        }
 
         private RelayCommand createMyNewCompanyCmd, createInvoiceCompanyCmd;
         public RelayCommand CreateMyNewCompanyCommand =>
@@ -194,6 +207,28 @@ namespace StudioServicesApp.ViewModels
             {
                 Navigation.PushPopupAsync(new AddCompanyInvoicePopup());
             }));
+        private RelayCommand<string> searchCSCmd;
+        public RelayCommand<string> SearchClientSupplierCommand =>
+            searchCSCmd ??
+            (searchCSCmd = new RelayCommand<string>(search =>
+            {
+                CompanyList.Clear();
+                if(string.IsNullOrEmpty(search))
+                    CompanyList.AddRange(base.ClientsSuppliers);
+                else
+                {
+                    var lowersearch = search.ToLower();
+                    var res = ClientsSuppliers.FindAll(x => x.Name.ToLower().Contains(lowersearch) || x.VATNumber.StartsWith(lowersearch));
+                    CompanyList.AddRange(res);
+                }
+            }));
+        public override void Cleanup()
+        {
+            SelectedCompany = null;
+            InvoiceNumberText = string.Empty;
+            InvoiceNumberExtraText = string.Empty;
+            base.Cleanup();
+        }
         public MyObservableCollection<string> InvoiceDetails { get; } = new MyObservableCollection<string>();
     }
 }
