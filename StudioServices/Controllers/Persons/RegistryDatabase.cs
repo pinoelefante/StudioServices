@@ -42,7 +42,8 @@ namespace StudioServices.Controllers.Persons
                     connection.Table<ContactMethod>().Where(x => x.PersonId == id && x.Enabled).ToList().ForEach(x => persona.Add(x));
                     connection.Table<IdentificationDocument>().Where(x => x.PersonId == id && x.Enabled).ToList().ForEach(x => persona.Add(x));
                     connection.Table<Email>().Where(x => x.PersonId == id && x.Enabled).ToList().ForEach(x => persona.Add(x));
-                    connection.Table<Address>().Where(x => x.PersonId == id && x.Enabled).ToList().ForEach(x => persona.Add(x));
+                    int negId = -id;
+                    connection.Table<Address>().Where(x => (x.PersonId == id || x.PersonId == negId) && x.Enabled).ToList().ForEach(x => persona.Add(x));
                 }
             }
             return persona;

@@ -101,7 +101,15 @@
                 </Label.Triggers>
             </Label>
 
-            <SearchBar Grid.Row="2" Placeholder="Cerca per ragione sociale o partita iva"/>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <SearchBar Grid.Column="0" Placeholder="Cerca per ragione sociale o partita iva"/>
+                <Button Grid.Column="1" Text="+" Command="{Binding OpenAddInvoiceCompanyCommand}"/>
+            </Grid>
+            
 
             <ListView Grid.Row="3" ItemsSource="{Binding CompanyList}" SelectedItem="{Binding SelectedCompany, Mode=TwoWay}">
                 <ListView.Header>

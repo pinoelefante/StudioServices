@@ -15,7 +15,6 @@ namespace StudioServices.Controllers.Accounting
     {
         private const int PRODUCT_CODE_LENGTH = 3;
         private WarehouseDatabase db;
-        private RegistryDatabase registry;
         private Random random;
         public WarehouseManager()
         {
@@ -47,7 +46,7 @@ namespace StudioServices.Controllers.Accounting
                 City = city,
                 CivicNumber = civicNum,
                 Country = country,
-                Description = $"Added by {person_id}",
+                Description = string.Empty,
                 Id = address_id,
                 PersonId = -person_id,
                 Province = province,

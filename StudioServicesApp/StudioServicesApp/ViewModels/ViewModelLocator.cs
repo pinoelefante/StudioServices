@@ -50,6 +50,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<InvoiceCreationViewModel>();
             SimpleIoc.Default.Register<AddCompanyViewModel>();
             SimpleIoc.Default.Register<AddAddressViewModel>();
+            SimpleIoc.Default.Register<AddCompanyInvoiceViewModel>();
 
             SimpleIoc.Default.Register<ServerSettingsViewModel>();
 
@@ -80,6 +81,7 @@ namespace StudioServicesApp.ViewModels
         public InvoiceCreationViewModel InvoiceCreationViewModel => GetService<InvoiceCreationViewModel>();
         public AddCompanyViewModel AddCompanyViewModel => GetService<AddCompanyViewModel>();
         public AddAddressViewModel AddAddressViewModel => GetService<AddAddressViewModel>();
+        public AddCompanyInvoiceViewModel AddCompanyInvoiceViewModel => GetService<AddCompanyInvoiceViewModel>();
 
         public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();
     }

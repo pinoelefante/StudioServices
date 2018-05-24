@@ -7,34 +7,12 @@
                  BindingContext="{Binding AddAddressViewModel, Source={StaticResource Locator}}"
                  CloseWhenBackgroundIsClicked="False"
                  HasSystemPadding="False"
-                 InputTransparent="False">
+                 InputTransparent="False"
+                 Title="Aggiungi indirizzo">
     <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
         <AbsoluteLayout>
-            <Frame Margin="15" HorizontalOptions="Center" BackgroundColor="White">
+            <Frame Margin="15" HorizontalOptions="Center" BackgroundColor="White" MinimumWidthRequest="200" WidthRequest="200">
                 <Grid Padding="10,10,10,5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    
                     <Label Grid.Row="0" Text="Tipo"/>
                     <Picker Grid.Row="1" SelectedIndex="{Binding TypeIndex, Mode=TwoWay}" MinimumWidthRequest="100">
                         <Picker.Items>

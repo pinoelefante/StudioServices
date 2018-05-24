@@ -32,7 +32,7 @@ namespace StudioServicesApp.ViewModels
             Device.BeginInvokeOnMainThread(() =>
             {
                 ListAddresses.Clear();
-                ListAddresses.AddRange(Persona?.Addresses);
+                ListAddresses.AddRange(Persona?.GetPersonAddresses());
             });
         }
         public override void NavigatedFrom()

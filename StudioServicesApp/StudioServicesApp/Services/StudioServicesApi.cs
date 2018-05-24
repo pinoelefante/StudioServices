@@ -232,14 +232,20 @@ namespace StudioServicesApp.Services
         */
         public async Task<ResponseMessage<List<Company>>> Warehouse_ClientsSuppliersList(int personId)
         {
-            var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers/{personId}";
+            var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers";
             return await SendRequestAsync<List<Company>>(address, HttpMethod.GET);
+        }
+        public async Task<ResponseMessage<int>> Warehouse_SaveClientSupplier(string companyName, string vat, string country, string city, string province, string street, string civicNumber, string zipCode, int addressId, int companyId)
+        {
+            var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers";
+            var parameters = new ParametersList("companyName", companyName, "vat", vat, "country", country, "city", city, "province", province, "street", street, "civicNumber", civicNumber, "zipCode", zipCode, "addressId", addressId, "companyId", companyId);
+            return await SendRequestAsync<int>(address, HttpMethod.POST, parameters);
         }
         #endregion
 
         private async Task<ResponseMessage<T>> SendRequestAsync<T>(string url, HttpMethod method, IEnumerable<KeyValuePair<string, string>> parameters = null, byte[] file = null, bool send_later = false)
         {
-            if(!connectionStatus.IsConnected())
+            if(!connectionStatus.IsConnected(url))
             {
                 if (send_later)
                     AddRequest(url, method, parameters as ParametersList, file, send_later);

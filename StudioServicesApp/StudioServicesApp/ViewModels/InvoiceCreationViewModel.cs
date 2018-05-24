@@ -28,6 +28,12 @@ namespace StudioServicesApp.ViewModels
                 else if (MyCompanies.Count == 0)
                     Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
             });
+            MessengerInstance.Register<int>(this, "AddCompanyInvoiceStatus", async (companyId) =>
+            {
+                if (companyId <= 0)
+                    return;
+
+            });
             await base.NavigatedToAsync();
             Device.BeginInvokeOnMainThread(() =>
             {
@@ -175,12 +181,18 @@ namespace StudioServicesApp.ViewModels
                 Debug.WriteLine($"PageIndex: {pageIndex}");
             }));
 
-        private RelayCommand createMyNewCompanyCmd;
+        private RelayCommand createMyNewCompanyCmd, createInvoiceCompanyCmd;
         public RelayCommand CreateMyNewCompanyCommand =>
             createMyNewCompanyCmd ??
             (createMyNewCompanyCmd = new RelayCommand(() =>
             {
                 Navigation.PushPopupAsync(new AddCompanyPopup());
+            }));
+        public RelayCommand OpenAddInvoiceCompanyCommand =>
+            createInvoiceCompanyCmd ??
+            (createInvoiceCompanyCmd = new RelayCommand(() =>
+            {
+                Navigation.PushPopupAsync(new AddCompanyInvoicePopup());
             }));
         public MyObservableCollection<string> InvoiceDetails { get; } = new MyObservableCollection<string>();
     }

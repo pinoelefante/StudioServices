@@ -46,7 +46,7 @@ namespace pinoelefante.ViewModels
         
         public void ShowMessage(string message, string title = "", Action okAction=null)
         {
-            messageService.ShowMessage(message, title, okAction);
+            messageService.ShowMessage(message ?? string.Empty, title, okAction);
         }
         public void ShowToast(string message, int seconds = 3)
         {
@@ -112,6 +112,9 @@ namespace pinoelefante.ViewModels
                     if (!res)
                         ShowLoginPrompt();
                     return res;
+                case ResponseCode.INTERNET_NOT_AVAILABLE:
+                    ShowMessage("Connessione assente");
+                    return false;
                 case ResponseCode.COMMUNICATION_ERROR:
                 case ResponseCode.FAIL:
                 case ResponseCode.SERIALIZER_ERROR:

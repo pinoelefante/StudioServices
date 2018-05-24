@@ -20,7 +20,7 @@ namespace StudioServicesWeb
         public static IWebHost BuildWebHost(string[] args) {
             return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://0.0.0.0:5000")
+                .UseUrls("http://localhost:5000", "http://0.0.0.0:5000")
                 .Build();
         }
     }

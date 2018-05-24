@@ -22,14 +22,15 @@ namespace pinoelefante.Views
         protected object navigationParameter = null;
         protected override void OnAppearing()
         {
-            base.OnAppearing();
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            ViewModel?.NavigatedToAsync(navigationParameter);
+            if (ViewModel != null)
+            {
+                ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+                ViewModel.NavigatedToAsync(navigationParameter);
+            }
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            /*
             switch(e.PropertyName)
             {
                 case nameof(ViewModel.IsBusyActive):
@@ -43,12 +44,10 @@ namespace pinoelefante.Views
                         ViewModel.Navigation.PopPopupAsync();
                     break;
             }
-            */
         }
 
         protected override void OnDisappearing()
         {
-            base.OnDisappearing();
             ViewModel?.NavigatedFrom();
         }
         protected override bool OnBackButtonPressed()

@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.Views.LoginPage"
              xmlns:views="clr-namespace:pinoelefante.Views"
-             IsBusy="{Binding IsBusyActive, Mode=TwoWay}"
              BindingContext="{Binding LoginViewModel, Source={StaticResource Locator}}">
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding OpenServerSettings}" Text="Server"/>

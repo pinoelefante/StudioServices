@@ -33,7 +33,6 @@ namespace StudioServices.Controllers.Persons
         }
         public Person GetPerson(int person_id)
         {
-            // TODO gestione cache
             return db.PersonSelect(person_id);
         }
         public bool ChangeActiveStatus(int person_id, bool state)

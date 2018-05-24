@@ -36,5 +36,17 @@ namespace StudioServices.Registry.Data
             else
                 throw new ArgumentException("Tipo di oggetto non supportato");
         }
+        public List<Address> GetPersonAddresses()
+        {
+            return Addresses.FindAll(x => x.PersonId == Id);
+        }
+        public List<Address> GetInvoiceAddresses()
+        {
+            return Addresses.FindAll(x => x.PersonId == -Id);
+        }
+        public Address GetAddress(int id)
+        {
+            return Addresses.Find(x => x.Id == id);
+        }
     }
 }
