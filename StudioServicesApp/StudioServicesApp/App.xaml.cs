@@ -1,4 +1,6 @@
 ﻿using System;
+using Acr.UserDialogs;
+using pinoelefante.Services;
 using StudioServicesApp.ViewModels;
 using StudioServicesApp.Views;
 using Xamarin.Forms;
@@ -11,29 +13,24 @@ namespace StudioServicesApp
 		public App ()
 		{
 			InitializeComponent();
-
-            //var nav = new NavigationPage(new InvoiceCreationHome());
-            //ConfigureNavigation(nav, ViewModelLocator.INVOICE_CREATION_HOME);
+            
             var nav = new NavigationPage(new LoginPage());
             MainPage = nav;
             ConfigureNavigation(nav, ViewModelLocator.LOGIN_PAGE);
         }
         public static void ConfigureNavigation(NavigationPage nav, string homePageKey, bool askToClose = false)
         {
-            /*
             IClosingApp closer = ViewModelLocator.GetService<IClosingApp>();
             Action act = async () =>
             {
                 if (askToClose)
                 {
-                    if (!await UserDialogs.Instance.ConfirmAsync("Would you like to close the app?", "Closing app"))
+                    if (!await UserDialogs.Instance.ConfirmAsync("Vuoi chiudere l'applicazione?", "Chiudi applicazione"))
                         return;
                 }
                 closer.CloseApp();
             };
             ViewModelLocator.NavigationService.Initialize(nav, homePageKey, act);
-            */
-            ViewModelLocator.NavigationService.Initialize(nav, homePageKey);
         }
 
         protected override void OnStart ()

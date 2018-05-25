@@ -59,8 +59,10 @@ namespace pinoelefante.ViewModels
 
         public virtual Task NavigatedToAsync(object parameter = null)
         {
+            RegisterMessenger();
             return Task.CompletedTask;   
         }
+        public virtual void RegisterMessenger() { }
         public virtual void NavigatedFrom() { }
         /*
          * OnBackPressed() must return true when override 

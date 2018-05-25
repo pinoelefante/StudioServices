@@ -1,4 +1,5 @@
 ﻿using pinoelefante.Views;
+using StudioServices.Data.Accounting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,9 @@ namespace StudioServicesApp.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class InvoiceCreationDetails : MyContentPage
 	{
-		public InvoiceCreationDetails ()
+		public InvoiceCreationDetails (object invoice = null) : base(invoice)
 		{
 			InitializeComponent ();
 		}
-        protected override void OnAppearing()
-        {
-        }
     }
 }

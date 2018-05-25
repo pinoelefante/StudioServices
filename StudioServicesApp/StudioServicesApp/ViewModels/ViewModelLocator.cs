@@ -36,6 +36,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<CacheManager>();
             var sqlite = DependencyService.Get<ISQLite>();
             SimpleIoc.Default.Register<ISQLite>(() => sqlite);
+            SimpleIoc.Default.Register(() => DependencyService.Get<IClosingApp>());
             SimpleIoc.Default.Register<DatabaseService>();
             SimpleIoc.Default.Register<ConnectionStatus>();
             SimpleIoc.Default.Register<AlertService>();
@@ -47,7 +48,8 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<NewsPageViewModel>();
             SimpleIoc.Default.Register<ViewMessageViewModel>();
             SimpleIoc.Default.Register<AddIdentificationDocumentViewModel>();
-            SimpleIoc.Default.Register<InvoiceCreationViewModel>();
+            SimpleIoc.Default.Register<InvoiceCreationHomeViewModel>();
+            SimpleIoc.Default.Register<InvoiceCreationDetailsViewModel>();
             SimpleIoc.Default.Register<AddCompanyViewModel>();
             SimpleIoc.Default.Register<AddAddressViewModel>();
             SimpleIoc.Default.Register<AddCompanyInvoiceViewModel>();
@@ -78,7 +80,8 @@ namespace StudioServicesApp.ViewModels
         public NewsPageViewModel NewsPageViewModel => GetService<NewsPageViewModel>();
         public ViewMessageViewModel ViewMessageViewModel => GetService<ViewMessageViewModel>();
         public AddIdentificationDocumentViewModel AddIdentificationDocumentViewModel => GetService<AddIdentificationDocumentViewModel>();
-        public InvoiceCreationViewModel InvoiceCreationViewModel => GetService<InvoiceCreationViewModel>();
+        public InvoiceCreationHomeViewModel InvoiceCreationHomeViewModel => GetService<InvoiceCreationHomeViewModel>();
+        public InvoiceCreationDetailsViewModel InvoiceCreationDetailsViewModel => GetService<InvoiceCreationDetailsViewModel>();
         public AddCompanyViewModel AddCompanyViewModel => GetService<AddCompanyViewModel>();
         public AddAddressViewModel AddAddressViewModel => GetService<AddAddressViewModel>();
         public AddCompanyInvoiceViewModel AddCompanyInvoiceViewModel => GetService<AddCompanyInvoiceViewModel>();

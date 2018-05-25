@@ -6,7 +6,7 @@
                      xmlns:sys="clr-namespace:System;assembly=netstandard"
                      xmlns:effects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
                      Title="Creazione fattura"
-                     BindingContext="{Binding InvoiceCreationViewModel, Source={StaticResource Locator}}">
+                     BindingContext="{Binding InvoiceCreationHomeViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
         <Grid Padding="5">
             <Grid.RowDefinitions>
@@ -114,7 +114,6 @@
                 <Button Grid.Column="1" Text="+" Command="{Binding OpenAddInvoiceCompanyCommand}"/>
             </Grid>
             
-
             <ListView Grid.Row="3" ItemsSource="{Binding CompanyList}" SelectedItem="{Binding SelectedCompany, Mode=TwoWay}">
                 <ListView.Header>
                     <Grid Padding="5">
@@ -144,7 +143,7 @@
             
             <!-- Buttons -->
             <StackLayout Grid.Row="4">
-                <Button Text="Avanti" Command="{Binding NextInvoicePageCommand}" CommandParameter="invoice_details">
+                <Button Text="Avanti" Command="{Binding NextInvoicePageCommand}">
                     <Button.Triggers>
                         <MultiTrigger TargetType="Button">
                             <MultiTrigger.Conditions>
