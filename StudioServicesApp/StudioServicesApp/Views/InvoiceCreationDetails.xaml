@@ -4,7 +4,6 @@
              x:Class="StudioServicesApp.Views.InvoiceCreationDetails"
              xmlns:views="clr-namespace:pinoelefante.Views"
              xmlns:sys="clr-namespace:System;assembly=netstandard"
-             xmlns:effects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
              Title="Creazione fattura - Dettagli"
              BindingContext="{Binding InvoiceCreationViewModel, Source={StaticResource Locator}}">
     <views:MyContentPage.ToolbarItems>

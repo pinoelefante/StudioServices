@@ -4,7 +4,7 @@
                      x:Class="StudioServicesApp.Views.InvoiceCreationHome"
                      xmlns:views="clr-namespace:pinoelefante.Views"
                      xmlns:sys="clr-namespace:System;assembly=netstandard"
-                     xmlns:effects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
+                     xmlns:effects="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
                      Title="Creazione fattura"
                      BindingContext="{Binding InvoiceCreationViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
@@ -67,22 +67,15 @@
                         <ColumnDefinition Width="30*"/>
                     </Grid.ColumnDefinitions>
                     <Entry Grid.Column="0" Text="{Binding InvoiceNumberText, Mode=TwoWay}" Keyboard="Numeric" HorizontalTextAlignment="End">
-                        <!--
-                        <Entry.Behaviors>
-                            <views:EventToCommandBehavior EventName="Unfocused" Command="{Binding EntryIntUnfocused}" CommandParameter="Unfocused event" />
-                        </Entry.Behaviors>
-                        -->
                         <Entry.Effects>
-                            <!-- <effects:EntryCapitalizeKeyboard /> -->
-                            <!--<effects:EntryClear />-->
+                            
                         </Entry.Effects>
                     </Entry>
                     <Label Grid.Column="1" Text="/" VerticalOptions="End"/>
                     <Entry Grid.Column="2" Text="{Binding InvoiceNumberExtraText, Mode=TwoWay}" HorizontalTextAlignment="Center">
-                        
+
                         <Entry.Effects>
                             <effects:EntryCapitalizeKeyboard />
-                            <!-- <effects:EntryClear /> -->
                         </Entry.Effects>
                         
                     </Entry>

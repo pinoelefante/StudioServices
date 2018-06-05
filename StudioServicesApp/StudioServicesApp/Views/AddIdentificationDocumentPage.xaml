@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.Views.AddIdentificationDocumentPage"
-             xmlns:effects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
              Title="Aggiungi documento di riconoscimento"
              BindingContext="{Binding AddIdentificationDocumentViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
@@ -28,8 +27,7 @@
                 <Label Text="Numero del documento"/>
                 <Entry Text="{Binding DocumentNumber, Mode=TwoWay}">
                     <Entry.Effects>
-                        <effects:EntryCapitalizeKeyboard />
-                        <effects:EntryClear />
+                        
                     </Entry.Effects>
                 </Entry>
                 
