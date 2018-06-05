@@ -5,7 +5,7 @@
              xmlns:views="clr-namespace:pinoelefante.Views"
              xmlns:sys="clr-namespace:System;assembly=netstandard"
              Title="Creazione fattura - Dettagli"
-             BindingContext="{Binding InvoiceCreationViewModel, Source={StaticResource Locator}}">
+             BindingContext="{Binding InvoiceCreationDetailsViewModel, Source={StaticResource Locator}}">
     <views:MyContentPage.ToolbarItems>
         <ToolbarItem Text="Aggiungi" Icon="add_icon.png" Command="{Binding OpenAddInvoiceDetailCommand}"/>
     </views:MyContentPage.ToolbarItems>
@@ -36,9 +36,9 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Text="Mittente" FontAttributes="Bold"/>
-                <Label Grid.Row="1" Text="{Binding SelectedMyCompany.Name}"/>
-                <Label Grid.Row="2" Text="{Binding SelectedMyCompany.VATNumber}"/>
-                <Label Grid.Row="3" Text="{Binding SelectedMyCompany.Address}"/>
+                <Label Grid.Row="1" Text="{Binding MyCompany.Name}"/>
+                <Label Grid.Row="2" Text="{Binding MyCompany.VATNumber}"/>
+                <!--<Label Grid.Row="3" Text="{Binding MyCompany.Address}"/>-->
             </Grid>
             
             <!-- Destinatario -->
@@ -50,32 +50,32 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Text="Destinatario" FontAttributes="Bold"/>
-                <Label Grid.Row="1" Text="{Binding SelectedCompany.Name}"/>
-                <Label Grid.Row="2" Text="{Binding SelectedCompany.VATNumber}"/>
-                <Label Grid.Row="3" Text="{Binding SelectedCompany.Address}"/>
+                <Label Grid.Row="1" Text="{Binding RecipientCompany.Name}"/>
+                <Label Grid.Row="2" Text="{Binding RecipientCompany.VATNumber}"/>
+                <!--<Label Grid.Row="3" Text="{Binding RecipientCompany.Address}"/>-->
             </Grid>
             
             <!-- Fattura -->
             <ScrollView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <StackLayout Orientation="Horizontal">
                     <Label Text="Fattura n."/>
-                    <Label Text="{Binding InvoiceNumberText}" FontAttributes="Bold"/>
+                    <Label Text="{Binding CurrentInvoice.Number}" FontAttributes="Bold"/>
                     <Label Text="/" FontAttributes="Bold" IsVisible="True">
                         <Label.Triggers>
-                            <DataTrigger TargetType="Label" Binding="{Binding InvoiceNumberExtraText.Length}" Value="0">
+                            <DataTrigger TargetType="Label" Binding="{Binding CurrentInvoice.NumberExtra.Length}" Value="0">
                                 <Setter Property="IsVisible" Value="False" />
                             </DataTrigger>
                         </Label.Triggers>
                     </Label>
-                    <Label Text="{Binding InvoiceNumberExtraText}" FontAttributes="Bold" IsVisible="True">
+                    <Label Text="{Binding CurrentInvoice.NumberExtra}" FontAttributes="Bold" IsVisible="True">
                         <Label.Triggers>
-                            <DataTrigger TargetType="Label" Binding="{Binding InvoiceNumberExtraText.Length}" Value="0">
+                            <DataTrigger TargetType="Label" Binding="{Binding CurrentInvoice.NumberExtra.Length}" Value="0">
                                 <Setter Property="IsVisible" Value="False" />
                             </DataTrigger>
                         </Label.Triggers>
                     </Label>
                     <Label Text="del"/>
-                    <Label Text="{Binding InvoiceDate, Converter={StaticResource DateTimeString}, ConverterParameter=Date}" FontAttributes="Bold"/>
+                    <Label Text="{Binding CurrentInvoice.Emission, Converter={StaticResource DateTimeString}, ConverterParameter=Date}" FontAttributes="Bold"/>
                 </StackLayout>
             </ScrollView>
         </Grid>

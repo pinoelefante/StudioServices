@@ -29,7 +29,7 @@ namespace StudioServicesApp.ViewModels
         {
             return Task.Factory.StartNew(async () =>
             {
-                
+                await base.NavigatedToAsync();
                 await LoadPersonAsync();
                 await LoadCompaniesAsync();
                 await LoadClientsSuppliersAsync();
@@ -94,7 +94,7 @@ namespace StudioServicesApp.ViewModels
             else
                 ClientsSuppliers = cache.GetValue<List<Company>>("clients_suppliers");
         }
-        public List<Company> GetListCompanies()
+        public List<Company> GetMyCompaniesList()
         {
             List<Company> list = new List<Company>();
             if(MyCompanies!=null)
@@ -117,5 +117,13 @@ namespace StudioServicesApp.ViewModels
                 });
             }
         }
+        public Company GetMyCompany(int id)
+        {
+            foreach (var k in MyCompanies.Keys)
+                if (k.Id == id)
+                    return k;
+            return null;
+        }
+        public Company GetClientSupplier(int id) => ClientsSuppliers.Find(x => x.Id == id);
     }
 }

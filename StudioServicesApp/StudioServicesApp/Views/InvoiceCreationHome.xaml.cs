@@ -14,7 +14,11 @@ namespace StudioServicesApp.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class InvoiceCreationHome : MyContentPage
 	{
-		public InvoiceCreationHome ()
+        public InvoiceCreationHome()
+        {
+            InitializeComponent();
+        }
+        public InvoiceCreationHome (object p = null) : base(p)
 		{
 			InitializeComponent ();
 		}
