@@ -22,15 +22,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\Timetable\" />
+    <Folder Include="Services\UMA\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Web.RedisSessionStateProvider" Version="2.2.6" />
+    <PackageReference Include="Microsoft.Web.RedisSessionStateProvider" Version="3.0.0-preview" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.166-beta" />
+    <PackageReference Include="TLSharp" Version="0.1.0.374" />
+    <PackageReference Include="WhatsAppAPI" Version="15.4.29" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StudioServices\StudioServices.csproj" />
+    <ProjectReference Include="..\StudioServices.Models\StudioServices.Models.csproj" />
   </ItemGroup>
 
 </Project>
