@@ -52,6 +52,10 @@ namespace StudioServicesApp.Services
         }
         public string GetServerAddress() => WS_ADDRESS;
 
+        #region Test
+
+        #endregion
+
         #region Authentication
         public async Task<ResponseMessage<bool>> Authentication_LoginAsync(string username, string password)
         {
@@ -236,12 +240,12 @@ namespace StudioServicesApp.Services
         }
         #endregion
 
-        private async Task<ResponseMessage<T>> SendRequestAsync<T>(string url, HttpMethod method, IEnumerable<KeyValuePair<string, string>> parameters = null, byte[] file = null, bool send_later = false)
+        private async Task<ResponseMessage<T>> SendRequestAsync<T>(string url, HttpMethod method, object parameters = null, byte[] file = null, bool send_later = false)
         {
             if(!connectionStatus.IsConnected(url))
             {
                 if (send_later)
-                    AddRequest(url, method, parameters as ParametersList, file, send_later);
+                    AddRequest(url, method, parameters, file, send_later);
                 return new ResponseMessage<T>() { Code = ResponseCode.INTERNET_NOT_AVAILABLE };
             }
             var res = await web.SendRequestAsync(url, method, parameters, file);
@@ -249,7 +253,7 @@ namespace StudioServicesApp.Services
             if (string.IsNullOrEmpty(res))
             {
                 if(send_later)
-                    AddRequest(url, method, parameters as ParametersList, file, send_later);
+                    AddRequest(url, method, parameters, file, send_later);
                 return new ResponseMessage<T>() { Code = ResponseCode.COMMUNICATION_ERROR };
             }
                 
@@ -264,13 +268,13 @@ namespace StudioServicesApp.Services
                 return new ResponseMessage<T>() { Code = ResponseCode.SERIALIZER_ERROR };
             }
         }
-        private void AddRequest(string url, HttpMethod method, ParametersList parameters, byte[] file, bool later)
+        private void AddRequest(string url, HttpMethod method, object parameters, byte[] file, bool later)
         {
             RequestItem item = new RequestItem()
             {
                 Url = url,
                 Method = method,
-                Parameters = parameters,
+                ParameterObject = parameters,
                 File = file,
                 SendLater = later
             };
@@ -303,7 +307,7 @@ namespace StudioServicesApp.Services
                     while(runLaterQueue.Any())
                     {
                         var element = runLaterQueue.First();
-                        var resp = await SendRequestAsync<object>(element.Url, element.Method, element.Parameters, element.File);
+                        var resp = await SendRequestAsync<object>(element.Url, element.Method, element.ParameterObject, element.File);
                         if(resp.IsOK)
                         {
                             runLaterQueue.Dequeue();
@@ -321,30 +325,26 @@ namespace StudioServicesApp.Services
         public int Id { get; set; }
         public HttpMethod Method { get; set; }
         public string Url { get; set; }
-        [Ignore]
-        public IEnumerable<KeyValuePair<string, string>> Parameters { get; set; }
         public byte[] File { get; set; }
         public bool SendLater { get; set; }
+
+        [Ignore]
+        public object ParameterObject { get; set; }
 
         public string ParametersString
         {
             get
             {
-                if (Parameters == null)
-                    return string.Empty;
-                var content = string.Empty;
-                foreach(var item in Parameters)
-                    content += $"{item.Key} {item.Value}";
-                return content;
+                return JsonConvert.SerializeObject(ParameterObject);
             }
             set
             {
                 if (string.IsNullOrEmpty(value))
-                    return;
-                var items = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (items.Length % 2 != 0)
-                    throw new Exception("must be divisible by 2");
-                Parameters = new ParametersList(items);
+                    ParameterObject = null;
+                else
+                {
+                    ParameterObject = JsonConvert.DeserializeObject(value);
+                }
             }
         }
     }

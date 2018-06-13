@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -64,6 +65,24 @@ namespace StudioServicesApp.Services
                 return null;
             }
         }
+        public async Task<string> SendPostJsonRequestAsync(string url, object parameter)
+        {
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(parameter);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                CancellationToken token = new CancellationToken();
+                var res = await httpClient.PostAsync(url, content, token);
+                if (!token.IsCancellationRequested && res.IsSuccessStatusCode)
+                    return await res.Content.ReadAsStringAsync();
+                return null;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return null;
+            }
+        }
         public async Task<string> SendMultipartPostRequestAsync(string url, byte[] file_content, params KeyValuePair<string, string>[] parameters)
         {
             try
@@ -110,31 +129,40 @@ namespace StudioServicesApp.Services
                 return null;
             }
         }
-        public async Task<string> SendRequestAsync(string url, HttpMethod method, IEnumerable<KeyValuePair<string, string>> parameters = null, byte[] file = null)
+        public async Task<string> SendRequestAsync(string url, HttpMethod method, object parameters = null, byte[] file = null)
         {
-            KeyValuePair<string, string>[] parameters_enum = parameters !=null ? Enumerable.ToArray(parameters) : null;
-            string response = String.Empty;
-            switch (method)
+            if(parameters == null || parameters is IEnumerable<KeyValuePair<string,string>>)
             {
-                case HttpMethod.GET:
-                    response = await SendGetRequestAsync(url, parameters_enum);
-                    break;
-                case HttpMethod.POST:
-                    if (file == null)
-                        response = await SendPostRequestAsync(url, parameters_enum);
-                    else
-                        response = await SendMultipartPostRequestAsync(url, file, parameters_enum);
-                    break;
-                case HttpMethod.DELETE:
-                    response = await SendDeleteRequestAsync(url, parameters_enum);
-                    break;
-                case HttpMethod.PUT:
-                    // TODO
-                    break;
+                var parameters_conv = (IEnumerable<KeyValuePair<string, string>>)parameters;
+                KeyValuePair<string, string>[] parameters_enum = parameters != null ? Enumerable.ToArray(parameters_conv) : null;
+                string response = String.Empty;
+                switch (method)
+                {
+                    case HttpMethod.GET:
+                        response = await SendGetRequestAsync(url, parameters_enum);
+                        break;
+                    case HttpMethod.POST:
+                        if (file == null)
+                            response = await SendPostRequestAsync(url, parameters_enum);
+                        else
+                            response = await SendMultipartPostRequestAsync(url, file, parameters_enum);
+                        break;
+                    case HttpMethod.DELETE:
+                        response = await SendDeleteRequestAsync(url, parameters_enum);
+                        break;
+                    case HttpMethod.PUT:
+                        // TODO
+                        break;
+                }
+                if (string.IsNullOrEmpty(response))
+                    return null;
+                return response;
             }
-            if (string.IsNullOrEmpty(response))
-                return null;
-            return response;
+            else
+            {
+                string response = await SendPostJsonRequestAsync(url, parameters);
+                return response;
+            }
         }
         public bool HasCookie(string name, string url)
         {
