@@ -22,6 +22,7 @@ namespace StudioServicesApp.Droid
             base.OnCreate(bundle);
             SQLitePCL.Batteries_V2.Init();
             Rg.Plugins.Popup.Popup.Init(this, bundle);
+            Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             UserDialogs.Init(this);

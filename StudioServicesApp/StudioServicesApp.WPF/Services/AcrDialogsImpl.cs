@@ -42,7 +42,8 @@ namespace StudioServicesApp.WPF.Services
 
         public Task AlertAsync(AlertConfig config, CancellationToken? cancelToken = null)
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
+            return AlertAsync(config.Message, config.Title);
         }
 
         public IDisposable Confirm(ConfirmConfig config)

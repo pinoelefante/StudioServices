@@ -32,7 +32,7 @@ namespace StudioServicesApp.Views
                 new MasterPageItem()
                 {
                     Title = "Contabilità",
-                    PageKey = ViewModelLocator.INVOICE_CREATION_HOME,
+                    PageKey = ViewModelLocator.WAREHOUSE_HOME,
                     IconSource = "add_icon.png"
                 }
             };

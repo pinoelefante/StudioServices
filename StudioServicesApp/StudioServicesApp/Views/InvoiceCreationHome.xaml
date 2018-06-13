@@ -76,7 +76,7 @@
                         <Entry.Effects>
                             <effects:EntryCapitalizeKeyboard />
                         </Entry.Effects>
-    -->                    
+-->                    
                     </Entry>
                 </Grid>
             </Grid>

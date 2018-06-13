@@ -164,18 +164,18 @@
       <Version>11.0.2</Version>
     </PackageReference>
     <PackageReference Include="Plugin.Permissions">
-      <Version>2.2.1</Version>
+      <Version>3.0.0.12</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
-      <Version>1.1.4.158-pino</Version>
+      <Version>1.1.4.159-pino</Version>
     </PackageReference>
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.5.166-beta</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.Media">
-      <Version>3.2.0.242-beta</Version>
+      <Version>4.0.0.9</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="3.1.0.530888-pre2" />
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.5" />
   </ItemGroup>
   <ItemGroup>
