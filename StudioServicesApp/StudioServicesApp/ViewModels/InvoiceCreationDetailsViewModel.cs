@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using StudioServices.Data.Accounting;
 using StudioServicesApp.Services;
@@ -18,6 +19,8 @@ namespace StudioServicesApp.ViewModels
         public Invoice CurrentInvoice { get => _currInvoice; set => SetMT(ref _currInvoice, value); }
         public Company MyCompany { get => myCompany; set => SetMT(ref myCompany, value); }
         public Company RecipientCompany { get => recipientCompany; set => SetMT(ref recipientCompany, value); }
+        public MyObservableCollection<InvoiceDetail> InvoiceDetails { get; } = new MyObservableCollection<InvoiceDetail>();
+
         public override async Task NavigatedToAsync(object parameter = null)
         {
             await base.NavigatedToAsync();
@@ -25,5 +28,13 @@ namespace StudioServicesApp.ViewModels
             MyCompany = GetMyCompany(CurrentInvoice.Sender);
             RecipientCompany = GetClientSupplier(CurrentInvoice.Recipient); 
         }
+        private RelayCommand _openAddInvoiceProductCmd;
+
+        public RelayCommand OpenAddInvoiceDetailCommand =>
+            _openAddInvoiceProductCmd ??
+            (_openAddInvoiceProductCmd = new RelayCommand(() =>
+            {
+
+            }));
     }
 }

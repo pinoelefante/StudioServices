@@ -245,6 +245,5 @@ namespace StudioServicesApp.ViewModels
             InvoiceNumberExtraText = string.Empty;
             base.Cleanup();
         }
-        public MyObservableCollection<string> InvoiceDetails { get; } = new MyObservableCollection<string>();
     }
 }

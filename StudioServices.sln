@@ -16,6 +16,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioServices.Models", "St
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioServicesApp.WPF", "StudioServicesApp\StudioServicesApp.WPF\StudioServicesApp.WPF.csproj", "{4CC76CA7-D986-4628-AEF7-2DAEA8D6F902}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Others", "Others", "{F832208A-0CB3-4C19-801A-F5D69DE2A7B4}"
+	ProjectSection(SolutionItems) = preProject
+		RedisInstallation.txt = RedisInstallation.txt
+		..\..\..\Desktop\nuget_repository\Rg.Plugins.Popup\1.1.4.158-pino\rg.plugins.popup.1.1.4.158-pino.nupkg = ..\..\..\Desktop\nuget_repository\Rg.Plugins.Popup\1.1.4.158-pino\rg.plugins.popup.1.1.4.158-pino.nupkg
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

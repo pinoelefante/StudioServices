@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Acr.UserDialogs;
+using StudioServicesApp.WPF.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +27,8 @@ namespace StudioServicesApp.WPF
         public MainWindow()
         {
             InitializeComponent();
-            // Rg.Plugins.Popup.Popup.Init();
+            Rg.Plugins.Popup.Popup.Init();
+            UserDialogs.Instance = new AcrDialogsImpl();
             Forms.Init();
             LoadApplication(new StudioServicesApp.App());
         }

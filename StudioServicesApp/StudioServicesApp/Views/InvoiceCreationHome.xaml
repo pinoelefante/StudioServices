@@ -4,7 +4,6 @@
                      x:Class="StudioServicesApp.Views.InvoiceCreationHome"
                      xmlns:views="clr-namespace:pinoelefante.Views"
                      xmlns:sys="clr-namespace:System;assembly=netstandard"
-                     xmlns:effects="clr-namespace:Xamarin.Toolkit.Effects;assembly=Xamarin.Toolkit.Effects"
                      Title="Creazione fattura"
                      BindingContext="{Binding InvoiceCreationHomeViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
@@ -73,11 +72,11 @@
                     </Entry>
                     <Label Grid.Column="1" Text="/" VerticalOptions="End"/>
                     <Entry Grid.Column="2" Text="{Binding InvoiceNumberExtraText, Mode=TwoWay}" HorizontalTextAlignment="Center">
-
+<!--
                         <Entry.Effects>
                             <effects:EntryCapitalizeKeyboard />
                         </Entry.Effects>
-                        
+    -->                    
                     </Entry>
                 </Grid>
             </Grid>

@@ -63,7 +63,7 @@
       <Version>2.2.1</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
-      <Version>1.1.4.158-pre</Version>
+      <Version>1.1.4.158-pino</Version>
     </PackageReference>
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.5.166-beta</Version>
