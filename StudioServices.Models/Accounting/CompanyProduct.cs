@@ -1,14 +1,14 @@
 ﻿using SQLite;
-using StudioServices.Data;
-using StudioServices.Data.Accounting;
+using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace StudioServices.Models.Accounting
+namespace StudioServices.Data.Accounting
 {
     public class CompanyProduct : PersonReference
     {
+        [ForeignKey(typeof(Company))]
         [Indexed(Name = "ProductId", Order = 1, Unique = true)]
         public int CompanyId { get; set; }
         [Indexed(Name = "ProductId", Order = 2, Unique = true)]

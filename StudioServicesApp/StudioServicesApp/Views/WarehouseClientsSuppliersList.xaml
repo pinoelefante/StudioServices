@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="Clienti/Fornitori"
-             x:Class="StudioServicesApp.Views.WarehouseClientsSuppliersList">
+             x:Class="StudioServicesApp.Views.WarehouseClientsSuppliersList"
+             BindingContext="{Binding WarehouseClientsSuppliersListViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Xamarin.Forms!"

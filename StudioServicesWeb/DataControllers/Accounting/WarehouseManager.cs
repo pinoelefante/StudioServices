@@ -2,7 +2,6 @@
 using StudioServices.Controllers.Utils;
 using StudioServices.Data.Accounting;
 using StudioServices.Data.Registry;
-using StudioServices.Models.Accounting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +21,7 @@ namespace StudioServices.Controllers.Accounting
             random = new Random();
         }
         // TODO add warehouse log (file saving all operations)
+        /*
         public bool SaveCompany(int personId, string companyName, string vatnumber, int address_id, out string message, int company_id = 0)
         {
             message = string.Empty;
@@ -37,6 +37,18 @@ namespace StudioServices.Controllers.Accounting
             };
             return db.SaveItem(company);
         }
+        */
+        public bool SaveCompany(Company company)
+        {
+            return db.SaveItem(company);
+        }
+        public int SaveCompanyForInvoice(Company client, int personId)
+        {
+            client.PersonId = -personId;
+            client.Address.PersonId = -personId;
+            return db.SaveItem(client) ? client.Id : 0;
+        }
+        /*
         public int SaveCompanyForInvoice(int person_id, string companyName, string vatNumber,string country, string city, string province, string street, string civicNum, string zipCode, out string message, int address_id = 0, int company_id = 0)
         {
             message = string.Empty;
@@ -70,6 +82,7 @@ namespace StudioServices.Controllers.Accounting
                 return company.Id;
             return 0;
         }
+        */
         public Company GetCompany(int company_id)
         {
             return db.GetCompanyById(company_id);
@@ -158,6 +171,10 @@ namespace StudioServices.Controllers.Accounting
         public List<Company> GetClientsSuppliers(int personId)
         {
             return db.GetClientsSuppliets(-personId);
+        }
+        public List<Invoice> GetInvoices(int company, int? year)
+        {
+            return db.GetInvoices(company, year);
         }
     }
 }

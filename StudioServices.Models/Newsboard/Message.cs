@@ -1,4 +1,6 @@
 ﻿using SQLite;
+using SQLiteNetExtensions.Attributes;
+using StudioServices.Registry.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,8 @@ namespace StudioServices.Data.Newsboard
         public bool IsExpireEnabled { get; set; }
         public DateTime ExpireDate { get; set; }
         public bool IsMarked { get; set; }
+
+        [ForeignKey(typeof(Person))]
         public int SenderId { get; set; }
 
         [Ignore]

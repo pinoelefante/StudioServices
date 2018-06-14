@@ -49,12 +49,12 @@ namespace StudioServices.Controllers.Persons
                 Person person = db.PersonSelect(id_person);
                 person.AuthCode = null;
                 // Aggiunge l'email all'account
-                person.Add(new Email()
+                person.Emails.Add(new Email()
                 {
                     Address = email,
                     FullName = person.Name + " " + person.Surname
                 });
-                return db.PersonSave(person);
+                return db.SaveItem(person);
             }
             message = "Errore durante il salvataggio";
             return false;

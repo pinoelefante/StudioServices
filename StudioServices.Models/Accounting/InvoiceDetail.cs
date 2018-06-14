@@ -1,12 +1,22 @@
-﻿namespace StudioServices.Data.Accounting
+﻿using SQLiteNetExtensions.Attributes;
+
+namespace StudioServices.Data.Accounting
 {
     public class InvoiceDetail
     {
+        [ForeignKey(typeof(CompanyProduct))]
         public int ProductId { get; set; }
+
         public double UnitPrice { get; set; }
         public float Quantity { get; set; }
         public double UnitPriceDiscount { get; set; }
         public float Tax { get; set; }
+
+        [ForeignKey(typeof(Invoice))]
+        public int InvoiceId { get; set; }
+
+        [OneToOne]
+        public CompanyProduct Product { get; set; }
     }
     public enum InvoiceQuantity
     {

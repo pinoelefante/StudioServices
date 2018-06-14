@@ -72,5 +72,13 @@ namespace StudioServices.Controllers.Accounting
                 return conn.Table<Company>().Where(x => x.PersonId == personId).ToList();
             }
         }
+        public List<Invoice> GetInvoices(int companyId, int? year)
+        {
+            using (var conn = GetConnection())
+            {
+                var invoices = conn.Table<Invoice>().Where(x => x.Sender == companyId && (year != null ? x.Emission.Year == year: true)).OrderBy(x => x.Number).ThenBy(x => x.NumberExtra).ToList();
+                return invoices;
+            }
+        }
     }
 }

@@ -4,8 +4,24 @@
                  xmlns:pages="clr-namespace:pinoelefante.Views"
                  Title="Fatture"
                  x:Class="StudioServicesApp.Views.WarehouseInvoiceList"
-                 BindingContext="{Binding WarehouseInvoiceListViewModel}">
-    <ContentPage Title="Vendite">
+                 BindingContext="{Binding WarehouseInvoiceListViewModel, Source={StaticResource Locator}}">
+    <pages:MyTabbedPage.Resources>
+        <DataTemplate x:Key="InvoiceTemplate">
+            <ViewCell>
+                <Grid Padding="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Text="{Binding Number}"/>
+
+                    <Label Grid.Column="2" Text="{Binding Emission, Converter={StaticResource DateTimeString}, ConverterParameter=Date}"/>
+                </Grid>
+            </ViewCell>
+        </DataTemplate>
+    </pages:MyTabbedPage.Resources>
+    <ContentPage Title="Vendite" Padding="10,0">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -15,16 +31,18 @@
 
             <StackLayout Grid.Row="0">
                 <Label Text="Azienda"/>
-                <Picker />
+                <Picker SelectedIndex="{Binding CompanyIndex, Mode=TwoWay}" ItemsSource="{Binding CompanyList}" ItemDisplayBinding="{Binding Name}"/>
             </StackLayout>
 
             <StackLayout Grid.Row="1">
                 <Label Text="Anno"/>
-                <Picker />
+                <Picker ItemsSource="{Binding YearsList}" SelectedIndex="{Binding YearIndex, Mode=TwoWay}"/>
             </StackLayout>
 
-            <ListView Grid.Row="2">
-                
+            <ListView Grid.Row="2" ItemsSource="{Binding InvoiceSell}" ItemTemplate="{StaticResource InvoiceTemplate}">
+                <ListView.Behaviors>
+                    <pages:EventToCommandBehavior EventName="ItemTapped" Command="{Binding OpenInvoiceCreatorWithInvoiceCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}"/>
+                </ListView.Behaviors>
             </ListView>
 
             <Button Grid.Row="0" Grid.RowSpan="3"
@@ -44,5 +62,44 @@
         </Grid>
     </ContentPage>
 
-    <ContentPage Title="Acquisti" />
+    <ContentPage Title="Acquisti" Padding="10,0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackLayout Grid.Row="0">
+                <Label Text="Azienda"/>
+                <Picker SelectedIndex="{Binding CompanyIndex, Mode=TwoWay}" ItemsSource="{Binding CompanyList}" ItemDisplayBinding="{Binding Name}"/>
+            </StackLayout>
+
+            <StackLayout Grid.Row="1">
+                <Label Text="Anno"/>
+                <Picker ItemsSource="{Binding YearsList}" SelectedIndex="{Binding YearIndex, Mode=TwoWay}"/>
+            </StackLayout>
+
+            <ListView Grid.Row="2" ItemsSource="{Binding InvoicePurchase}" ItemTemplate="{StaticResource InvoiceTemplate}">
+                <ListView.Behaviors>
+                    <pages:EventToCommandBehavior EventName="ItemTapped" Command="{Binding OpenInvoiceCreatorWithInvoiceCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}"/>
+                </ListView.Behaviors>
+            </ListView>
+
+            <Button Grid.Row="0" Grid.RowSpan="3"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Margin="10,10,10,10"
+                    Text="+"
+                    FontSize="32"
+                    FontAttributes="Bold"
+                    BackgroundColor="LightGreen"
+                    TextColor="White"
+                    BorderRadius="25"
+                    WidthRequest="60"
+                    HeightRequest="60"
+                    BorderColor="White"
+                    Command="{Binding OpenInvoiceCreatorPurchaseCommand}"/>
+        </Grid>
+    </ContentPage>
 </pages:MyTabbedPage>

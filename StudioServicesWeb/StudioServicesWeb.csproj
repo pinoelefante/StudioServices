@@ -33,6 +33,7 @@
     <PackageReference Include="Microsoft.Web.RedisSessionStateProvider" Version="3.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.166-beta" />
+    <PackageReference Include="SQLiteNetExtensions" Version="2.0.0" />
     <PackageReference Include="TLSharp" Version="0.1.0.374" />
     <PackageReference Include="WhatsAppAPI" Version="15.4.29" />
   </ItemGroup>

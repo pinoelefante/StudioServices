@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SQLite;
+using SQLiteNetExtensions.Attributes;
+using StudioServices.Registry.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +12,14 @@ namespace StudioServices.Data.Newsboard
 {
     public class ReadStatus
     {
+        [ForeignKey(typeof(Person))]
         [Indexed(Name = "ReadStatusId", Order = 1, Unique = true)]
         public int PersonId { get; set; }
+
+        [ForeignKey(typeof(Message))]
         [Indexed(Name = "ReadStatusId", Order = 2, Unique = true)]
         public int MessageId { get; set; }
+
         public bool Whatsapp { get; set; }
         public bool Telegram { get; set; }
         public bool Email { get; set; }

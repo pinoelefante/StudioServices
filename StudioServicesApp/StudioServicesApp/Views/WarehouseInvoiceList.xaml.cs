@@ -13,7 +13,7 @@ namespace StudioServicesApp.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class WarehouseInvoiceList : MyTabbedPage
 	{
-		public WarehouseInvoiceList ()
+		public WarehouseInvoiceList () : base()
 		{
 			InitializeComponent ();
 		}

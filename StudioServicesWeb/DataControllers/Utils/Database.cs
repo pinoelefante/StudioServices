@@ -11,7 +11,7 @@ using StudioServices.Data.Newsboard;
 using StudioServices.Data.Items;
 using StudioServices.Data.Payment;
 using StudioServices.Data.Accounting;
-using StudioServices.Models.Accounting;
+using SQLiteNetExtensions.Extensions;
 
 namespace StudioServices.Controllers.Utils
 {
@@ -65,7 +65,15 @@ namespace StudioServices.Controllers.Utils
         {
             using (var con = GetConnection())
             {
-                return con.InsertOrReplace(item) > 0;
+                try
+                {
+                    con.InsertOrReplaceWithChildren(item);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
         public bool SaveItem(DataFile item, bool update = true)
@@ -75,19 +83,20 @@ namespace StudioServices.Controllers.Utils
                 try
                 {
                     if (item.Id > 0 && update)
-                        return connection.Update(item) > 0;
+                    {
+                        connection.UpdateWithChildren(item);
+                    }
                     else if (item.Id == 0)
                     {
-                        int id = connection.Insert(item);
-                        return id > 0;
+                        connection.InsertWithChildren(item);
                     }
+                    return true;
                 }
                 catch
                 {
                     return false;
                 }
             }
-            return false;
         }
         public bool SaveAll(IEnumerable<DataFile> items, bool update = true)
         {
@@ -95,24 +104,11 @@ namespace StudioServices.Controllers.Utils
             {
                 try
                 {
-                    int count = 0;
                     connection.RunInTransaction(() =>
                     {
-                        foreach (var x in items)
-                        {
-                            if (x.Id > 0 && update)
-                            {
-                                if (connection.Update(x) > 0)
-                                    count++;
-                            }
-                            else if (x.Id == 0)
-                            {
-                                if (connection.Insert(x) > 0)
-                                    count++;
-                            }
-                        }
+                        connection.InsertOrReplaceAllWithChildren(items);
                     });
-                    return count > 0;
+                    return true;
                 }
                 catch
                 {

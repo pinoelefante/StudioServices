@@ -46,25 +46,24 @@ namespace StudioServicesWeb.Controllers.Warehouse
         }
         [Route("company")]
         [HttpPost]
-        public Response<bool> CreateCompany(string name, string vat, int address_id)
+        public Response<bool> CreateCompany([FromBody]Company company)
         {
             if (!_isLogged())
                 return CreateLoginRequired<bool>();
-            var res = manager.SaveCompany(_getPersonId(), name, vat, address_id, out string message);
-            return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL, message);
+            company.PersonId = _getPersonId();
+            var res = manager.SaveCompany(company);
+            return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL);
         }
         [Route("company/{id}")]
         [HttpPost]
-        public Response<bool> UpdateCompany([FromRoute]int id, string name, string vat, int addressId)
+        public Response<bool> UpdateCompany([FromBody]Company company)
         {
             if (!_isLogged())
                 return CreateLoginRequired<bool>();
-            var company = manager.GetCompany(id);
             if (company == null || company.PersonId != _getPersonId())
                 return CreateBoolean(false, ResponseCode.FAIL, "Operazione non autorizzata");
-
-            var res = manager.SaveCompany(_getPersonId(), name, vat, addressId, out string message, id);
-            return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL, message);
+            var res = manager.SaveCompany(company);
+            return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL);
         }
         [Route("company")]
         [HttpGet]
@@ -93,13 +92,32 @@ namespace StudioServicesWeb.Controllers.Warehouse
         }
         [Route("clients_suppliers")]
         [HttpPost]
-        public Response<Company> SaveClientSupplier(string companyName, string vat, string country, string city, string province, string street, string civicNumber, string zipCode, int addressId, int companyId)
+        public Response<Company> SaveClientSupplier(Company client)
         {
             if (!_isLogged())
                 return CreateLoginRequired<Company>();
-            var res = manager.SaveCompanyForInvoice(_getPersonId(), companyName, vat, country, city, province, street, civicNumber, zipCode, out string message, addressId, companyId);
+            var res = manager.SaveCompanyForInvoice(client, _getPersonId());
+            // var res = manager.SaveCompanyForInvoice(_getPersonId(), companyName, vat, country, city, province, street, civicNumber, zipCode, out string message, addressId, companyId);
             var company = res > 0 ? manager.GetCompany(res) : null;
-            return CreateResponse(company, company != null ? ResponseCode.OK : ResponseCode.FAIL, message);
+            return CreateResponse(company, company != null ? ResponseCode.OK : ResponseCode.FAIL);
+        }
+        [Route("invoices/{company}")]
+        [HttpGet]
+        public Response<List<Invoice>> GetInvoiceByYear([FromRoute]int company, [FromQuery]int? year = null)
+        {
+            if (!_isLogged())
+                return CreateLoginRequired<List<Invoice>>();
+            // TODO: verifica company person id
+            List<Invoice> invoices = null;
+            if(year == null)
+            {
+                // get all invoices
+            }
+            else
+            {
+
+            }
+            return CreateResponse(invoices);
         }
     }
 }

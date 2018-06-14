@@ -1,8 +1,12 @@
+using SQLiteNetExtensions.Attributes;
+
 namespace StudioServices.Data.Items
 {
     public class ItemRequest : PersonReference
     {
+        [ForeignKey(typeof(PayableItem))]
         public int ItemId { get; set; }
+
         public bool IsRequest { get; set; }
         public bool IsPrint { get; set; }
         public string Note { get; set; }

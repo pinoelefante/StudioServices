@@ -6,36 +6,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SQLiteNetExtensions.Extensions;
 
 namespace StudioServices.Controllers.Persons
 {
     public class RegistryDatabase : Database
     {
-        public bool PersonSave(Person persona, bool aggiorna = true)
-        {
-            using (var connection = GetConnection())
-            {
-                if (SaveItem(persona))
-                {
-                    persona.Contacts.ForEach((x) => x.PersonId = persona.Id);
-                    persona.Identifications.ForEach((x) => x.PersonId = persona.Id);
-                    persona.Emails.ForEach((x) => x.PersonId = persona.Id);
-                    persona.Addresses.ForEach((x) => x.PersonId = persona.Id);
-                    bool contatti = persona.Contacts.Count > 0 ? SaveAll(persona.Contacts, aggiorna) : true;
-                    bool documenti = persona.Identifications.Count > 0 ? SaveAll(persona.Identifications, aggiorna) : true;
-                    bool emails = persona.Emails.Count > 0 ? SaveAll(persona.Emails, aggiorna) : true;
-                    bool indirizzi = persona.Addresses.Count > 0 ? SaveAll(persona.Addresses, aggiorna) : true;
-                    return (contatti || documenti || emails || indirizzi);
-                }
-                else
-                    return false;
-            }
-        }
         public Person PersonSelect(int id)
         {
-            Person persona = null;
             using (var connection = GetConnection())
             {
+                /*
                 persona = connection.Get<Person>(id);
                 if (persona != null)
                 {
@@ -45,8 +26,12 @@ namespace StudioServices.Controllers.Persons
                     int negId = -id;
                     connection.Table<Address>().Where(x => (x.PersonId == id || x.PersonId == negId) && x.Enabled).ToList().ForEach(x => persona.Add(x));
                 }
+                */
+                var person = connection.GetWithChildren<Person>(id);
+                int negId = -id;
+                connection.Table<Address>().Where(x => (x.PersonId == id || x.PersonId == negId) && x.Enabled).ToList().ForEach(x => person.Addresses.Add(x));
+                return person;
             }
-            return persona;
         }
         public List<Person> SelectNewPersons()
         {
@@ -86,21 +71,23 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<Account>().Where(x => x.Username.Equals(username)).FirstOrDefault();
+                return con.GetAllWithChildren<Account>(x => x.Username.Equals(username)).FirstOrDefault();
+                // return con.Table<Account>().Where(x => x.Username.Equals(username)).FirstOrDefault();
             }
         }
         public Account SelectAccount(int account_id)
         {
             using (var con = GetConnection())
             {
-                return con.Get<Account>(account_id);
+                return con.GetWithChildren<Account>(account_id);
             }
         }
         public List<Account> SelectNewAccounts()
         {
             using (var con = GetConnection())
             {
-                return con.Table<Account>().Where(x => !x.Enabled && x.DisabledTime.Ticks == 0).ToList();
+                return con.GetAllWithChildren<Account>(x => !x.Enabled && x.DisabledTime.Ticks == 0).ToList();
+                // return con.Table<Account>().Where(x => !x.Enabled && x.DisabledTime.Ticks == 0).ToList();
             }
         }
         public IdentificationDocument IdentificationDocumentSelect(int doc_id, int person_id)
@@ -114,28 +101,30 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Get<IdentificationDocument>(doc_id);
+                return con.GetWithChildren<IdentificationDocument>(doc_id);
             }
         }
         public IdentificationDocument IdentificationDocumentSelect(string number, DocumentType type, int person_id)
         {
             using (var con = GetConnection())
             {
-                return con.Table<IdentificationDocument>().Where(x => x.Number.Equals(number) && x.Type == type && x.PersonId == person_id).FirstOrDefault();
+                return con.GetAllWithChildren<IdentificationDocument>().Where(x => x.Number.Equals(number) && x.Type == type && x.PersonId == person_id).FirstOrDefault();
+                // return con.Table<IdentificationDocument>().Where(x => x.Number.Equals(number) && x.Type == type && x.PersonId == person_id).FirstOrDefault();
             }
         }
         public List<IdentificationDocument> IdentificationDocumentList(int id_person, bool all = false)
         {
             using (var con = GetConnection())
             {
-                return con.Table<IdentificationDocument>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).ToList();
+                return con.GetAllWithChildren<IdentificationDocument>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).ToList();
+                //return con.Table<IdentificationDocument>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).ToList();
             }
         }
         public ContactMethod ContactMethodSelect(int contact_id)
         {
             using (var con = GetConnection())
             {
-                return con.Get<ContactMethod>(contact_id);
+                return con.GetWithChildren<ContactMethod>(contact_id);
             }
         }
         public ContactMethod ContactMethodSelect(int contact_id, int person_id)
@@ -149,21 +138,23 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<ContactMethod>().Where(x => x.Number.Equals(number) && x.Type == type && x.PersonId == person_id).FirstOrDefault();
+                return con.GetAllWithChildren<ContactMethod>().Where(x => x.Number.Equals(number) && x.Type == type && x.PersonId == person_id).FirstOrDefault();
+                //return con.Table<ContactMethod>().Where(x => x.Number.Equals(number) && x.Type == type && x.PersonId == person_id).FirstOrDefault();
             }
         }
         public IEnumerable<ContactMethod> ContactMethodList(int id_person, bool all = false)
         {
             using (var con = GetConnection())
             {
-                return con.Table<ContactMethod>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).AsEnumerable();
+                return con.GetAllWithChildren<ContactMethod>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).AsEnumerable();
+                //return con.Table<ContactMethod>().Where(x => x.PersonId == id_person && (all ? true : x.Enabled)).AsEnumerable();
             }
         }
         public Address AddressSelect(int id_address)
         {
             using (var con = GetConnection())
             {
-                return con.Get<Address>(id_address);
+                return con.GetWithChildren<Address>(id_address);
             }
         }
         public Address AddressSelect(int id_address, int person_id)
@@ -184,14 +175,15 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<Address>().Where(x => x.PersonId == person_id /*&& (all ? true : x.Enabled)*/).AsEnumerable().Where(x => (all ? true : x.Enabled)).ToList();
+                return con.GetAllWithChildren<Address>().Where(x => x.PersonId == person_id /*&& (all ? true : x.Enabled)*/).AsEnumerable().Where(x => (all ? true : x.Enabled)).ToList();
+                // return con.Table<Address>().Where(x => x.PersonId == person_id /*&& (all ? true : x.Enabled)*/).AsEnumerable().Where(x => (all ? true : x.Enabled)).ToList();
             }
         }
         public Email EmailSelect(int email_id)
         {
             using (var con = GetConnection())
             {
-                return con.Get<Email>(email_id);
+                return con.GetWithChildren<Email>(email_id);
             }
         }
         public Email EmailSelect(int email_id, int person_id)
@@ -212,7 +204,8 @@ namespace StudioServices.Controllers.Persons
         {
             using (var con = GetConnection())
             {
-                return con.Table<Email>().Where(x => x.PersonId == person_id && (all ? true : x.Enabled)).AsEnumerable();
+                return con.GetAllWithChildren<Email>().Where(x => x.PersonId == person_id && (all ? true : x.Enabled)).AsEnumerable();
+                // return con.Table<Email>().Where(x => x.PersonId == person_id && (all ? true : x.Enabled)).AsEnumerable();
             }
         }
     }

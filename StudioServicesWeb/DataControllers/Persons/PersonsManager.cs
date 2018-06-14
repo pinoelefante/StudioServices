@@ -29,7 +29,7 @@ namespace StudioServices.Controllers.Persons
                 AuthCode = verify_code,
                 Enabled = enabled
             };
-            return db.PersonSave(persona);
+            return db.SaveItem(persona);
         }
         public Person GetPerson(int person_id)
         {
