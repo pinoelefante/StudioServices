@@ -6,6 +6,7 @@ using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using StudioServices.Data.Sqlite.Registry;
 using StudioServicesApp.Services;
 using System;
 using System.Collections.Generic;
@@ -157,7 +158,16 @@ namespace StudioServicesApp.ViewModels
                 var res = await UserDialogs.Instance.ConfirmAsync($"Vuoi salvare il documento?\nNumero: {DocumentNumber}\nEmesso il {DocumentIssue.ToShortDateString()}", "Conferma inserimento", "Salva", "Annulla");
                 if (!res)
                     return;
-                var response = await SendRequestAsync(() => api.Person_AddDocumentAsync(DocumentIndex, DocumentNumber, DocumentIssue, DocumentExpiry, _imageData, FileExtension));
+                var document = new IdentificationDocument()
+                {
+                    Expire = DocumentExpiry,
+                    FileContentBase64 = _imageData!=null && _imageData.Length > 0 ? Convert.ToBase64String(_imageData) : string.Empty,
+                    Issue = DocumentIssue,
+                    Number = DocumentNumber,
+                    PersonId = Persona.Id,
+                    Type = (DocumentType)Enum.ToObject(typeof(DocumentType), DocumentIndex)
+                };
+                var response = await SendRequestAsync(() => api.Person_AddDocumentAsync(document));
                 if (response.IsOK)
                 {
                     await LoadPersonAsync(true);

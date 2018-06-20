@@ -1,25 +1,26 @@
-﻿using StudioServices.Data.Registry;
-using StudioServices.Registry.Data;
+﻿using StudioServices.Data.EntityFramework.Registry;
+using StudioServicesWeb.DataControllers;
 using System;
+
 namespace StudioServices.Controllers.Persons
 {
     public class AuthenticationManager
     {
-        private RegistryDatabase db;
-        public AuthenticationManager()
+        private DatabaseEF db;
+        public AuthenticationManager(DatabaseEF d)
         {
-            db = new RegistryDatabase();
+            db = d;
         }
         public bool AccountRegister(string username, string password, string email, string codice_fiscale, string codice_persona, out string message)
         {
             message = "";
             // Verifica codice fiscale & codice persona
             // Verifica restituisce l'id della persona
-            int id_person = db.VerifyPersonCode(codice_fiscale, codice_persona);
+            var personTuple = db.Auth_VerifyPersonCode(codice_fiscale, codice_persona);
 
-            if(id_person <= 0)
+            if(personTuple.Item1 <= 0)
             {
-                switch(id_person)
+                switch(personTuple.Item1)
                 {
                     case 0:
                         message = "Codice verifica errato";
@@ -40,21 +41,21 @@ namespace StudioServices.Controllers.Persons
                 Username = username,
                 Password = PasswordSecurity.PasswordStorage.CreateHash(password),
                 Enabled = false,
-                PersonId = id_person
+                PersonId = personTuple.Item2.Id,
             };
-
-            if(db.SaveItem(account))
+            var person = personTuple.Item2;
+            if(db.Save(account))
             {
                 // Imposta l'authcode a Null perché già utilizzato
-                Person person = db.PersonSelect(id_person);
                 person.AuthCode = null;
                 // Aggiunge l'email all'account
                 person.Emails.Add(new Email()
                 {
+                    PersonId = person.Id,
                     Address = email,
                     FullName = person.Name + " " + person.Surname
                 });
-                return db.SaveItem(person);
+                return db.Save(person);
             }
             message = "Errore durante il salvataggio";
             return false;
@@ -69,7 +70,7 @@ namespace StudioServices.Controllers.Persons
             message = "";
             person_id = -1;
             admin = false;
-            Account acc = db.SelectAccountByUsername(username);
+            Account acc = db.Auth_GetAccountByUsername(username);
             if (acc == null)
             {
                 message = "L'account non esiste";
@@ -94,7 +95,7 @@ namespace StudioServices.Controllers.Persons
         }
         public bool ChangePassword(int account_id, string vecchia_password, string nuova_password)
         {
-            Account acc = db.SelectAccount(account_id);
+            Account acc = db.Get<Account>(account_id);
             if(acc == null)
             {
                 // Account assente
@@ -103,7 +104,7 @@ namespace StudioServices.Controllers.Persons
             if(PasswordSecurity.PasswordStorage.VerifyPassword(vecchia_password, acc.Password))
             {
                 acc.Password = PasswordSecurity.PasswordStorage.CreateHash(nuova_password);
-                return db.SaveItem(acc);
+                return db.UpdateDataFileItem(acc);
             }
             else
             {
@@ -114,11 +115,11 @@ namespace StudioServices.Controllers.Persons
         public bool ChangePassword(int id_account, string nuova_password)
         {
             // usabile solo dall'amministratore
-            Account acc = db.SelectAccount(id_account);
+            Account acc = db.Get<Account>(id_account);
             if (acc == null)
                 return false;
             acc.Password = PasswordSecurity.PasswordStorage.CreateHash(nuova_password);
-            return db.SaveItem(acc);
+            return db.UpdateDataFileItem(acc);
         }
     }
 }

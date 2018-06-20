@@ -1,5 +1,7 @@
 ﻿using StudioServices.Controllers.Items;
-using StudioServices.Data.Payment;
+using StudioServices.Data.EntityFramework.Items;
+using StudioServices.Data.EntityFramework.Payment;
+using StudioServicesWeb.DataControllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +12,10 @@ namespace StudioServices.Controllers.Payments
 {
     public class PaymentsManager
     {
-        private PaymentDatabase db;
-        private ItemsDatabase db_models;
-        public PaymentsManager()
+        private DatabaseEF db;
+        public PaymentsManager(DatabaseEF d)
         {
-            db = new PaymentDatabase();
-            db_models = new ItemsDatabase();
+            db = d;
         }
         public double GetToPay(int person_id, bool exclude_pending = false)
         {
@@ -26,8 +26,8 @@ namespace StudioServices.Controllers.Payments
         }
         public double GetTotalToPay(int person_id, bool exclude_pending = false)
         {
-            var requests = db_models.SelectItemRequestsList(person_id);
-            var models = db_models.SelectItemsList(false);
+            var requests = db.GetList<ItemRequest>(person_id);
+            var models = db.GetAll<PayableItem>(false);
             var total = 0d;
             foreach (var item in requests)
             {
@@ -47,14 +47,14 @@ namespace StudioServices.Controllers.Payments
         }
         public double GetTotalPayed(int person_id)
         {
-            var history = db.SelectPaymentHistoryList(person_id);
+            var history = db.GetList<PaymentHistory>(person_id);
             double total = 0;
             history.ForEach(x => total += x.Amount);
             return total;
         }
         public List<PaymentHistory> GetPaymentHistory(int person_id)
         {
-            return db.SelectPaymentHistoryList(person_id);
+            return db.GetList<PaymentHistory>(person_id);
         }
         public bool AddPayment(int person_id, double amount, PaymentMethod type, string transaction_id = "000000")
         {
@@ -64,7 +64,7 @@ namespace StudioServices.Controllers.Payments
                 Amount = amount,
                 Type = type
             };
-            return db.SaveItem(payment);
+            return db.Save(payment);
         }
     }
 }

@@ -18,7 +18,7 @@
     },
     "StudioServicesWeb": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "api/authentication",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

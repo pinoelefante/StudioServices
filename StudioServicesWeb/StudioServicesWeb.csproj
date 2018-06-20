@@ -2,15 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>92fc1dde-1e72-4034-92d6-d032f3337ae9</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>TRACE;DEBUG;SQLSERVER</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>TRACE;SQLSERVER</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,11 +32,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="Microsoft.Web.RedisSessionStateProvider" Version="3.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="sqlite-net-pcl" Version="1.5.166-beta" />
-    <PackageReference Include="SQLiteNetExtensions" Version="2.0.0" />
     <PackageReference Include="TLSharp" Version="0.1.0.374" />
     <PackageReference Include="WhatsAppAPI" Version="15.4.29" />
   </ItemGroup>
@@ -43,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StudioServices.Models\StudioServices.Models.csproj" />
+    <ProjectReference Include="..\StudioServices.Models.EntityFramework\StudioServices.Models.EntityFramework.csproj" />
   </ItemGroup>
 
 </Project>

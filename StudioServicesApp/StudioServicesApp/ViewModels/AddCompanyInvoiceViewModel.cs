@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
-using StudioServices.Data.Accounting;
+using StudioServices.Data.Sqlite.Accounting;
+using StudioServices.Data.Sqlite.Registry;
 using StudioServicesApp.Services;
 
 namespace StudioServicesApp.ViewModels
@@ -28,7 +29,25 @@ namespace StudioServicesApp.ViewModels
             addCompanyCmd ??
             (addCompanyCmd = new RelayCommand(async () =>
             {
-                var res = await SendRequestAsync(async () => await api.Warehouse_SaveClientSupplier(CompanyName, VatNumber, Country, City, Province, Street, CivicNumber, ZipCode, 0, 0));
+                var companyAddress = new Address()
+                {
+                    AddressType = AddressType.WORK,
+                    City = City,
+                    CivicNumber = CivicNumber,
+                    Country = Country,
+                    Province = Province,
+                    Street = Street,
+                    ZipCode = ZipCode
+                };
+                var company = new Company()
+                {
+                    Address = companyAddress,
+                    AddressId = companyAddress.Id,
+                    Name = CompanyName,
+                    PersonId = Persona.Id,
+                    VATNumber = VatNumber
+                };
+                var res = await SendRequestAsync(async () => await api.Warehouse_SaveClientSupplier(company));
                 if (res.IsOK && res.Data != null)
                 {
                     MessengerInstance.Send(res.Data, "AddCompanyInvoiceStatus");

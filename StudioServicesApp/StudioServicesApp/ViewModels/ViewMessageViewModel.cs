@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
-using StudioServices.Data.Newsboard;
+using StudioServices.Data.Sqlite.Newsboard;
 using StudioServicesApp.Services;
 using System;
 using System.Collections.Generic;

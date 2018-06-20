@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using StudioServices.Data.Sqlite.Registry;
 using StudioServicesApp.Services;
 
 namespace StudioServicesApp.ViewModels
@@ -29,7 +30,19 @@ namespace StudioServicesApp.ViewModels
             addAddressCmd ??
             (addAddressCmd = new RelayCommand(async () =>
             {
-                var res = await SendRequestAsync(() => api.Person_AddAddressAsync(TypeIndex, Country, City, Province, Address, CivicNumber, Description));
+                var addr = new Address()
+                {
+                    AddressType = (AddressType)Enum.ToObject(typeof(AddressType), TypeIndex),
+                    City = City,
+                    CivicNumber = CivicNumber,
+                    Country = Country,
+                    Description = Description,
+                    PersonId = Persona.Id,
+                    Province = Province,
+                    Street = Address,
+                    ZipCode = ZIPCode
+                };
+                var res = await SendRequestAsync(() => api.Person_AddAddressAsync(addr));
                 if (res.IsOK)
                 {
                     MessengerInstance.Send<bool>(res.Data, "AddAddressStatus");

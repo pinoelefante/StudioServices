@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
-using StudioServices.Data.Accounting;
+using StudioServices.Data.Sqlite.Accounting;
 using StudioServicesApp.Services;
 using Xamarin.Forms;
 using System.Linq;
@@ -75,7 +75,7 @@ namespace StudioServicesApp.ViewModels
                 var invoice = new Invoice()
                 {
                     Type = InvoiceType.PURCHASE,
-                    Sender = CompanyIndex >= 0 ? CompanyList[CompanyIndex].Id : 0,
+                    SenderId = CompanyIndex >= 0 ? CompanyList[CompanyIndex].Id : 0,
                 };
                 Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_HOME, invoice);
             }));
@@ -86,7 +86,7 @@ namespace StudioServicesApp.ViewModels
                 var invoice = new Invoice()
                 {
                     Type = InvoiceType.SELL,
-                    Sender = CompanyIndex >= 0 ? CompanyList[CompanyIndex].Id : 0,
+                    SenderId = CompanyIndex >= 0 ? CompanyList[CompanyIndex].Id : 0,
                 };
                 Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_HOME, invoice);
             }));

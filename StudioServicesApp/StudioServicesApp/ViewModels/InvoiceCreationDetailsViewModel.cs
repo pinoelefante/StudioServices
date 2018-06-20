@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
-using StudioServices.Data.Accounting;
+using StudioServices.Data.Sqlite.Accounting;
 using StudioServicesApp.Services;
 
 namespace StudioServicesApp.ViewModels
@@ -25,7 +25,7 @@ namespace StudioServicesApp.ViewModels
         {
             await base.NavigatedToAsync();
             CurrentInvoice = parameter as Invoice;
-            MyCompany = GetMyCompany(CurrentInvoice.Sender);
+            MyCompany = GetMyCompany(CurrentInvoice.SenderId);
             RecipientCompany = GetClientSupplier(CurrentInvoice.Recipient); 
         }
         private RelayCommand _openAddInvoiceProductCmd;

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudioServices.Controllers.Accounting;
-using StudioServices.Data.Accounting;
-using StudioServices.Models.Accounting;
+using StudioServices.Data.EntityFramework.Accounting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,16 +18,15 @@ namespace StudioServicesWeb.Controllers.Warehouse
         }
         [Route("product")]
         [HttpPost]
-        public Response<bool> SaveProduct(int companyId, string productName, double unitPrice = 1.0, int unitMeasure = 0, double tax = 22.0, double quantity = 0, string productCode = null, int id = 0)
+        public Response<bool> SaveProduct([FromBody]CompanyProduct product)
         {
             if (!_isLogged())
                 return CreateLoginRequired<bool>();
-            var company = manager.GetCompany(companyId);
+            var company = manager.GetCompany(product.CompanyId);
             if (company == null || company.PersonId != _getPersonId())
                 return CreateBoolean(false, ResponseCode.FAIL, "Operazione non autorizzata");
 
-            InvoiceQuantity unit = (InvoiceQuantity)Enum.ToObject(typeof(InvoiceQuantity), unitMeasure);
-            bool res = manager.SaveProduct(companyId, _getPersonId(), productName, unitPrice, unit, tax, quantity, productCode, id);
+            bool res = manager.SaveProduct(product);
             return CreateBoolean(res);
         }
         [Route("products/{companyId}")]
@@ -41,27 +39,16 @@ namespace StudioServicesWeb.Controllers.Warehouse
             if (company == null || company.PersonId != _getPersonId())
                 return CreateResponse<List<CompanyProduct>>(null, ResponseCode.FAIL, "Operazione non autorizzata");
 
-            var res = manager.ListCompanyProducts(companyId, all);
+            var res = manager.ListCompanyProducts(companyId, _getPersonId(), all);
             return CreateResponse(res);
         }
         [Route("company")]
         [HttpPost]
         public Response<bool> CreateCompany([FromBody]Company company)
         {
-            if (!_isLogged())
-                return CreateLoginRequired<bool>();
-            company.PersonId = _getPersonId();
-            var res = manager.SaveCompany(company);
-            return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL);
-        }
-        [Route("company/{id}")]
-        [HttpPost]
-        public Response<bool> UpdateCompany([FromBody]Company company)
-        {
-            if (!_isLogged())
-                return CreateLoginRequired<bool>();
-            if (company == null || company.PersonId != _getPersonId())
-                return CreateBoolean(false, ResponseCode.FAIL, "Operazione non autorizzata");
+            var checkCode = CheckLoginAndPerson(company);
+            if (checkCode != ResponseCode.OK)
+                return CreateBoolean(false, checkCode);
             var res = manager.SaveCompany(company);
             return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL);
         }
@@ -92,14 +79,12 @@ namespace StudioServicesWeb.Controllers.Warehouse
         }
         [Route("clients_suppliers")]
         [HttpPost]
-        public Response<Company> SaveClientSupplier(Company client)
+        public Response<Company> SaveClientSupplier([FromBody]Company client)
         {
             if (!_isLogged())
                 return CreateLoginRequired<Company>();
             var res = manager.SaveCompanyForInvoice(client, _getPersonId());
-            // var res = manager.SaveCompanyForInvoice(_getPersonId(), companyName, vat, country, city, province, street, civicNumber, zipCode, out string message, addressId, companyId);
-            var company = res > 0 ? manager.GetCompany(res) : null;
-            return CreateResponse(company, company != null ? ResponseCode.OK : ResponseCode.FAIL);
+            return CreateResponse(res > 0 ? client : null, res > 0 ? ResponseCode.OK : ResponseCode.FAIL);
         }
         [Route("invoices/{company}")]
         [HttpGet]

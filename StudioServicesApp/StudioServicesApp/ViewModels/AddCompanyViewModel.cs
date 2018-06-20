@@ -1,7 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
-using StudioServices.Data.Registry;
+using StudioServices.Data.Sqlite.Accounting;
+using StudioServices.Data.Sqlite.Registry;
 using StudioServicesApp.Services;
 using StudioServicesApp.Views;
 using System;
@@ -57,8 +58,15 @@ namespace StudioServicesApp.ViewModels
             addCompanyCmd ??
             (addCompanyCmd = new RelayCommand(async () =>
             {
-                // TODO controllare che non esista già
-                var res = await SendRequestAsync(async () => await api.Warehouse_SaveCompanyAsync(CompanyName, VatNumber, SelectedAddress.Id));
+                var company = new Company()
+                {
+                    Address = SelectedAddress,
+                    AddressId = SelectedAddress.Id,
+                    Name = CompanyName,
+                    PersonId = Persona.Id,
+                    VATNumber = VatNumber
+                };
+                var res = await SendRequestAsync(async () => await api.Warehouse_SaveCompanyAsync(company));
                 if (res.IsOK)
                 {
                     MessengerInstance.Send<bool>(res.Data, "AddCompanyStatus");

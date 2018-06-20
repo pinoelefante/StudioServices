@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using StudioServices.Controllers.Items;
-using StudioServices.Data.Items;
+using StudioServices.Data.EntityFramework.Items;
 
 namespace StudioServicesWeb.Controllers
 {
@@ -27,22 +27,21 @@ namespace StudioServicesWeb.Controllers
             return CreateResponse(list);
         }
 
-        [Route("items")]
-        [HttpGet("{id}")]
-        public string GetItem(int id)
+        /*
+        [Route("items/{id}")]
+        [HttpGet]
+        public Response<PayableItem> GetItem([FromRoute]int id)
         {
-            return $"Get {id}";
+            
         }
+        */
 
         [Route("items")]
         [HttpDelete("{id}")]
         public Response<bool> DeleteItem(int id)
         {
             if (!_isAdmin())
-            {
-                // TODO log request
                 return CreateBoolean(false, ResponseCode.ADMIN_FUNCTION);
-            }
             var res = items.DeleteItem(id);
             return CreateBoolean(res);
         }
@@ -66,11 +65,11 @@ namespace StudioServicesWeb.Controllers
 
         [Route("request")]
         [HttpPost]
-        public Response<bool> RequestItem([FromForm]int item_id, bool print, string note, int item_quantity, int print_quantity)
+        public Response<bool> RequestItem([FromForm]ItemRequest request)
         {
             if (!_isLogged())
                 return CreateLoginRequired<bool>();
-            var res = items.RequestModel(_getPersonId(), item_id, print, note, out string message, item_quantity, print_quantity);
+            var res = items.RequestModel(request, out string message);
             return CreateBoolean(res, ResponseCode.OK, message);
         }
 

@@ -58,7 +58,7 @@ namespace StudioServicesWeb.Controllers
         {
             int accountId = _getAccountId();
             if (accountId > 0)
-                return $"AccountId {accountId} ({_isAdmin()})";
+                return $"AccountId {accountId} ({_isAdmin(false)})";
             else
                 return "Welcome!";
         }

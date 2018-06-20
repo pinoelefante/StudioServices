@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
 using SQLite;
-using StudioServices.Data.Accounting;
-using StudioServices.Data.Newsboard;
-using StudioServices.Models.Accounting;
-using StudioServices.Registry.Data;
+using StudioServices.Data.Sqlite.Accounting;
+using StudioServices.Data.Sqlite.Newsboard;
+using StudioServices.Data.Sqlite.Registry;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -98,15 +97,10 @@ namespace StudioServicesApp.Services
         #endregion
 
         #region Person
-        public async Task<ResponseMessage<bool>> Person_CreateAsync(string name, string surname, string fiscal_code, DateTime birthday, string b_place)
-        {
-            return await Person_CreateAsync(name, surname, fiscal_code, birthday.Year, birthday.Month, birthday.Day, b_place);
-        }
-        public async Task<ResponseMessage<bool>> Person_CreateAsync(string name, string surname, string fiscal_code, int b_year, int b_month, int b_day, string b_place)
+        public async Task<ResponseMessage<bool>> Person_CreateAsync(Person person)
         {
             var address = $"{WS_ADDRESS}/api/person/create";
-            var parameters = new ParametersList("name", name, "surname", surname, "fiscal_code", fiscal_code, "b_year", b_year.ToString(), "b_month", b_month.ToString(), "b_day", b_day.ToString(), "b_place", b_place);
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, person);
         }
         public async Task<ResponseMessage<Person>> Person_GetAsync()
         {
@@ -119,11 +113,10 @@ namespace StudioServicesApp.Services
             var prms = new ParametersList("person_id", person_id.ToString(), "status", status.ToString());
             return await SendRequestAsync<Person>(address, HttpMethod.GET, prms);
         }
-        public async Task<ResponseMessage<bool>> Person_AddDocumentAsync(int type, string number, DateTime issue, DateTime expire, byte[] file, string file_ext)
+        public async Task<ResponseMessage<bool>> Person_AddDocumentAsync(IdentificationDocument document)
         {
             var address = $"{WS_ADDRESS}/api/person/document";
-            var prmts = new ParametersList("type", type.ToString(), "number", number, "i_ticks", issue.Ticks.ToString(), "e_ticks", expire.Ticks.ToString(), "file_ext", file_ext);
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, prmts, file);
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, document);
         }
         public async Task<ResponseMessage<bool>> Person_DeleteDocumentAsync(int id)
         {
@@ -131,11 +124,10 @@ namespace StudioServicesApp.Services
             var prmts = new ParametersList("id", id.ToString());
             return await SendRequestAsync<bool>(address, HttpMethod.DELETE, prmts);
         }
-        public async Task<ResponseMessage<bool>> Person_AddContactAsync(int type, string number, bool whatsapp, bool telegram, int priorita)
+        public async Task<ResponseMessage<bool>> Person_AddContactAsync(ContactMethod contact)
         {
             var address = $"{WS_ADDRESS}/api/person/contact";
-            var parameters = new ParametersList("type", type, "number", number, "whatsapp", whatsapp, "telegram", telegram, "priority", priorita);
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, contact);
         }
         public async Task<ResponseMessage<bool>> Person_DeleteContactAsync(int id)
         {
@@ -143,11 +135,10 @@ namespace StudioServicesApp.Services
             var prmts = new ParametersList("id", id.ToString());
             return await SendRequestAsync<bool>(address, HttpMethod.DELETE, prmts);
         }
-        public async Task<ResponseMessage<bool>> Person_AddAddressAsync(int type, string country, string city, string province, string address, string number, string description)
+        public async Task<ResponseMessage<bool>> Person_AddAddressAsync(Address address)
         {
             var url_address = $"{WS_ADDRESS}/api/person/address";
-            var parameters = new ParametersList("type", type, "country", country, "city", city, "province", province, "address", address, "number", number, "description", description);
-            return await SendRequestAsync<bool>(url_address, HttpMethod.POST, parameters);
+            return await SendRequestAsync<bool>(url_address, HttpMethod.POST, address);
         }
         public async Task<ResponseMessage<bool>> Person_DeleteAddressAsync(int id)
         {
@@ -170,7 +161,7 @@ namespace StudioServicesApp.Services
         #endregion
 
         #region News
-        public async Task<ResponseMessage<List<Message>>> News_PublicMessageListAsync(long ticks = 0)
+        public async Task<ResponseMessage<List<Message>>> News_GetAllPublicMessagesAsync(long ticks = 0)
         {
             var address = $"{WS_ADDRESS}/api/news/all";
             var parameters = new ParametersList("time", ticks);
@@ -199,11 +190,10 @@ namespace StudioServicesApp.Services
         #endregion
 
         #region Warehouse
-        public async Task<ResponseMessage<bool>> Warehouse_SaveCompanyAsync(string name, string vat, int address_id, int company_id = 0)
+        public async Task<ResponseMessage<bool>> Warehouse_SaveCompanyAsync(Company company)
         {
-            var address = $"{WS_ADDRESS}/api/warehouse/company/{(company_id > 0 ? company_id.ToString() : "")}";
-            var parameters = new ParametersList("name",name,"vat",vat,"address_id",address_id);
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
+            var address = $"{WS_ADDRESS}/api/warehouse/company";
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, company);
         }
         public async Task<ResponseMessage<List<Company>>> Warehouse_GetMyCompaniesAsync()
         {
@@ -221,22 +211,20 @@ namespace StudioServicesApp.Services
             var address = $"{WS_ADDRESS}/api/warehouse/products/{companyId}";
             return await SendRequestAsync<List<CompanyProduct>>(address, HttpMethod.GET);
         }
-        public async Task<ResponseMessage<bool>> Warehouse_SaveProduct(int companyId, string productName, double unitPrice, InvoiceQuantity unitMeasure, double tax, double quantity, string productCode, int productId=0)
+        public async Task<ResponseMessage<bool>> Warehouse_SaveProduct(CompanyProduct product)
         {
             var address = $"{WS_ADDRESS}/api/warehouse/product";
-            var parameters = new ParametersList("companyId", companyId, "productName", productName, "unitPrice", unitPrice, "unitMeasure", unitMeasure, "tax", tax, "quantity", quantity, "productCode", productCode, "id", productId);
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, parameters);
+            return await SendRequestAsync<bool>(address, HttpMethod.POST, product);
         }
         public async Task<ResponseMessage<List<Company>>> Warehouse_ClientsSuppliersList()
         {
             var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers";
             return await SendRequestAsync<List<Company>>(address, HttpMethod.GET);
         }
-        public async Task<ResponseMessage<Company>> Warehouse_SaveClientSupplier(string companyName, string vat, string country, string city, string province, string street, string civicNumber, string zipCode, int addressId, int companyId)
+        public async Task<ResponseMessage<Company>> Warehouse_SaveClientSupplier(Company client)
         {
             var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers";
-            var parameters = new ParametersList("companyName", companyName, "vat", vat, "country", country, "city", city, "province", province, "street", street, "civicNumber", civicNumber, "zipCode", zipCode, "addressId", addressId, "companyId", companyId);
-            return await SendRequestAsync<Company>(address, HttpMethod.POST, parameters);
+            return await SendRequestAsync<Company>(address, HttpMethod.POST, client);
         }
         #endregion
 

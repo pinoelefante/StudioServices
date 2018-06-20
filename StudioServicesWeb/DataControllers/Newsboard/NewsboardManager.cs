@@ -1,4 +1,5 @@
-﻿using StudioServices.Data.Newsboard;
+﻿using StudioServices.Data.EntityFramework.Newsboard;
+using StudioServicesWeb.DataControllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace StudioServices.Controllers.Newsboard
 {
     public class NewsboardManager
     {
-        private NewsboardDatabase db;
-        public NewsboardManager()
+        private DatabaseEF db;
+        public NewsboardManager(DatabaseEF d)
         {
-            db = new NewsboardDatabase();
+            db = d;
         }
         public bool SendPublicMessage(string content, int sender_id, string title = "", bool isMarked = false,  bool isExpire = false, DateTime expireDate = default(DateTime))
         {
@@ -27,7 +28,7 @@ namespace StudioServices.Controllers.Newsboard
                 SenderId = sender_id
             };
 
-            if(db.SaveItem(msg))
+            if(db.Save(msg))
             {
                 // TODO Inviare notifiche push
                 return true;
@@ -36,7 +37,7 @@ namespace StudioServices.Controllers.Newsboard
         }
         public Message GetMessage(int message_id)
         {
-            return db.GetMessage(message_id);
+            return db.Get<Message>(message_id);
         }
         public bool SendConversationMessage(string content, int sender_id, int receiver_id)
         {
@@ -49,7 +50,7 @@ namespace StudioServices.Controllers.Newsboard
                 SenderId = sender_id,
                 PersonId = receiver_id
             };
-            if(db.SaveItem(msg))
+            if(db.Save(msg))
             {
                 // TODO send push
                 return true;
@@ -66,22 +67,22 @@ namespace StudioServices.Controllers.Newsboard
         }
         public List<Message> GetPublicMessages(int person_id, DateTime last_message_date = default(DateTime))
         {
-            return db.GetPublicMessages(person_id, last_message_date);
+            return db.Message_GetPublicMessages(person_id, last_message_date);
         }
         public bool DeleteMessage(int message_id)
         {
-            Message msg = db.GetMessage(message_id);
+            Message msg = db.Get<Message>(message_id);
             if(msg == null)
             {
                 // Impossibile cancellare un messaggio che non esiste
                 return true;
             }
             msg.SetAttivo(false);
-            return db.SaveItem(msg);
+            return db.Save(msg);
         }
         public bool SetRead(int person_id, int message_id, ReadMode mode)
         {
-            var read_status = db.GetReadStatus(message_id, person_id) ?? new ReadStatus() { PersonId = person_id, MessageId = message_id };
+            var read_status = db.Message_GetReadStatus(message_id, person_id) ?? new ReadStatus() { PersonId = person_id, MessageId = message_id };
             switch(mode)
             {
                 case ReadMode.APP:
@@ -102,11 +103,11 @@ namespace StudioServices.Controllers.Newsboard
                 default:
                     return false;
             }
-            return db.SaveObject(read_status);
+            return db.SaveObj(read_status);
         }
         public bool IsRead(int person_id, int message_id)
         {
-            return db.GetReadStatus(message_id, person_id) != null;
+            return db.Message_GetReadStatus(message_id, person_id) != null;
         }
     }
 }

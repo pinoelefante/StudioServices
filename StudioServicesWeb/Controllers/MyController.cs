@@ -4,15 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StudioServices.Data.EntityFramework;
+using System.Runtime.CompilerServices;
 
 namespace StudioServicesWeb.Controllers
 {
     public class MyController : Controller
     {
-        protected bool _isAdmin()
+        protected bool _isAdmin(bool logEnable = true, [CallerMemberName]string methodName = "")
         {
             var is_admin = HttpContext.Session.GetInt32("IsAdmin");
-            return is_admin != null && is_admin > 0;
+            var res = is_admin != null && is_admin > 0;
+            if(logEnable && !res)
+            {
+                // TODO: log admin fail
+            }
+            return res;
         }
         protected bool _isLogged()
         {
@@ -35,6 +42,19 @@ namespace StudioServicesWeb.Controllers
             HttpContext.Session.SetInt32("PersonId", person_id);
             HttpContext.Session.SetInt32("IsAdmin", admin ? 1 : 0);
             await HttpContext.Session.CommitAsync();
+        }
+        protected bool CheckPerson(PersonReference data)
+        {
+            var personId = _getPersonId();
+            return data.PersonId == personId;
+        }
+        protected ResponseCode CheckLoginAndPerson(PersonReference data)
+        {
+            if (!_isLogged())
+                return ResponseCode.REQUIRE_LOGIN;
+            if (!CheckPerson(data))
+                return ResponseCode.INVALID_PERSON;
+            return ResponseCode.OK;
         }
         public Response<Boolean> CreateBoolean(bool resp, ResponseCode code = ResponseCode.OK, string message = "")
         {
@@ -83,6 +103,7 @@ namespace StudioServicesWeb.Controllers
         REQUIRE_LOGIN = 1,
         FAIL = 2,
         ADMIN_FUNCTION = 3,
-        MAINTENANCE = 4
+        MAINTENANCE = 4,
+        INVALID_PERSON = 5
     }
 }

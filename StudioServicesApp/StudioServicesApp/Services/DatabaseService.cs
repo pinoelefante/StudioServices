@@ -1,6 +1,6 @@
 ﻿using pinoelefante.Services;
 using SQLite;
-using StudioServices.Data.Newsboard;
+using StudioServices.Data.Sqlite.Newsboard;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

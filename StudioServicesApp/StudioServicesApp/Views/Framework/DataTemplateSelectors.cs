@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StudioServices.Data.Newsboard;
+using StudioServices.Data.Sqlite.Newsboard;
 using Xamarin.Forms;
 
 namespace StudioServicesApp.Views

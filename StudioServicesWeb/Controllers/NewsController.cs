@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using StudioServices.Controllers.Newsboard;
-using StudioServices.Data.Newsboard;
+using StudioServices.Data.EntityFramework.Newsboard;
 
 namespace StudioServicesWeb.Controllers
 {
@@ -46,10 +46,7 @@ namespace StudioServicesWeb.Controllers
         public Response<bool> PostNews(string text, string title, bool is_private, int person_id, bool is_marked, bool expire, int e_year, int e_month, int e_day)
         {
             if(!_isAdmin())
-            {
-                // TODO log request
                 return CreateOnlyAdmin<bool>();
-            }
             var res = news.SendPublicMessage(text, _getPersonId(), title);
             return CreateBoolean(res);
         }
@@ -80,10 +77,7 @@ namespace StudioServicesWeb.Controllers
                 return CreateResponse(messages);
             }
             if (!_isAdmin())
-            {
-                // TODO log request
                 return CreateOnlyAdmin<List<Message>>();
-            }
             
             // TODO implement
             throw new NotImplementedException();
@@ -94,10 +88,7 @@ namespace StudioServicesWeb.Controllers
         public Response<bool> DeleteNews(int id)
         {
             if(!_isAdmin())
-            {
-                // TODO log request
                 return CreateOnlyAdmin<bool>();
-            }
             var res = news.DeleteMessage(id);
             return CreateBoolean(res);
         }

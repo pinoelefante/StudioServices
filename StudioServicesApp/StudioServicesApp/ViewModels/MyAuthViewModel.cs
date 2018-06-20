@@ -1,8 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
-using StudioServices.Data.Accounting;
-using StudioServices.Models.Accounting;
-using StudioServices.Registry.Data;
+using StudioServices.Data.Sqlite.Accounting;
+using StudioServices.Data.Sqlite.Registry;
 using StudioServicesApp.Services;
 using System;
 using System.Collections.Generic;

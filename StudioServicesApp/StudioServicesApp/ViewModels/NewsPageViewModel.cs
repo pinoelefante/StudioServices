@@ -1,8 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
-using StudioServices.Data.Newsboard;
-using StudioServices.Registry.Data;
+using StudioServices.Data.Sqlite.Newsboard;
 using StudioServicesApp.Services;
 using System;
 using System.Collections.Generic;
@@ -97,7 +96,7 @@ namespace StudioServicesApp.ViewModels
                 });
             }
             // get news from webservice using ticks
-            var res = await SendRequestAsync(async () => await api.News_PublicMessageListAsync(last_ticks));
+            var res = await SendRequestAsync(async () => await api.News_GetAllPublicMessagesAsync(last_ticks));
             
             if (res.Code == ResponseCode.OK && res.Data != null)
             {

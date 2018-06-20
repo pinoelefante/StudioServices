@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
-using StudioServices.Data.Accounting;
+using StudioServices.Data.Sqlite.Accounting;
 using StudioServicesApp.Services;
 using StudioServicesApp.Views;
 using StudioServicesApp.Views.Framework;
@@ -156,7 +156,7 @@ namespace StudioServicesApp.ViewModels
             InvoiceNumberText = invoice.Number.ToString();
             InvoiceNumberExtraText = invoice.NumberExtra;
             SelectedIndexInvoiceType = (int)invoice.Type;
-            SelectedMyCompanyIndex = ListCompanies.IndexOf(GetMyCompany(invoice.Sender));
+            SelectedMyCompanyIndex = ListCompanies.IndexOf(GetMyCompany(invoice.SenderId));
             SelectedCompany = GetClientSupplier(invoice.Recipient);
         }
         private int GetNextInvoiceNumber(int year)
@@ -174,7 +174,7 @@ namespace StudioServicesApp.ViewModels
                         Emission = InvoiceDate,
                         Number = Int32.Parse(InvoiceNumberText),
                         NumberExtra = InvoiceNumberExtraText,
-                        Sender = SelectedMyCompany.Id,
+                        SenderId = SelectedMyCompany.Id,
                         Recipient = SelectedCompany.Id,
                         Type = (InvoiceType)Enum.ToObject(typeof(InvoiceType), SelectedIndexInvoiceType)
                     };

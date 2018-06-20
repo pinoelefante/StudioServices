@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudioServices.Controllers.Persons;
-using StudioServices.Registry.Data;
+using StudioServices.Data.EntityFramework.Registry;
 
 namespace StudioServicesWeb.Controllers
 {
@@ -24,16 +24,11 @@ namespace StudioServicesWeb.Controllers
 
         [Route("create")]
         [HttpPost]
-        public Response<bool> CreatePerson([FromForm]string name, [FromForm]string surname, [FromForm]string fiscal_code, [FromForm]int b_year, [FromForm]int b_month, [FromForm]int b_day, [FromForm]string b_place)
+        public Response<bool> CreatePerson([FromBody]Person person)
         {
             if (!_isAdmin())
-            {
-                // TODO : loggare tentativo
                 return CreateBoolean(false,ResponseCode.ADMIN_FUNCTION, "Funzione non abilitata all'utente");
-            }
-            name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name);
-            surname = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(surname);
-            bool res = persons.AddPerson(name, surname, fiscal_code.ToUpper(), new DateTime(b_year, b_month, b_day), b_place, out string verify_code);
+            bool res = persons.AddPerson(person, out string verify_code);
             return CreateBoolean(res);   
         }
 
@@ -52,25 +47,19 @@ namespace StudioServicesWeb.Controllers
         public Response<bool> SetStatus(int person_id, bool status)
         {
             if (!_isAdmin())
-            {
-                // TODO : loggare tentativo
                 return CreateBoolean(false, ResponseCode.ADMIN_FUNCTION,"Funzione non abilitata");
-            }
             bool res = persons.ChangeActiveStatus(person_id, status);
             return CreateBoolean(res);
         }
 
         [Route("document")]
         [HttpPost]
-        public Response<bool> AddDocument([FromForm]int type, [FromForm]string number, [FromForm]long i_ticks, [FromForm]long e_ticks, [FromForm]/*byte[]*/string file, [FromForm]string file_ext)
+        public Response<bool> AddDocument([FromBody]IdentificationDocument document)
         {
-            if (!_isLogged())
-                return CreateBoolean(false, ResponseCode.REQUIRE_LOGIN);
-            number = number.ToUpper();
-            DateTime issue_date = new DateTime(i_ticks);
-            DateTime expire_date = new DateTime(e_ticks);
-            var fileContent = System.Convert.FromBase64String(file);
-            bool res = persons.AddIdentificationDocument(_getPersonId(), type, number, issue_date, expire_date, fileContent, file_ext);
+            var checkCode = CheckLoginAndPerson(document);
+            if (checkCode != ResponseCode.OK)
+                return CreateBoolean(false, checkCode);
+            bool res = persons.AddIdentificationDocument(document);
             return CreateBoolean(res);
         }
 
@@ -86,9 +75,12 @@ namespace StudioServicesWeb.Controllers
 
         [Route("contact")]
         [HttpPost]
-        public Response<bool> AddContact(int type, string number, bool whatsapp = false, bool telegram = false, int priorita = 0)
+        public Response<bool> AddContact([FromBody]ContactMethod contact)
         {
-            var res = persons.AddContactNumber(_getPersonId(), type, number, whatsapp, telegram, priorita);
+            var checkCode = CheckLoginAndPerson(contact);
+            if (checkCode != ResponseCode.OK)
+                return CreateBoolean(false, checkCode);
+            var res = persons.AddContactNumber(contact);
             return CreateBoolean(res);
         }
         [Route("contact")]
@@ -101,9 +93,12 @@ namespace StudioServicesWeb.Controllers
 
         [Route("address")]
         [HttpPost]
-        public Response<bool> AddAddress(int type, string country, string city, string province, string address, string number, string zip, string description)
+        public Response<bool> AddAddress([FromBody]Address address)
         {
-            var res = persons.AddAddress(_getPersonId(), type, country, city, province, address, number, zip, description);
+            var checkCode = CheckLoginAndPerson(address);
+            if (checkCode != ResponseCode.OK)
+                return CreateBoolean(false, checkCode);
+            var res = persons.AddAddress(address);
             return CreateBoolean(res);
         }
 
@@ -119,7 +114,27 @@ namespace StudioServicesWeb.Controllers
         [HttpPost]
         public Response<bool> AddEmail(string address, bool pec, bool managed, string password, string fullname, string imap_address, int imap_port, string imap_username, string smtp_address, int smtp_port, string smtp_username, string service_username, string service_password, long expire_day, bool renew_auto, string renew_paypal)
         {
-            var res = persons.AddEmail(_getPersonId(), address, pec, managed, password, fullname, imap_address, imap_port, imap_username, smtp_address, smtp_port, smtp_username, service_username, service_password, new DateTime(expire_day), renew_auto, renew_paypal);
+            Email email = new Email()
+            {
+                Address = address,
+                AutoRenewEnabled = renew_auto,
+                AutoRenewPaypalAddress = renew_paypal,
+                Expire = new DateTime(expire_day),
+                FullName = fullname,
+                IMAPAddress = imap_address,
+                IMAPPort = imap_port,
+                IMAPUsername = imap_username,
+                IsManaged = managed,
+                IsPec = pec,
+                Password = password,
+                PersonId = _getPersonId(),
+                ServicePassword = service_password,
+                ServiceUsername = service_username,
+                SMTPAddress = smtp_address,
+                SMTPPort = smtp_port,
+                SMTPUsername = smtp_username
+            };
+            var res = persons.AddEmail(email);
             return CreateBoolean(res);
         }
 
