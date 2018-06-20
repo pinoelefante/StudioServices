@@ -20,7 +20,7 @@ namespace StudioServicesApp.ViewModels
     public class AddIdentificationDocumentViewModel : MyAuthViewModel
     {
         private int _docIndex = 0;
-        private string _docNumber, _fileExt;
+        private string _docNumber, _fileExt, _fileName;
         private DateTime _docIssue = DateTime.Now, _docExpire = DateTime.Now.AddYears(10);
         private RelayCommand _imageFromFile, _imageFromCamera, _addDocument;
         private bool _hasCamera = true, _imageLoaded = false;
@@ -34,15 +34,16 @@ namespace StudioServicesApp.ViewModels
         public bool HasCamera { get => _hasCamera; set => SetMT(ref _hasCamera, value); }
         public bool IsImageLoaded { get => _imageLoaded; set => SetMT(ref _imageLoaded, value); }
         public string FileExtension { get => _fileExt; set => SetMT(ref _fileExt, value); }
+        public string FileName { get => _fileName; set => SetMT(ref _fileName, value); }
 
         public AddIdentificationDocumentViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
-        public override Task NavigatedToAsync(object parameter = null)
+        public override async Task NavigatedToAsync(object parameter = null)
         {
             Reset();
-            if(parameter != null)
-                VerifyPersonEnabled = (bool)parameter;
+
+            VerifyPersonEnabled = parameter == null ? false : (bool)parameter;
             // HasCamera = CrossMedia.Current.IsCameraAvailable;
-            return base.NavigatedToAsync(parameter);
+            await base.NavigatedToAsync();
         }
         private void Reset()
         {
@@ -88,6 +89,7 @@ namespace StudioServicesApp.ViewModels
                     }
                     IsImageLoaded = _imageData != null;
                     FileExtension = file.Path.Substring(file.Path.LastIndexOf("."));
+                    FileName = Path.GetFileName(file.Path);
                 }
                 else
                 {
@@ -143,6 +145,7 @@ namespace StudioServicesApp.ViewModels
                     }
                     IsImageLoaded = _imageData != null;
                     FileExtension = file.Path.Substring(file.Path.LastIndexOf("."));
+                    FileName = Path.GetFileName(file.Path);
                 }
                 else
                 {
@@ -161,6 +164,7 @@ namespace StudioServicesApp.ViewModels
                 var document = new IdentificationDocument()
                 {
                     Expire = DocumentExpiry,
+                    Filename = FileName,
                     FileContentBase64 = _imageData!=null && _imageData.Length > 0 ? Convert.ToBase64String(_imageData) : string.Empty,
                     Issue = DocumentIssue,
                     Number = DocumentNumber,

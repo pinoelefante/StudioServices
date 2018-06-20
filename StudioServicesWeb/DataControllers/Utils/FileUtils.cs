@@ -9,9 +9,9 @@ namespace StudioServices.Controllers.Utils
 {
     public class FileUtils
     {
-        public static bool WriteFile(string folder_path, string filename, byte[] content)
+        public static bool WriteFile(string base_folder, string folder, string filename, byte[] content)
         {
-            string destination = Path.Combine(folder_path, filename);
+            string destination = Path.Combine(base_folder, folder, filename);
             CreateDirectoryFromFilePath(destination);
             try
             {

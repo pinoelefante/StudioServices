@@ -8,6 +8,6 @@ namespace StudioServices.Data.Sqlite
         [ForeignKey(typeof(Person))]
         public virtual int PersonId { get; set; }
 
-        public virtual Person Person { get; set; }
+        // public virtual Person Person { get; set; }
     }
 }

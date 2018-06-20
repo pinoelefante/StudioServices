@@ -47,9 +47,9 @@ namespace StudioServices.Controllers.Persons
             bool isUpdate = document.Id > 0;
 
             // Salvataggio file e generazione nome
-            string filename = document.Filename ?? String.Format("{0:D4}_{1:D2}_{2}", document.PersonId, document.Type, StringUtils.RandomString(), file_ext);
+            string filename = string.Format("{0:D6}_{1:D2}_{2}_{3}", document.PersonId, (int)document.Type, StringUtils.RandomString(), document.Filename);
             document.Filename = filename;
-            if (FileUtils.WriteFile(StudioServicesConfig.IDENTIFICATIONS_FOLDER, filename, file))
+            if (FileUtils.WriteFile(StudioServicesConfig.IDENTIFICATIONS_FOLDER, document.PersonId.ToString("D6"), filename, file))
             {
                 document.SetAttivo(true);
                 if (db.Save(document))

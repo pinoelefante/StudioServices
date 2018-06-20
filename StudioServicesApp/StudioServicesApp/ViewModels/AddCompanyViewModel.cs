@@ -60,7 +60,7 @@ namespace StudioServicesApp.ViewModels
             {
                 var company = new Company()
                 {
-                    Address = SelectedAddress,
+                    // Address = SelectedAddress,
                     AddressId = SelectedAddress.Id,
                     Name = CompanyName,
                     PersonId = Persona.Id,

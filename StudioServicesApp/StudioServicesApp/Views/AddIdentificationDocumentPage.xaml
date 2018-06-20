@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.Views.AddIdentificationDocumentPage"
+             xmlns:views="clr-namespace:pinoelefante.Views"
              Title="Aggiungi documento di riconoscimento"
              BindingContext="{Binding AddIdentificationDocumentViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
@@ -32,10 +33,10 @@
                 </Entry>
                 
                 <Label Text="Data"/>
-                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentIssue, Mode=TwoWay}"/>
+                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentIssue, Mode=TwoWay}" MaximumDate="{Binding sys.DateTime.Now}"/>
                 
                 <Label Text="Scadenza"/>
-                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentExpiry, Mode=TwoWay}" MaximumDate="{Binding x:Static sys.DateTime.Now}"/>
+                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentExpiry, Mode=TwoWay}"/>
                 
                 <Label Text="File"/>
                 <StackLayout Orientation="Horizontal">
@@ -47,4 +48,4 @@
             <Button Text="Avanti" Grid.Row="2" HorizontalOptions="Center" Command="{Binding AddDocumentCommand}"/>
         </Grid>
     </ContentPage.Content>
-</ContentPage>
+</views:MyContentPage>

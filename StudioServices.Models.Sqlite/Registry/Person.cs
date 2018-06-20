@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace StudioServices.Data.Sqlite.Registry
 {
-    public abstract class Person : DataFile
+    public class Person : DataFile
     {
         public virtual string Name { get; set; }
         public virtual string Surname { get; set; }
