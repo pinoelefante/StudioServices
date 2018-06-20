@@ -179,18 +179,22 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.5" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StudioServicesApp\StudioServicesApp.csproj">
-      <Project>{6EBA54D7-BB59-438B-BD2E-D193E77462F2}</Project>
-      <Name>StudioServicesApp</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
     <SDKReference Include="SQLite.UWP.2015, Version=3.23.1">
       <Name>SQLite for Universal Windows Platform %28SQLite.UWP.2015, Version=3.23.1%29</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StudioServices.Models.Sqlite\StudioServices.Models.Sqlite.csproj">
+      <Project>{3e5b8a0a-e103-4e2e-a602-2b00af28b5f2}</Project>
+      <Name>StudioServices.Models.Sqlite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioServicesApp\StudioServicesApp.csproj">
+      <Project>{6eba54d7-bb59-438b-bd2e-d193e77462f2}</Project>
+      <Name>StudioServicesApp</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
