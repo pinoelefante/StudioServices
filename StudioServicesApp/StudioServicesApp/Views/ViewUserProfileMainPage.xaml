@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:pinoelefante.Views"
+             Title="Profilo"
+             BindingContext="{Binding ViewUserProfileMainPageViewModel, Source={StaticResource Locator}}"
+             x:Class="StudioServicesApp.Views.ViewUserProfileMainPage">
+    <ScrollView>
+        <StackLayout Orientation="Vertical">
+            <Label Text="Nome" />
+            <Entry Text="{Binding Name, Mode=TwoWay}"/>
+
+            <Label Text="Cognome" />
+            <Entry Text="{Binding Surname, Mode=TwoWay}"/>
+
+            <Label Text="Data di nascita" />
+            <DatePicker Date="{Binding BirthDay, Mode=TwoWay}"/>
+
+            <Label Text="Luogo di nascita" />
+            <Entry Text="{Binding BirthPlace, Mode=TwoWay}"/>
+
+            <Label Text="Codice fiscale" />
+            <Entry Text="{Binding FiscalCode, Mode=TwoWay}"/>
+
+            <Button Text="Salva" Command="{Binding SaveProfileCommand}" />
+        </StackLayout>
+    </ScrollView>
+</views:MyContentPage>

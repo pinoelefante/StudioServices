@@ -62,6 +62,7 @@
                     <views:EventToCommandBehavior EventName="ItemTapped" Command="{Binding OpenMessageCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}" />
                 </ListView.Behaviors>
             </ListView>
+            <Label Text="Non sono presenti notizie" VerticalOptions="Center" HorizontalOptions="Center" IsVisible="{Binding Newsboard.Count, Converter={StaticResource IntEquals}, ConverterParameter=0}" />
         </Grid>
     </ContentPage.Content>
 </views:MyContentPage>

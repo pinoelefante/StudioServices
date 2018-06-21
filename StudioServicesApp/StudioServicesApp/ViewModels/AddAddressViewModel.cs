@@ -32,7 +32,7 @@ namespace StudioServicesApp.ViewModels
             {
                 var addr = new Address()
                 {
-                    AddressType = (AddressType)Enum.ToObject(typeof(AddressType), TypeIndex),
+                    AddressType = AddressType.HOME,
                     City = City,
                     CivicNumber = CivicNumber,
                     Country = Country,

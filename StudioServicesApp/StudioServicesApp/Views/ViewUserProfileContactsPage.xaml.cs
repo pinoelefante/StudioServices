@@ -1,5 +1,4 @@
 ﻿using pinoelefante.Views;
-using Rg.Plugins.Popup.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +11,11 @@ using Xamarin.Forms.Xaml;
 namespace StudioServicesApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class AddCompanyPopup : MyPopupPage
+	public partial class ViewUserProfileContactsPage : MyContentPage
 	{
-		public AddCompanyPopup (object parameter = null) : base(parameter)
+		public ViewUserProfileContactsPage ()
 		{
 			InitializeComponent ();
 		}
-    }
+	}
 }

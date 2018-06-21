@@ -17,5 +17,7 @@ namespace StudioServices.Data.EntityFramework.Accounting
 
         // [OneToOne]
         public Address Address { get; set; }
+
+        public bool IsClient { get; set; } = false;
     }
 }

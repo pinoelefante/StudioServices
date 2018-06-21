@@ -12,30 +12,151 @@
     <popup:PopupPage.Animation>
         <popupAnimation:ScaleAnimation PositionIn="Bottom" PositionOut="Center" ScaleIn="1" ScaleOut="0.7" DurationIn="700" EasingIn="BounceOut"/>
     </popup:PopupPage.Animation>
-    <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
-        <AbsoluteLayout>
-            <Frame Margin="15" HorizontalOptions="Center" BackgroundColor="White">
-                <Grid Padding="10,10,10,5">
-                    <Label Grid.Row="0" Text="Nome azienda"/>
-                    <Entry Grid.Row="1" Text="{Binding CompanyName, Mode=TwoWay}"/>
-                    <Label Grid.Row="2" Text="Partita IVA"/>
-                    <Entry Grid.Row="3" Text="{Binding VatNumber, Mode=TwoWay}"/>
-                    <Label Grid.Row="4" Text="Indirizzo"/>
-                    <StackLayout Grid.Row="5" Orientation="Horizontal">
-                        <Picker ItemsSource="{Binding ListAddresses}" SelectedItem="{Binding SelectedAddress}" WidthRequest="200"/>
-                        <Button Command="{Binding OpenAddAddressPopup}" Text="+"/>
-                    </StackLayout>
-                    <Button Grid.Row="6" Text="Aggiungi" Command="{Binding AddCompanyCommand}"/>
-                </Grid>
-            </Frame>
-            <ContentView AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
-                <ContentView.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ClosePopupCommand}"/>
-                </ContentView.GestureRecognizers>
-                <Image x:Name="CloseImage" HeightRequest="30" WidthRequest="30" Source="close_circle_button.png"/>
-            </ContentView>
-        </AbsoluteLayout>
-        
-    </ScrollView>
     
+    <Grid Margin="20" BackgroundColor="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Command="{Binding ClosePopupCommand}" Image="back_icon.png" HeightRequest="32" VerticalOptions="Center"/>
+            <StackLayout Grid.Column="1" Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,10">
+                <Label Text="Aggiungi"/>
+                <Label Text="azienda">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding IsClient}" Value="True">
+                            <Setter Property="Text" Value="cliente/fornitore" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </StackLayout>
+        </Grid>
+        
+        <ScrollView Grid.Row="1" Margin="10">
+            <Grid>
+                <!-- first page -->
+                <StackLayout Orientation="Vertical" Padding="40,10" IsVisible="False">
+                    <StackLayout.Triggers>
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding CurrentPage}" Value="0">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </StackLayout.Triggers>
+                    
+                    <Label Text="Nome azienda"/>
+                    <Entry Text="{Binding CompanyName, Mode=TwoWay}"/>
+                    <Label Text="Partita IVA"/>
+                    <Entry Text="{Binding VatNumber, Mode=TwoWay}"/>
+                    
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="End">
+                        <Button Text="Avanti" Command="{Binding GoPage}" CommandParameter="1" IsVisible="False">
+                            <Button.Triggers>
+                                <MultiTrigger TargetType="Button">
+                                    <MultiTrigger.Conditions>
+                                        <BindingCondition Binding="{Binding CompanyName, Converter={StaticResource StringEmpty}}" Value="False"/>
+                                        <BindingCondition Binding="{Binding VatNumber, Converter={StaticResource StringEmpty}}" Value="False"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="IsVisible" Value="True" />
+                                </MultiTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </StackLayout>
+                </StackLayout>
+                
+                <!-- second page -->
+                <StackLayout Orientation="Vertical" Padding="40,10" IsVisible="False">
+                    <StackLayout.Triggers>
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding CurrentPage}" Value="1">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </StackLayout.Triggers>
+
+                    <Label Text="Indirizzo"/>
+                    <Entry Text="{Binding Address, Mode=TwoWay}" MinimumWidthRequest="100"/>
+                    <Label Text="Numero civico" />
+                    <Entry Text="{Binding CivicNumber, Mode=TwoWay}"/>
+                    <Label Text="Città"/>
+                    <Entry Text="{Binding City, Mode=TwoWay}"/>
+                    <Label Text="Prov."/>
+                    <Entry Text="{Binding Province, Mode=TwoWay}"/>
+                    <Label Text="CAP"/>
+                    <Entry Text="{Binding ZIPCode, Mode=TwoWay}"/>
+                    <Label Text="Nazione"/>
+                    <Entry Text="{Binding Country, Mode=TwoWay}"/>
+                    <Label Text="Note"/>
+                    <Entry Text="{Binding Description, Mode=TwoWay}"/>
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End">
+                        <Button Text="Indietro" Command="{Binding GoPage}" CommandParameter="0"/>
+                        <Button Text="Avanti" Command="{Binding GoPage}" CommandParameter="2" IsVisible="False">
+                            <Button.Triggers>
+                                <MultiTrigger TargetType="Button">
+                                    <MultiTrigger.Conditions>
+                                        <BindingCondition Binding="{Binding Address, Converter={StaticResource StringEmpty}}" Value="False"/>
+                                        <BindingCondition Binding="{Binding CivicNumber, Converter={StaticResource StringEmpty}}" Value="False"/>
+                                        <BindingCondition Binding="{Binding City, Converter={StaticResource StringEmpty}}" Value="False"/>
+                                        <BindingCondition Binding="{Binding Province, Converter={StaticResource StringEmpty}}" Value="False"/>
+                                        <BindingCondition Binding="{Binding ZIPCode, Converter={StaticResource StringEmpty}}" Value="False"/>
+                                        <BindingCondition Binding="{Binding Country, Converter={StaticResource StringEmpty}}" Value="False"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="IsVisible" Value="True" />
+                                </MultiTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </StackLayout>
+                </StackLayout>
+
+                <!-- third page -->
+                <StackLayout Orientation="Vertical" Padding="40,20,40,10" IsVisible="False" HorizontalOptions="Center">
+                    <StackLayout.Triggers>
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding CurrentPage}" Value="2">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </StackLayout.Triggers>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Nome:" />
+                        <Label Text="{Binding CompanyName}"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="P.IVA/CF:" />
+                        <Label Text="{Binding VatNumber}"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="in:"/>
+                        <Label Text="{Binding City}"/>
+                        <Label Text="prov.:"/>
+                        <Label Text="{Binding Province}"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="{Binding Address}"/>
+                        <Label Text="n."/>
+                        <Label Text="{Binding CivicNumber}"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="{Binding ZIPCode}" />
+                        <Label Text="," />
+                        <Label Text="{Binding Country}"/>
+                    </StackLayout>
+
+                    <StackLayout>
+                        <Label Text="{Binding Description}" />
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End">
+                        <Button Text="Indietro" Command="{Binding GoPage}" CommandParameter="1"/>
+                        <Button Text="Aggiungi" Command="{Binding AddCompanyCommand}"/>
+                    </StackLayout>
+                </StackLayout>
+            </Grid>
+            
+        </ScrollView>
+    </Grid>
 </views:MyPopupPage>

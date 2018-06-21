@@ -27,8 +27,8 @@ namespace StudioServices.Controllers.Accounting
         }
         public int SaveCompanyForInvoice(Company client, int personId)
         {
-            client.PersonId = -personId;
-            client.Address.PersonId = -personId;
+            client.PersonId = personId;
+            client.Address.PersonId = personId;
             return db.Save(client) ? client.Id : 0;
         }
         public Company GetCompany(int company_id)
@@ -95,7 +95,7 @@ namespace StudioServices.Controllers.Accounting
         }
         public List<Company> GetClientsSuppliers(int personId)
         {
-            return db.GetList<Company>(-personId);
+            return db.Warehouse_GetClientSupplierList(personId);
         }
         public List<Invoice> GetInvoices(int company, int? year)
         {

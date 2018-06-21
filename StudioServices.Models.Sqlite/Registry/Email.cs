@@ -36,5 +36,10 @@ namespace StudioServices.Data.Sqlite.Registry
         public string SMTPUsername { get; set; }
 
         public string FullName { get; set; }
+
+        public override string ToString()
+        {
+            return Address;
+        }
     }
 }

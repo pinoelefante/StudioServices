@@ -11,9 +11,9 @@ using Xamarin.Forms.Xaml;
 namespace StudioServicesApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class AddCompanyInvoicePopup : MyPopupPage
+	public partial class ViewUserProfileMainPage : MyContentPage
 	{
-		public AddCompanyInvoicePopup ()
+		public ViewUserProfileMainPage ()
 		{
 			InitializeComponent ();
 		}

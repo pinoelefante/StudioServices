@@ -1,10 +1,13 @@
-﻿using GalaSoft.MvvmLight.Views;
+﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
 using StudioServices.Data.Sqlite.Accounting;
 using StudioServices.Data.Sqlite.Registry;
 using StudioServicesApp.Services;
+using StudioServicesApp.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -35,6 +38,10 @@ namespace StudioServicesApp.ViewModels
                 if(VerifyPersonEnabled)
                     CheckPerson();
             });
+        }
+        public override void NavigatedFrom()
+        {
+            base.NavigatedFrom();
         }
         protected async Task LoadPersonAsync(bool force = false)
         {
@@ -124,5 +131,21 @@ namespace StudioServicesApp.ViewModels
             return null;
         }
         public Company GetClientSupplier(int id) => ClientsSuppliers.Find(x => x.Id == id);
+
+        private RelayCommand openAddAddressPopup;
+
+        public RelayCommand OpenAddAddressPopupCommand =>
+            openAddAddressPopup ??
+            (openAddAddressPopup = new RelayCommand(() =>
+            {
+                MessengerInstance.Register<bool>(this, "AddAddressStatus", async (x) =>
+                {
+                    Debug.WriteLine("AddAddressStatusMessenger");
+                    await LoadPersonAsync(true);
+
+                    MessengerInstance.Unregister<bool>(this, "AddAddressStatus");
+                });
+                Navigation.PushPopupAsync(new AddAddressPopup());
+            }));
     }
 }

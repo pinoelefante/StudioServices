@@ -16,21 +16,18 @@ namespace StudioServicesApp.ViewModels
     public class MyMasterDetailViewModel : MyViewModel
     {
         public MyMasterDetailViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
+        private RelayCommand openProfilePage;
         public void Navigate(string pageKey)
         {
             Navigation.NavigateTo(pageKey);
         }
         public RelayCommand CloseMasterPage { get; set; }
 
-        // private RelayCommand _openProfile;
-        /*
-        public RelayCommand OpenUserProfile =>
-            _openProfile ??
-            (_openProfile = new RelayCommand(() =>
+        public RelayCommand OpenProfilePage =>
+            openProfilePage ??
+            (openProfilePage = new RelayCommand(() =>
             {
-                navigation.NavigateTo(ViewModelLocator.ViewUserProfile, cache.CurrentUser.Id);
-                CloseMasterPage?.Execute(null);
+                Navigation.NavigateTo(ViewModelLocator.USERPROFILE_PAGE);
             }));
-         */
     }
 }

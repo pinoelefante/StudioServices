@@ -25,7 +25,8 @@ namespace StudioServicesApp.ViewModels
             ADD_IDENTIFICATION_DOC_PAGE = "AddIdentificationDocPage",
             INVOICE_CREATION_HOME = "InvoiceCreationHomePage",
             INVOICE_CREATION_DETAILS = "InvoiceCreationDetailsPage",
-            WAREHOUSE_HOME = "WarehouseHomePage";
+            WAREHOUSE_HOME = "WarehouseHomePage",
+            USERPROFILE_PAGE = "UserProfilePage";
 
         public const string SERVER_SETTINGS = "ServerSettingsPage";
 
@@ -53,10 +54,11 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<InvoiceCreationDetailsViewModel>();
             SimpleIoc.Default.Register<AddCompanyViewModel>();
             SimpleIoc.Default.Register<AddAddressViewModel>();
-            SimpleIoc.Default.Register<AddCompanyInvoiceViewModel>();
             SimpleIoc.Default.Register<WarehouseProductsManagerViewModel>();
             SimpleIoc.Default.Register<WarehouseInvoiceListViewModel>();
             SimpleIoc.Default.Register<WarehouseClientsSuppliersListViewModel>();
+            SimpleIoc.Default.Register<ViewUserProfileMainPageViewModel>();
+            SimpleIoc.Default.Register<ViewUserProfileContactsViewModel>();
 
             SimpleIoc.Default.Register<ServerSettingsViewModel>();
 
@@ -73,6 +75,7 @@ namespace StudioServicesApp.ViewModels
             NavigationService.Configure(INVOICE_CREATION_DETAILS, typeof(InvoiceCreationDetails));
             NavigationService.Configure(WAREHOUSE_HOME, typeof(WarehouseHome));
             NavigationService.Configure(SERVER_SETTINGS, typeof(ServerSettings));
+            NavigationService.Configure(USERPROFILE_PAGE, typeof(ViewUserProfilePage));
         }
 
         public static NavigationService NavigationService => (NavigationService)GetService<INavigationService>();
@@ -88,11 +91,11 @@ namespace StudioServicesApp.ViewModels
         public InvoiceCreationDetailsViewModel InvoiceCreationDetailsViewModel => GetService<InvoiceCreationDetailsViewModel>();
         public AddCompanyViewModel AddCompanyViewModel => GetService<AddCompanyViewModel>();
         public AddAddressViewModel AddAddressViewModel => GetService<AddAddressViewModel>();
-        public AddCompanyInvoiceViewModel AddCompanyInvoiceViewModel => GetService<AddCompanyInvoiceViewModel>();
         public WarehouseProductsManagerViewModel WarehouseProductsManagerViewModel => GetService<WarehouseProductsManagerViewModel>();
         public WarehouseClientsSuppliersListViewModel WarehouseClientsSuppliersListViewModel => GetService<WarehouseClientsSuppliersListViewModel>();
         public WarehouseInvoiceListViewModel WarehouseInvoiceListViewModel => GetService<WarehouseInvoiceListViewModel>();
-
+        public ViewUserProfileMainPageViewModel ViewUserProfileMainPageViewModel => GetService<ViewUserProfileMainPageViewModel>();
+        public ViewUserProfileContactsViewModel ViewUserProfileContactsViewModel => GetService<ViewUserProfileContactsViewModel>();
         public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();
     }
 }

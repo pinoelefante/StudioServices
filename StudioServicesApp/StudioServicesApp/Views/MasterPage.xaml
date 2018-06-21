@@ -16,6 +16,19 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenProfilePage}" />
+                </Grid.GestureRecognizers>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="profile.png" HeightRequest="80" />
+                <Label Grid.Column="1" Text="Il mio profilo" VerticalOptions="Center" Margin="10,0"/>
+            </Grid>
             
             <!-- Commands List -->
             <ListView Grid.Row="1" x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="None" ListView.RowHeight="40">

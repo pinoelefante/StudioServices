@@ -89,11 +89,15 @@ namespace StudioServicesWeb.DataControllers
         #region Registry
         public Person Registry_GetPerson(int id)
         {
-            return db.Persons.Include((p) => p.Emails)
+            var person = db.Persons.Include((p) => p.Emails)
                 .Include((p) => p.Addresses)
                 .Include((p) => p.Contacts)
                 .Include((p) => p.Identifications)
-                .Where((p) => p.Id == id).FirstOrDefault();
+                .Where((p) => p.Id == id)
+                .FirstOrDefault();
+            if (person != null)
+                person.Addresses = person.Addresses.Where(x => x.AddressType == AddressType.HOME).ToList();
+            return person;
         }
         public IdentificationDocument Registry_GetIdentificationDocument(int id_documento, int id_persona)
         {
@@ -119,6 +123,14 @@ namespace StudioServicesWeb.DataControllers
                         where invoices.SenderId == company && (year != null ? invoices.Emission.Year == year : true)
                         orderby invoices.Number descending, invoices.NumberExtra descending
                         select invoices;
+            return query.ToList();
+        }
+        public List<Company> Warehouse_GetClientSupplierList(int person_id)
+        {
+            var query = from company in db.Companies
+                        where company.PersonId == person_id && company.IsClient
+                        orderby company.Name
+                        select company;
             return query.ToList();
         }
         #endregion

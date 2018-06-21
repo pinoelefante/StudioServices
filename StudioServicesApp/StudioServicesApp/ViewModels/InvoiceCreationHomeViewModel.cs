@@ -221,7 +221,7 @@ namespace StudioServicesApp.ViewModels
             createInvoiceCompanyCmd ??
             (createInvoiceCompanyCmd = new RelayCommand(() =>
             {
-                Navigation.PushPopupAsync(new AddCompanyInvoicePopup());
+                Navigation.PushPopupAsync(new AddCompanyPopup(true));
             }));
         private RelayCommand<string> searchCSCmd;
         public RelayCommand<string> SearchClientSupplierCommand =>

@@ -7,43 +7,37 @@
                  BindingContext="{Binding AddAddressViewModel, Source={StaticResource Locator}}"
                  CloseWhenBackgroundIsClicked="False"
                  HasSystemPadding="False"
-                 InputTransparent="False"
-                 Title="Aggiungi indirizzo">
-    <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
-        <AbsoluteLayout>
-            <Frame Margin="15" HorizontalOptions="Center" BackgroundColor="White" MinimumWidthRequest="200" WidthRequest="200">
-                <Grid Padding="10,10,10,5">
-                    <Label Grid.Row="0" Text="Tipo"/>
-                    <Picker Grid.Row="1" SelectedIndex="{Binding TypeIndex, Mode=TwoWay}" MinimumWidthRequest="100">
-                        <Picker.Items>
-                            <x:String>Casa</x:String>
-                            <x:String>Lavoro</x:String>
-                        </Picker.Items>
-                    </Picker>
-                    <Label Grid.Row="2" Text="Indirizzo"/>
-                    <Entry Grid.Row="3" Text="{Binding Address, Mode=TwoWay}" MinimumWidthRequest="100"/>
-                    <Label Grid.Row="4" Text="Numero" />
-                    <Entry Grid.Row="5" Text="{Binding CivicNumber, Mode=TwoWay}"/>
-                    <Label Grid.Row="6" Text="Città"/>
-                    <Entry Grid.Row="7" Text="{Binding City, Mode=TwoWay}"/>
-                    <Label Grid.Row="8" Text="Prov."/>
-                    <Entry Grid.Row="9" Text="{Binding Province, Mode=TwoWay}"/>
-                    <Label Grid.Row="10" Text="CAP"/>
-                    <Entry Grid.Row="11" Text="{Binding ZIPCode, Mode=TwoWay}"/>
-                    <Label Grid.Row="12" Text="Nazione"/>
-                    <Entry Grid.Row="13" Text="{Binding Country, Mode=TwoWay}" IsEnabled="False"/>
-                    <Label Grid.Row="14" Text="Note"/>
-                    <Entry Grid.Row="15" Text="{Binding Description, Mode=TwoWay}"/>
-                    
-                    <Button Grid.Row="16" Text="Aggiungi" Command="{Binding AddAddressCommand}"/>
-                </Grid>
-            </Frame>
-            <ContentView AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
-                <ContentView.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ClosePopupCommand}"/>
-                </ContentView.GestureRecognizers>
-                <Image x:Name="CloseImage" HeightRequest="30" WidthRequest="30" Source="close_circle_button.png" />
-            </ContentView>
-        </AbsoluteLayout>
-    </ScrollView>
+                 InputTransparent="False">
+    <Grid Margin="20" BackgroundColor="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Command="{Binding ClosePopupCommand}" Image="back_icon.png" HeightRequest="32"/>
+            <Label Grid.Column="1" Text="Aggiungi indirizzo" HorizontalOptions="Center"/>
+        </Grid>
+        <ScrollView Grid.Row="1">
+            <StackLayout Orientation="Vertical" Padding="40,10">
+                <Label Text="Indirizzo"/>
+                <Entry Text="{Binding Address, Mode=TwoWay}" MinimumWidthRequest="100"/>
+                <Label Text="Numero civico" />
+                <Entry Text="{Binding CivicNumber, Mode=TwoWay}"/>
+                <Label Text="Città"/>
+                <Entry Text="{Binding City, Mode=TwoWay}"/>
+                <Label Text="Prov."/>
+                <Entry Text="{Binding Province, Mode=TwoWay}"/>
+                <Label Text="CAP"/>
+                <Entry Text="{Binding ZIPCode, Mode=TwoWay}"/>
+                <Label Text="Note"/>
+                <Entry Text="{Binding Description, Mode=TwoWay}"/>
+
+                <Button Text="Aggiungi" Command="{Binding AddAddressCommand}"/>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
 </views:MyPopupPage>

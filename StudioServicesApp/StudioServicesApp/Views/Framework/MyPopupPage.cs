@@ -8,14 +8,17 @@ namespace pinoelefante.Views
 {
     public class MyPopupPage : PopupPage
     {
-        public MyPopupPage() : base() { }
-
+        public MyPopupPage(object parameter = null) : base()
+        {
+            navigationParameter = parameter;
+        }
+        private object navigationParameter;
         protected MyViewModel ViewModel => this.BindingContext as MyViewModel;
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            ViewModel?.NavigatedToAsync();
+            ViewModel?.NavigatedToAsync(navigationParameter);
         }
         protected override void OnDisappearing()
         {

@@ -14,6 +14,8 @@
             <converters:DateTimeStringConverter x:Key="DateTimeString"/>
             <converters:IntEqualsConverter x:Key="IntEquals"/>
             <converters:IntGreaterThan x:Key="IntGreater"/>
+            <converters:IsNullConverter x:Key="IsNull" />
+            <converters:StringEmptyConverter x:Key="StringEmpty" />
 
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="PrimaryDark">#1976D2</Color>
@@ -39,6 +41,10 @@
                         <Setter Property="BackgroundColor" Value="Yellow" />
                     </Trigger>
                 </Style.Triggers>
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>
