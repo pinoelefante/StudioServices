@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MyPopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:views="clr-namespace:pinoelefante.Views"
+                 x:Class="StudioServicesApp.Views.AddContactMethodPopup"
+                 CloseWhenBackgroundIsClicked="False"
+                 HasSystemPadding="False"
+                 InputTransparent="False"
+                 BindingContext="{Binding AddContactMethodViewModel, Source={StaticResource Locator}}">
+    <Grid Margin="20" BackgroundColor="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Command="{Binding ClosePopupCommand}" Image="back_icon.png" HeightRequest="32"/>
+            <Label Grid.Column="1" Text="Aggiungi contatto" HorizontalOptions="Center"/>
+        </Grid>
+        <ScrollView Grid.Row="1">
+            <StackLayout Orientation="Vertical" Padding="40,10">
+                <Label Text="Tipo di contatto"/>
+                <Picker x:Name="contactType" SelectedIndex="{Binding TypeIndex, Mode=TwoWay}">
+                    <Picker.Items>
+                        <x:String>Telefono fisso</x:String>
+                        <x:String>Cellulare</x:String>
+                        <x:String>Fax</x:String>
+                        <x:String>Telegram</x:String>
+                        <x:String>Skype</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Label Text="Numero">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference contactType}, Path=SelectedIndex}" Value="3">
+                            <Setter Property="Text" Value="Contatto" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference contactType}, Path=SelectedIndex}" Value="4">
+                            <Setter Property="Text" Value="Contatto" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+                <Entry Text="{Binding Number, Mode=TwoWay}" />
+                <StackLayout Orientation="Vertical" IsVisible="False">
+                    <StackLayout.Triggers>
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding Path=SelectedIndex, Source={x:Reference contactType}}" Value="1">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </StackLayout.Triggers>
+                    <Label Text="WhatsApp"/>
+                    <Switch IsToggled="{Binding IsWhatsapp}" />
+                    <Label Text="Telegram"/>
+                    <Switch IsToggled="{Binding IsTelegram}" />
+                </StackLayout>
+
+                <Button Text="Aggiungi" Command="{Binding AddContactCommand}"/>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+</views:MyPopupPage>

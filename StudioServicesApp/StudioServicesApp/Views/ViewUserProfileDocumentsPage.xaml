@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Documenti"
+             xmlns:views="clr-namespace:pinoelefante.Views"
+             BindingContext="{Binding ViewUserProfileDocumentsViewModel, Source={StaticResource Locator}}"
+             x:Class="StudioServicesApp.Views.ViewUserProfileDocumentsPage">
+    <Grid Padding="10">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Text="Documenti" />
+            <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalOptions="End">
+                <Button Text="+" Command="{Binding AddDocument}"/>
+                <Button Text="-" Command="{Binding DeleteDocumentCommand}" CommandParameter="{Binding Source={x:Reference listDocs}, Path=SelectedItem}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding Source={x:Reference listDocs}, Path=SelectedItem, Converter={StaticResource IsNull}}" Value="True">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </StackLayout>
+            <ListView x:Name="listDocs" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Documents}"/>
+        </Grid>
+    </Grid>
+</views:MyContentPage>

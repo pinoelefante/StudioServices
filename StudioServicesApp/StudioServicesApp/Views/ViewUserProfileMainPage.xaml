@@ -5,8 +5,8 @@
              Title="Profilo"
              BindingContext="{Binding ViewUserProfileMainPageViewModel, Source={StaticResource Locator}}"
              x:Class="StudioServicesApp.Views.ViewUserProfileMainPage">
-    <ScrollView>
-        <StackLayout Orientation="Vertical">
+    <ScrollView Padding="10,10,0,10">
+        <StackLayout Orientation="Vertical" Margin="0,0,10,0">
             <Label Text="Nome" />
             <Entry Text="{Binding Name, Mode=TwoWay}"/>
 

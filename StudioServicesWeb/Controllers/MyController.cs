@@ -23,8 +23,15 @@ namespace StudioServicesWeb.Controllers
         }
         protected bool _isLogged()
         {
-            var account_id = HttpContext.Session.GetInt32("AccountId");
-            return account_id != null && account_id > 0;
+            try
+            {
+                var account_id = HttpContext.Session.GetInt32("AccountId");
+                return account_id != null && account_id > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
         protected int _getAccountId()
         {

@@ -44,13 +44,13 @@ namespace StudioServicesWeb.Controllers.Warehouse
         }
         [Route("company")]
         [HttpPost]
-        public Response<bool> CreateCompany([FromBody]Company company)
+        public Response<Company> CreateCompany([FromBody]Company company)
         {
             var checkCode = CheckLoginAndPerson(company);
             if (checkCode != ResponseCode.OK)
-                return CreateBoolean(false, checkCode);
+                return CreateResponse<Company>(null, checkCode);
             var res = manager.SaveCompany(company);
-            return CreateBoolean(res, res ? ResponseCode.OK : ResponseCode.FAIL);
+            return CreateResponse(res, res != null ? ResponseCode.OK : ResponseCode.FAIL);
         }
         [Route("company")]
         [HttpGet]
@@ -76,15 +76,6 @@ namespace StudioServicesWeb.Controllers.Warehouse
             if (!_isLogged())
                 return CreateLoginRequired<List<Company>>();
             return CreateResponse(manager.GetClientsSuppliers(_getPersonId()));
-        }
-        [Route("clients_suppliers")]
-        [HttpPost]
-        public Response<Company> SaveClientSupplier([FromBody]Company client)
-        {
-            if (!_isLogged())
-                return CreateLoginRequired<Company>();
-            var res = manager.SaveCompanyForInvoice(client, _getPersonId());
-            return CreateResponse(res > 0 ? client : null, res > 0 ? ResponseCode.OK : ResponseCode.FAIL);
         }
         [Route("invoices/{company}")]
         [HttpGet]

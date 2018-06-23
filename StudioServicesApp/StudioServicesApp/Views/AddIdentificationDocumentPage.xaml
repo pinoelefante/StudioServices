@@ -3,49 +3,61 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.Views.AddIdentificationDocumentPage"
              xmlns:views="clr-namespace:pinoelefante.Views"
+             xmlns:gallery="clr-namespace:ImageGallery.Controls"
              Title="Aggiungi documento di riconoscimento"
+             x:Name="CurPage"
              BindingContext="{Binding AddIdentificationDocumentViewModel, Source={StaticResource Locator}}">
     <ContentPage.Content>
-        <Grid Padding="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition />
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <ScrollView>
+            <Grid Padding="10,10,0,10" Margin="0,0,10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Text="è necessario inserire un documento per poter utilizzare l'applicazione" Margin="0,10"/>
+                <Label Grid.Row="0" Text="è necessario inserire un documento per poter utilizzare l'applicazione" Margin="0,10"/>
 
-            <StackLayout Orientation="Vertical" Grid.Row="1">
-                <Label Text="Tipo di documento" />
-                <Picker Grid.Row="0" HorizontalOptions="Start" SelectedIndex="{Binding DocumentIndex, Mode=TwoWay}">
-                    <Picker.Items>
-                        <x:String>Carta d'identità</x:String>
-                        <x:String>Passaporto</x:String>
-                        <x:String>Patente di guida</x:String>
-                    </Picker.Items>
-                </Picker>
-                
-                <Label Text="Numero del documento"/>
-                <Entry Text="{Binding DocumentNumber, Mode=TwoWay}">
-                    <Entry.Effects>
-                        
-                    </Entry.Effects>
-                </Entry>
-                
-                <Label Text="Data"/>
-                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentIssue, Mode=TwoWay}" MaximumDate="{Binding sys.DateTime.Now}"/>
-                
-                <Label Text="Scadenza"/>
-                <DatePicker HorizontalOptions="Start" Date="{Binding DocumentExpiry, Mode=TwoWay}"/>
-                
-                <Label Text="File"/>
-                <StackLayout Orientation="Horizontal">
-                    <Button Text="Carica..." Command="{Binding ImageGalleryCommand}"/>
-                    <Button Text="Foto" Command="{Binding ImageCameraCommand}" IsVisible="{Binding HasCamera, Mode=TwoWay}"/>
+                <StackLayout Orientation="Vertical" Grid.Row="1">
+                    <Label Text="Tipo di documento" />
+                    <Picker Grid.Row="0" HorizontalOptions="Start" SelectedIndex="{Binding DocumentIndex, Mode=TwoWay}">
+                        <Picker.Items>
+                            <x:String>Carta d'identità</x:String>
+                            <x:String>Passaporto</x:String>
+                            <x:String>Patente di guida</x:String>
+                        </Picker.Items>
+                    </Picker>
+
+                    <Label Text="Numero del documento"/>
+                    <Entry Text="{Binding DocumentNumber, Mode=TwoWay}"/>
+
+                    <Label Text="Data"/>
+                    <DatePicker HorizontalOptions="Start" Date="{Binding DocumentIssue, Mode=TwoWay}" MaximumDate="{Binding sys.DateTime.Now}"/>
+
+                    <Label Text="Scadenza"/>
+                    <DatePicker HorizontalOptions="Start" Date="{Binding DocumentExpiry, Mode=TwoWay}"/>
+
+                    <Label Text="File"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Button Text="Carica..." Command="{Binding ImageGalleryCommand}"/>
+                        <Button Text="Foto" Command="{Binding ImageCameraCommand}" IsVisible="{Binding HasCamera, Mode=TwoWay}"/>
+                    </StackLayout>
+
+                    <gallery:ImageGallery ItemsSource="{Binding FileLoaded}" HeightRequest="128" Margin="0, 10" IsVisible="{Binding FileLoaded.Count}">
+                        <gallery:ImageGallery.ItemTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Key}" Aspect="AspectFit">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding AddIdentificationDocumentViewModel.RemoveImageCommand, Source={StaticResource Locator}}" CommandParameter="{Binding Key}" />
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </DataTemplate>
+                        </gallery:ImageGallery.ItemTemplate>
+                    </gallery:ImageGallery>
                 </StackLayout>
-            </StackLayout>
 
-            <Button Text="Avanti" Grid.Row="2" HorizontalOptions="Center" Command="{Binding AddDocumentCommand}"/>
-        </Grid>
+                <Button Text="Avanti" Grid.Row="2" HorizontalOptions="Center" Command="{Binding AddDocumentCommand}"/>
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </views:MyContentPage>

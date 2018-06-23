@@ -18,6 +18,17 @@ namespace StudioServices.Data.Sqlite.Registry
         {
             return $"{Number} ({Type})";
         }
+        protected override void CorrectFields()
+        {
+            if(Type != ContactType.MOBILE)
+            {
+                IsWhatsApp = false;
+                if (Type != ContactType.TELEGRAM)
+                    IsTelegram = false;
+                else
+                    IsTelegram = true;
+            }
+        }
     }
     public enum ContactType
     {

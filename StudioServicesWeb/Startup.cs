@@ -33,14 +33,15 @@ namespace StudioServicesWeb
         public void ConfigureServices(IServiceCollection services)
         {
             StudioServicesConfig.Init();
-            services.AddMvc();
+            services.AddMvc().
+                AddJsonOptions(options =>
+                { 
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
 
-            //var connection = @"Server=(localdb)\mssqllocaldb;Database=EFGetStarted.AspNetCore.NewDb;Trusted_Connection=True;ConnectRetryCount=0";
             var sqlserver_connection = Configuration.GetConnectionString("SQLServerConnection");
             
             var dbContextOptions = (new DbContextOptionsBuilder().UseSqlServer(sqlserver_connection)).Options;
-            //var dbContext = new StudioServicesDBContext(dbContextOptions);
-            //services.AddSingleton(typeof(StudioServicesDBContext), dbContext);
             StudioServicesDBContext.CtxOptions = dbContextOptions;
             services.AddDbContext<StudioServicesDBContext>(/*options => options.UseSqlServer(sqlserver_connection)*/);
 

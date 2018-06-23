@@ -77,29 +77,14 @@ namespace StudioServicesApp.ViewModels
                     IsClient = IsClient
                 };
 
-                if(IsClient)
+                var res = await SendRequestAsync(async () => await api.Warehouse_SaveCompanyAsync(company));
+                if (res.IsOK && res.Data != null)
                 {
-                    var res = await SendRequestAsync(async () => await api.Warehouse_SaveClientSupplier(company));
-                    if (res.IsOK && res.Data != null)
-                    {
-                        MessengerInstance.Send(res.Data, "AddCompanyInvoiceStatus");
-                        await Navigation.PopPopupAsync();
-                    }
-                    else
-                        ShowMessage("Non è stato possibile aggiungere l'azienda", "Errore");
+                    MessengerInstance.Send(res.Data, "AddCompanyStatus");
+                    await Navigation.PopPopupAsync();
                 }
                 else
-                {
-                    var res = await SendRequestAsync(async () => await api.Warehouse_SaveCompanyAsync(company));
-                    if (res.IsOK)
-                    {
-                        MessengerInstance.Send<bool>(res.Data, "AddCompanyStatus");
-                        await Navigation.PopPopupAsync();
-                    }
-                    else
-                        ShowMessage("Azienda non aggiunta");
-                }
-                
+                    ShowMessage("Non è stato possibile aggiungere l'azienda", "Errore");
             }));
         public RelayCommand<string> GoPage =>
             navPage ??

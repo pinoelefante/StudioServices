@@ -35,7 +35,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Picker Grid.Column="0" ItemsSource="{Binding ListCompanies}" SelectedIndex="{Binding SelectedMyCompanyIndex, Mode=TwoWay}" SelectedItem="{Binding SelectedMyCompany, Mode=TwoWay}" ItemDisplayBinding="{Binding Name}"/>
-                    <Button Grid.Column="1" Text="+" Command="{Binding CreateMyNewCompanyCommand}" />
+                    <Button Grid.Column="1" Text="+" Command="{Binding OpenAddCompanyPopup}" CommandParameter="False"/>
                 </Grid>
 
                 <Label Grid.Row="1" Grid.Column="0" Text="Tipo di fattura" VerticalOptions="Center"/>
@@ -103,7 +103,7 @@
                         <views:EventToCommandBehavior EventName="TextChanged" EventArgsConverter="{Binding Source={StaticResource TextChangedConverter}}" Command="{Binding SearchClientSupplierCommand}"/>
                     </SearchBar.Behaviors>
                 </SearchBar>
-                <Button Grid.Column="1" Text="+" Command="{Binding OpenAddInvoiceCompanyCommand}"/>
+                <Button Grid.Column="1" Text="+" Command="{Binding OpenAddCompanyPopup}" CommandParameter="True"/>
             </Grid>
             
             <ListView Grid.Row="3" ItemsSource="{Binding CompanyList}" SelectedItem="{Binding SelectedCompany, Mode=TwoWay}">

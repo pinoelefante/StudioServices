@@ -31,7 +31,7 @@ namespace StudioServices.Data.Sqlite.Registry
         {
             return Addresses.Find(x => x.Id == id);
         }
-        protected override void Validate()
+        protected override void CorrectFields()
         {
             Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(string.IsNullOrEmpty(Name) ? string.Empty : Name);
             Surname = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(string.IsNullOrEmpty(Surname) ? string.Empty : Surname);

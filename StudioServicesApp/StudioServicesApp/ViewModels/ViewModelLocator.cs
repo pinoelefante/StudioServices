@@ -59,6 +59,9 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<WarehouseClientsSuppliersListViewModel>();
             SimpleIoc.Default.Register<ViewUserProfileMainPageViewModel>();
             SimpleIoc.Default.Register<ViewUserProfileContactsViewModel>();
+            SimpleIoc.Default.Register<ViewUserProfileDocumentsViewModel>();
+            SimpleIoc.Default.Register<AddContactMethodViewModel>();
+            SimpleIoc.Default.Register<AddEmailViewModel>();
 
             SimpleIoc.Default.Register<ServerSettingsViewModel>();
 
@@ -96,6 +99,9 @@ namespace StudioServicesApp.ViewModels
         public WarehouseInvoiceListViewModel WarehouseInvoiceListViewModel => GetService<WarehouseInvoiceListViewModel>();
         public ViewUserProfileMainPageViewModel ViewUserProfileMainPageViewModel => GetService<ViewUserProfileMainPageViewModel>();
         public ViewUserProfileContactsViewModel ViewUserProfileContactsViewModel => GetService<ViewUserProfileContactsViewModel>();
+        public ViewUserProfileDocumentsViewModel ViewUserProfileDocumentsViewModel => GetService<ViewUserProfileDocumentsViewModel>();
+        public AddContactMethodViewModel AddContactMethodViewModel => GetService<AddContactMethodViewModel>();
         public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();
+        public AddEmailViewModel AddEmailViewModel => GetService<AddEmailViewModel>();
     }
 }

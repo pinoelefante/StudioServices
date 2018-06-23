@@ -21,15 +21,11 @@ namespace StudioServices.Controllers.Accounting
         }
         // TODO add warehouse log (file saving all operations)
 
-        public bool SaveCompany(Company company)
+        public Company SaveCompany(Company company)
         {
-            return db.Save(company);
-        }
-        public int SaveCompanyForInvoice(Company client, int personId)
-        {
-            client.PersonId = personId;
-            client.Address.PersonId = personId;
-            return db.Save(client) ? client.Id : 0;
+            if (db.Save(company))
+                return company;
+            return null;
         }
         public Company GetCompany(int company_id)
         {
@@ -37,7 +33,7 @@ namespace StudioServices.Controllers.Accounting
         }
         public List<Company> GetUserCompanies(int person_id)
         {
-            return db.GetList<Company>(person_id);
+            return db.Warehouse_GetUserCompanies(person_id);
         }
         public bool SaveProduct(CompanyProduct product)
         {

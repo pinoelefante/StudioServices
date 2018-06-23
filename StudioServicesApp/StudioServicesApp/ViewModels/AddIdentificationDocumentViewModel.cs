@@ -14,17 +14,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace StudioServicesApp.ViewModels
 {
     public class AddIdentificationDocumentViewModel : MyAuthViewModel
     {
         private int _docIndex = 0;
-        private string _docNumber, _fileExt, _fileName;
+        private string _docNumber;
         private DateTime _docIssue = DateTime.Now, _docExpire = DateTime.Now.AddYears(10);
         private RelayCommand _imageFromFile, _imageFromCamera, _addDocument;
-        private bool _hasCamera = true, _imageLoaded = false;
-        private byte[] _imageData;
+        private bool _hasCamera = true;
 
         public int DocumentIndex { get => _docIndex; set => SetMT(ref _docIndex, value); }
         public string DocumentNumber { get => _docNumber; set => SetMT(ref _docNumber, value); }
@@ -32,29 +32,37 @@ namespace StudioServicesApp.ViewModels
         public DateTime DocumentExpiry { get => _docExpire; set => SetMT(ref _docExpire, value); }
 
         public bool HasCamera { get => _hasCamera; set => SetMT(ref _hasCamera, value); }
-        public bool IsImageLoaded { get => _imageLoaded; set => SetMT(ref _imageLoaded, value); }
-        public string FileExtension { get => _fileExt; set => SetMT(ref _fileExt, value); }
-        public string FileName { get => _fileName; set => SetMT(ref _fileName, value); }
+
+        public MyObservableCollection<KeyValuePair<String, byte[]>> FileLoaded { get; } = new MyObservableCollection<KeyValuePair<string, byte[]>>();
 
         public AddIdentificationDocumentViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
         public override async Task NavigatedToAsync(object parameter = null)
         {
             Reset();
-
             VerifyPersonEnabled = parameter == null ? false : (bool)parameter;
-            // HasCamera = CrossMedia.Current.IsCameraAvailable;
+            InitAsync();
             await base.NavigatedToAsync();
         }
         private void Reset()
         {
+            FileLoaded.Clear();
             DocumentIndex = 0;
             DocumentNumber = string.Empty;
             DocumentIssue = DateTime.Now;
             DocumentExpiry = DocumentIssue.AddYears(10);
-            IsImageLoaded = false;
-            FileExtension = string.Empty;
             HasCamera = false;
-            _imageData = null;
+        }
+        private async Task InitAsync()
+        {
+            try
+            {
+                if(await CrossMedia.Current.Initialize())
+                    HasCamera = CrossMedia.Current.IsCameraAvailable;
+            }
+            catch
+            {
+                HasCamera = false;
+            }
         }
 
         public RelayCommand ImageGalleryCommand =>
@@ -85,16 +93,13 @@ namespace StudioServicesApp.ViewModels
                 {
                     using (var stream = new BinaryReader(file.GetStream()))
                     {
-                        _imageData = stream.ReadBytes((int)stream.BaseStream.Length);
+                        var _imageData = stream.ReadBytes((int)stream.BaseStream.Length);
+                        FileLoaded.Add(new KeyValuePair<string, byte[]>(file.Path, _imageData));
                     }
-                    IsImageLoaded = _imageData != null;
-                    FileExtension = file.Path.Substring(file.Path.LastIndexOf("."));
-                    FileName = Path.GetFileName(file.Path);
                 }
                 else
                 {
                     Debug.WriteLine("Immagine non selezionata");
-                    // await UserDialogs.Instance.AlertAsync("Immagine non selezionata");
                 }
             }));
 
@@ -141,16 +146,13 @@ namespace StudioServicesApp.ViewModels
                 {
                     using (var stream = new BinaryReader(file.GetStream()))
                     {
-                        _imageData = stream.ReadBytes((int)stream.BaseStream.Length);
+                        var _imageData = stream.ReadBytes((int)stream.BaseStream.Length);
+                        FileLoaded.Add(new KeyValuePair<string, byte[]>(file.Path, _imageData));
                     }
-                    IsImageLoaded = _imageData != null;
-                    FileExtension = file.Path.Substring(file.Path.LastIndexOf("."));
-                    FileName = Path.GetFileName(file.Path);
                 }
                 else
                 {
                     Debug.WriteLine("Immagine non scattata");
-                    // await UserDialogs.Instance.AlertAsync("Image error");
                 }
             }));
 
@@ -161,23 +163,76 @@ namespace StudioServicesApp.ViewModels
                 var res = await UserDialogs.Instance.ConfirmAsync($"Vuoi salvare il documento?\nNumero: {DocumentNumber}\nEmesso il {DocumentIssue.ToShortDateString()}", "Conferma inserimento", "Salva", "Annulla");
                 if (!res)
                     return;
+                var fileName = $"DOC_{Persona.Id}.pdf";
                 var document = new IdentificationDocument()
                 {
                     Expire = DocumentExpiry,
-                    Filename = FileName,
-                    FileContentBase64 = _imageData!=null && _imageData.Length > 0 ? Convert.ToBase64String(_imageData) : string.Empty,
+                    Filename = fileName,
+                    FileContentBase64 = string.Empty,
+                    FileUpload = GetFileUploadContent(),
                     Issue = DocumentIssue,
                     Number = DocumentNumber,
                     PersonId = Persona.Id,
                     Type = (DocumentType)Enum.ToObject(typeof(DocumentType), DocumentIndex)
                 };
+                if (!ValidateDocument(document))
+                    return;
                 var response = await SendRequestAsync(() => api.Person_AddDocumentAsync(document));
-                if (response.IsOK)
+                if (response.IsOK && response.Data)
                 {
-                    await LoadPersonAsync(true);
-                    Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
+                    MessengerInstance.Send(true, "ReloadPerson");
+                    // Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
+                    Navigation.GoBack();
                 }
             }));
-        
+        private bool ValidateDocument(IdentificationDocument document)
+        {
+            try
+            {
+                return document.IsValid();
+            }
+            catch(DocumentExpiredException)
+            {
+                if (!UserDialogs.Instance.ConfirmAsync("Il documento è scaduto. Vuoi inserirlo comunque?", "Documento scaduto").Result)
+                    return false;
+            }
+            catch(DocumentIssueDateException)
+            {
+                if (!UserDialogs.Instance.ConfirmAsync("Non è possibile che il documento sia stato emesso nel giorno indicato. Se la data è corretta, controlla la data del tuo dispositivo e clicca 'Continua'.", "Documento emesso in futuro", "Continua").Result)
+                    return false;
+            }
+            catch(DocumentInvalidNumberException)
+            {
+                ShowMessage("Il numero del documento non è valido.", "Numero non valido");
+                return false;
+            }
+            return true;
+        }
+        private List<string> GetFileUploadContent()
+        {
+            List<string> upload = new List<string>(FileLoaded.Count);
+            for (int i = 0; i < FileLoaded.Count; i++)
+            {
+                var b64 = Convert.ToBase64String(FileLoaded[i].Value);
+                upload.Add(b64);
+            }
+            return upload;
+        }
+        public RelayCommand<string> RemoveImageCommand =>
+            new RelayCommand<string>(async (imgPath) =>
+            {
+                var item = FileLoaded.FirstOrDefault(x => x.Key.Equals(imgPath));
+                var index = FileLoaded.IndexOf(item);
+                if(index >= 0)
+                {
+                    ConfirmConfig confirmConfig = new ConfirmConfig()
+                    {
+                        Message = "Vuoi rimuovere l'immagine?",
+                        Title = "Immagine documento"
+                    };
+                    if(await UserDialogs.Instance.ConfirmAsync(confirmConfig))
+                        FileLoaded.RemoveAt(index);
+                }
+            });
     }
 }

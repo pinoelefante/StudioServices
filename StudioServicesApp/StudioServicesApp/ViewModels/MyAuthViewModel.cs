@@ -5,12 +5,14 @@ using StudioServices.Data.Sqlite.Accounting;
 using StudioServices.Data.Sqlite.Registry;
 using StudioServicesApp.Services;
 using StudioServicesApp.Views;
+using StudioServicesApp.Views.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace StudioServicesApp.ViewModels
 {
@@ -37,6 +39,13 @@ namespace StudioServicesApp.ViewModels
                 await LoadClientsSuppliersAsync();
                 if(VerifyPersonEnabled)
                     CheckPerson();
+            });
+        }
+        public override void RegisterMessenger()
+        {
+            MessengerInstance.Register<bool>(this, "ReloadPerson", async (force) =>
+            {
+                await LoadPersonAsync(force);
             });
         }
         public override void NavigatedFrom()
@@ -84,6 +93,7 @@ namespace StudioServicesApp.ViewModels
             }
             else
                 MyCompanies = cache.GetValue<Dictionary<Company, List<CompanyProduct>>>("my_companies", new Dictionary<Company, List<CompanyProduct>>());
+            RaisePropertyChanged(() => MyCompanies);
         }
         protected async Task LoadClientsSuppliersAsync(bool force = false)
         {
@@ -99,6 +109,7 @@ namespace StudioServicesApp.ViewModels
             }
             else
                 ClientsSuppliers = cache.GetValue<List<Company>>("clients_suppliers");
+            RaisePropertyChanged(() => ClientsSuppliers);
         }
         public List<Company> GetMyCompaniesList()
         {
@@ -108,6 +119,7 @@ namespace StudioServicesApp.ViewModels
                 foreach (var company in MyCompanies.Keys)
                     list.Add(company);
             }
+            list.Sort(companyComparerByName);
             list.TrimExcess();
             return list;
         }
@@ -132,7 +144,8 @@ namespace StudioServicesApp.ViewModels
         }
         public Company GetClientSupplier(int id) => ClientsSuppliers.Find(x => x.Id == id);
 
-        private RelayCommand openAddAddressPopup;
+        private RelayCommand openAddAddressPopup, openAddContactPopup, openAddEmailPopup;
+        private RelayCommand<string> openAddCompanyPopup;
 
         public RelayCommand OpenAddAddressPopupCommand =>
             openAddAddressPopup ??
@@ -146,6 +159,43 @@ namespace StudioServicesApp.ViewModels
                     MessengerInstance.Unregister<bool>(this, "AddAddressStatus");
                 });
                 Navigation.PushPopupAsync(new AddAddressPopup());
+            }));
+        public RelayCommand OpenAddContactPopupCommand =>
+            openAddContactPopup ??
+            (openAddContactPopup = new RelayCommand(() =>
+            {
+                MessengerInstance.Register<bool>(this, "AddContactStatus", async (x) =>
+                {
+                    MessengerInstance.Unregister<bool>("AddContactStatus");
+                    if (x)
+                        await LoadPersonAsync(true);
+                });
+                Navigation.PushPopupAsync(new AddContactMethodPopup());
+            }));
+        private static CompanyComparerByName companyComparerByName = new CompanyComparerByName();
+        public RelayCommand<string> OpenAddCompanyPopup =>
+            openAddCompanyPopup ??
+            (openAddCompanyPopup = new RelayCommand<string>((isClientS) =>
+            {
+                bool isClient = bool.Parse(isClientS);
+                MessengerInstance.Register<Company>(this, "AddCompanyStatus", (company) =>
+                {
+                    MessengerInstance.Unregister<Company>(this, "AddCompanyStatus");
+                    if (company == null)
+                        return;
+                    if (company.IsClient)
+                    {
+                        ClientsSuppliers.Add(company);
+                        ClientsSuppliers.Sort(companyComparerByName);
+                        RaisePropertyChanged(() => ClientsSuppliers);
+                    }
+                    else
+                    {
+                        MyCompanies.Add(company, new List<CompanyProduct>());
+                        RaisePropertyChanged(() => MyCompanies);
+                    }
+                });
+                Navigation.PushPopupAsync(new AddCompanyPopup(isClient));
             }));
     }
 }

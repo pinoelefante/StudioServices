@@ -19,7 +19,7 @@ namespace StudioServices.Data.Sqlite.Items
         public int PrintCopies { get; set; } = 1;
         public string Description { get; set; }
 
-        protected override void Validate()
+        protected override void CorrectFields()
         {
             RequestQuantity = RequestQuantity < 0 && IsRequest ? 1 : 0;
             PrintCopies = PrintCopies < 0 && IsPrint ? 1 : 0;

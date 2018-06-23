@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -11,10 +12,13 @@ namespace StudioServices.Data.Sqlite
         public virtual DateTime CreationTime { get; set; }
         public virtual DateTime DisabledTime { get; set; }
 
+        [SQLite.Ignore]
+        public List<string> FileUpload { get; set; } = new List<string>();
+
         public DataFile()
         {
             CreationTime = DateTime.Now;
-            Validate();
+            CorrectFields();
         }
 
         public bool SetAttivo(bool status)
@@ -32,6 +36,7 @@ namespace StudioServices.Data.Sqlite
             item = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-        protected virtual void Validate() { }
+        protected virtual void CorrectFields() { }
+        public virtual bool IsValid() => true;
     }
 }

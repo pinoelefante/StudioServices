@@ -8,4 +8,6 @@
     <local:ViewUserProfileMainPage />
 
     <local:ViewUserProfileContactsPage />
+
+    <local:ViewUserProfileDocumentsPage />
 </TabbedPage>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
@@ -16,63 +17,64 @@ namespace StudioServicesApp.ViewModels
 {
     public class InvoiceCreationHomeViewModel : MyAuthViewModel
     {
-        private CompanyComparerByName comparerByName = new CompanyComparerByName();
+        
         private RelayCommand nextPageCommand;
 
         public InvoiceCreationHomeViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
 
         public override async Task NavigatedToAsync(object parameter = null)
         {
+            base.PropertyChanged += InvoiceCreationHomeViewModel_PropertyChangedAsync;
             await base.NavigatedToAsync();
             Device.BeginInvokeOnMainThread(() =>
             {
-                ListCompanies?.Clear();
-                ListCompanies.AddRange(GetMyCompaniesList());
-
-                CompanyList?.Clear();
-                CompanyList.AddRange(ClientsSuppliers);
-
                 PopulateFields(parameter as Invoice);
-
-                if (ListCompanies.Count == 0)
-                {
-                    ShowMessage("Non sono presenti aziende.", "Aggiungi azienda", () =>
-                    {
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            Navigation.PushPopupAsync(new AddCompanyPopup());
-                        });
-                    });
-                }
 
                 if (SelectedIndexInvoiceType < 0)
                     SelectedIndexInvoiceType = 0;
-
-                if (ListCompanies.Count > 0 && SelectedMyCompany == null)
-                    SelectedMyCompanyIndex = 0;
             });
         }
-        public override void RegisterMessenger()
+        private void InvoiceCreationHomeViewModel_PropertyChangedAsync(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            MessengerInstance.Register<bool>(this, "AddCompanyStatus", async (status) =>
+            Device.BeginInvokeOnMainThread(() =>
             {
-                await LoadCompaniesAsync(true);
-                if (status)
-                    await NavigatedToAsync();
-                else if (MyCompanies.Count == 0)
-                    Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
-            });
-            MessengerInstance.Register<Company>(this, "AddCompanyInvoiceStatus", (company) =>
-            {
-                if (company == null)
-                    return;
-                ClientsSuppliers.Add(company);
-                ClientsSuppliers.Sort(comparerByName);
-                SearchClientSupplierCommand.Execute(null);
+                Debug.WriteLine("PropertyChanged: " + e.PropertyName);
+                switch (e.PropertyName)
+                {
+                    case nameof(MyCompanies):
+                        if (MyCompanies.Count == 0)
+                        {
+                            using (UserDialogs.Instance.Confirm(
+                                new ConfirmConfig()
+                                {
+                                    Message = "Non sono presenti aziende.",
+                                    Title = "Aggiungi azienda",
+                                    OkText = "Aggiungi",
+                                    CancelText = "Indietro",
+                                    OnAction = (res) =>
+                                    {
+                                        if (res)
+                                            OpenAddCompanyPopup.Execute(false);
+                                        else
+                                            Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
+                                    }
+                                })) { }
+                        }
+                        else if (MyCompanies.Count != ListCompanies.Count)
+                        {
+                            ListCompanies.AddRange(GetMyCompaniesList(), true);
+                            SelectedMyCompanyIndex = SelectedMyCompany != null ? ListCompanies.IndexOf(SelectedMyCompany) : (ListCompanies.Count > 0 ? 0 : -1);
+                        }
+                        break;
+                    case nameof(ClientsSuppliers):
+                        SearchClientSupplierCommand.Execute(null);
+                        break;
+                }
             });
         }
         public override void NavigatedFrom()
         {
+            base.PropertyChanged -= InvoiceCreationHomeViewModel_PropertyChangedAsync;
             Cleanup();
         }
 
@@ -209,20 +211,6 @@ namespace StudioServicesApp.ViewModels
             }
             return true;
         }
-
-        private RelayCommand createMyNewCompanyCmd, createInvoiceCompanyCmd;
-        public RelayCommand CreateMyNewCompanyCommand =>
-            createMyNewCompanyCmd ??
-            (createMyNewCompanyCmd = new RelayCommand(() =>
-            {
-                Navigation.PushPopupAsync(new AddCompanyPopup());
-            }));
-        public RelayCommand OpenAddInvoiceCompanyCommand =>
-            createInvoiceCompanyCmd ??
-            (createInvoiceCompanyCmd = new RelayCommand(() =>
-            {
-                Navigation.PushPopupAsync(new AddCompanyPopup(true));
-            }));
         private RelayCommand<string> searchCSCmd;
         public RelayCommand<string> SearchClientSupplierCommand =>
             searchCSCmd ??
@@ -240,6 +228,8 @@ namespace StudioServicesApp.ViewModels
             }));
         public override void Cleanup()
         {
+            ListCompanies.Clear();
+            CompanyList.Clear();
             SelectedCompany = null;
             InvoiceNumberText = string.Empty;
             InvoiceNumberExtraText = string.Empty;

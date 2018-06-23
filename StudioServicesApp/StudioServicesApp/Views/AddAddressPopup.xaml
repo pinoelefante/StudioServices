@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:MyPopupPage xmlns="http://xamarin.com/schemas/2014/forms"
                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                 xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
                  xmlns:views="clr-namespace:pinoelefante.Views"
                  x:Class="StudioServicesApp.Views.AddAddressPopup"
                  BindingContext="{Binding AddAddressViewModel, Source={StaticResource Locator}}"

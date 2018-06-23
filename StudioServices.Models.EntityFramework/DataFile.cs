@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +16,9 @@ namespace StudioServices.Data.EntityFramework
         public virtual bool Enabled { get; set; } = true;
         public virtual DateTime CreationTime { get; set; }
         public virtual DateTime DisabledTime { get; set; }
+
+        [NotMapped]
+        public List<string> FileUpload { get; set; } = new List<string>();
 
         public DataFile()
         {

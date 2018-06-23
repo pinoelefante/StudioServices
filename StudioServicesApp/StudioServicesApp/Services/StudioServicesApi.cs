@@ -190,10 +190,10 @@ namespace StudioServicesApp.Services
         #endregion
 
         #region Warehouse
-        public async Task<ResponseMessage<bool>> Warehouse_SaveCompanyAsync(Company company)
+        public async Task<ResponseMessage<Company>> Warehouse_SaveCompanyAsync(Company company)
         {
             var address = $"{WS_ADDRESS}/api/warehouse/company";
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, company);
+            return await SendRequestAsync<Company>(address, HttpMethod.POST, company);
         }
         public async Task<ResponseMessage<List<Company>>> Warehouse_GetMyCompaniesAsync()
         {
@@ -220,11 +220,6 @@ namespace StudioServicesApp.Services
         {
             var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers";
             return await SendRequestAsync<List<Company>>(address, HttpMethod.GET);
-        }
-        public async Task<ResponseMessage<Company>> Warehouse_SaveClientSupplier(Company client)
-        {
-            var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers";
-            return await SendRequestAsync<Company>(address, HttpMethod.POST, client);
         }
         #endregion
 

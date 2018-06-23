@@ -4,6 +4,7 @@ using StudioServices.Data.EntityFramework.Registry;
 using System.IO;
 using StudioServicesWeb;
 using StudioServicesWeb.DataControllers;
+using System.Linq;
 
 namespace StudioServices.Controllers.Persons
 {
@@ -41,7 +42,9 @@ namespace StudioServices.Controllers.Persons
         public bool AddIdentificationDocument(IdentificationDocument document)
         {
             var file_ext = document.GetFileExtension();
-            byte[] file = Convert.FromBase64String(document.FileContentBase64);
+            byte[] file = file_ext.Equals(".pdf", StringComparison.InvariantCultureIgnoreCase) ?
+                Convert.FromBase64String(document.FileUpload.FirstOrDefault()) :
+                FileUtils.ConvertB64ImagesToPDF(document.FileUpload.ToArray());
 
             // Crea oggetto documento
             bool isUpdate = document.Id > 0;

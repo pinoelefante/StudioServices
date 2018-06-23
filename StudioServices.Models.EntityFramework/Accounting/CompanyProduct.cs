@@ -19,6 +19,6 @@ namespace StudioServices.Data.EntityFramework.Accounting
         public double Quantity { get; set; }
 
         // [OneToOne]
-        // public Company Company { get; set; }
+        public Company Company { get; set; }
     }
 }
