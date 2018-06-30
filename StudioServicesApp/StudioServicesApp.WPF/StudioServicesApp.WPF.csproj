@@ -277,6 +277,10 @@
   <ItemGroup>
     <Resource Include="back_icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="add.png" />
+    <Resource Include="trash.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

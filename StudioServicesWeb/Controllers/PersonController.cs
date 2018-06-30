@@ -112,28 +112,11 @@ namespace StudioServicesWeb.Controllers
 
         [Route("email")]
         [HttpPost]
-        public Response<bool> AddEmail(string address, bool pec, bool managed, string password, string fullname, string imap_address, int imap_port, string imap_username, string smtp_address, int smtp_port, string smtp_username, string service_username, string service_password, long expire_day, bool renew_auto, string renew_paypal)
+        public Response<bool> AddEmail([FromBody]Email email)
         {
-            Email email = new Email()
-            {
-                Address = address,
-                AutoRenewEnabled = renew_auto,
-                AutoRenewPaypalAddress = renew_paypal,
-                Expire = new DateTime(expire_day),
-                FullName = fullname,
-                IMAPAddress = imap_address,
-                IMAPPort = imap_port,
-                IMAPUsername = imap_username,
-                IsManaged = managed,
-                IsPec = pec,
-                Password = password,
-                PersonId = _getPersonId(),
-                ServicePassword = service_password,
-                ServiceUsername = service_username,
-                SMTPAddress = smtp_address,
-                SMTPPort = smtp_port,
-                SMTPUsername = smtp_username
-            };
+            var user_ok = CheckLoginAndPerson(email);
+            if (user_ok != ResponseCode.OK)
+                return CreateBoolean(false, user_ok);
             var res = persons.AddEmail(email);
             return CreateBoolean(res);
         }

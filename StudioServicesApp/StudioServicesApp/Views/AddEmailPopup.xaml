@@ -32,7 +32,6 @@
 
         <ScrollView Grid.Row="1" Margin="10">
             <Grid>
-                <!-- first page -->
                 <StackLayout Orientation="Vertical" Padding="40,10">
                     <Label Text="Indirizzo email"/>
                     <Entry Text="{Binding Email.Address, Mode=TwoWay}"/>
@@ -60,23 +59,25 @@
                         <Label Text="Password" />
                         <Entry Text="{Binding Email.Password}" />
 
-                        <Label Text="IMAP Server"/>
-                        <Entry Text="{Binding Email.IMAPAddress}" />
+                        <StackLayout IsVisible="{Binding ServerConfig, Converter={StaticResource IsNull}}">
+                            <Label Text="IMAP Server"/>
+                            <Entry Text="{Binding Email.IMAPAddress}" />
 
-                        <Label Text="IMAP Port" />
-                        <Entry Text="{Binding Email.IMAPPort}" />
+                            <Label Text="IMAP Port" />
+                            <Entry Text="{Binding Email.IMAPPort}" />
 
-                        <Label Text="IMAP Username" />
-                        <Entry Text="{Binding Email.IMAPUsername}"/>
+                            <Label Text="IMAP Username" />
+                            <Entry Text="{Binding Email.IMAPUsername}"/>
 
-                        <Label Text="SMTP Server" />
-                        <Entry Text="{Binding Email.SMTPAddress}"/>
+                            <Label Text="SMTP Server" />
+                            <Entry Text="{Binding Email.SMTPAddress}"/>
 
-                        <Label Text="SMTP Port" />
-                        <Entry Text="{Binding Email.SMTPPort}" />
+                            <Label Text="SMTP Port" />
+                            <Entry Text="{Binding Email.SMTPPort}" />
 
-                        <Label Text="SMTP User" />
-                        <Entry Text="{Binding Email.SMTPUsername}"/>
+                            <Label Text="SMTP User" />
+                            <Entry Text="{Binding Email.SMTPUsername}"/>
+                        </StackLayout>
 
                         <!-- campi pec -->
                         <StackLayout Orientation="Vertical" IsVisible="False">
@@ -92,14 +93,16 @@
                             <Label Text="Service Password" />
                             <Entry Text="{Binding Email.ServicePassword}"/>
 
-                            <Label Text="Data di scadenza" />
-                            <DatePicker Date="{Binding Email.Expire}" />
+                            <StackLayout Orientation="Vertical" IsVisible="{Binding IsAdmin}">
+                                <Label Text="Data di scadenza" />
+                                <DatePicker Date="{Binding Email.Expire}" />
 
-                            <Label Text="Rinnovo automatico" />
-                            <Switch IsToggled="{Binding Email.AutoRenewEnabled}" />
+                                <Label Text="Rinnovo automatico" />
+                                <Switch IsToggled="{Binding Email.AutoRenewEnabled}" />
 
-                            <Label Text="PayPal rinnovo automatico" />
-                            <Entry Text="{Binding Email.AutoRenewPaypalAddress}"/>
+                                <Label Text="PayPal rinnovo automatico" />
+                                <Entry Text="{Binding Email.AutoRenewPaypalAddress}"/>
+                            </StackLayout>
                         </StackLayout>
                     </StackLayout>
 

@@ -37,5 +37,11 @@ namespace StudioServicesApp.Views
                 }
             };
         }
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            if(Device.Idiom != TargetIdiom.Desktop)
+                this.MasterDetails.IsPresented = false;
+        }
     }
 }

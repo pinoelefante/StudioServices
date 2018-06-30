@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudioServicesApp.App"
              xmlns:vm="clr-namespace:StudioServicesApp.ViewModels"
-             xmlns:converters="clr-namespace:pinoelefante.Converters">
+             xmlns:converters="clr-namespace:pinoelefante.Converters"
+             xmlns:x1="http://xamarin.com/schemas/2014/forms">
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator" />
@@ -15,6 +16,7 @@
             <converters:IntEqualsConverter x:Key="IntEquals"/>
             <converters:IntGreaterThan x:Key="IntGreater"/>
             <converters:IsNullConverter x:Key="IsNull" />
+            <converters:IsNullConverter x:Key="NotIsNull" />
             <converters:StringEmptyConverter x:Key="StringEmpty" />
 
             <Color x:Key="Primary">#2196F3</Color>
@@ -41,6 +43,12 @@
                         <Setter Property="BackgroundColor" Value="Yellow" />
                     </Trigger>
                 </Style.Triggers>
+            </Style>
+
+            <Style TargetType="ListView">
+                <Style.Setters>
+                    <Setter Property="Footer" Value=" " /> <!-- Fix iOS listview showing borders -->
+                </Style.Setters>
             </Style>
 
             <Style TargetType="Button">

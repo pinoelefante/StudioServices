@@ -14,5 +14,11 @@ namespace StudioServices.Data.Sqlite
             base.Reset();
             PersonId = 0;
         }
+        public override void InitFrom(DataFile f)
+        {
+            base.InitFrom(f);
+            var p = f as PersonReference;
+            PersonId = p.PersonId;
+        }
     }
 }

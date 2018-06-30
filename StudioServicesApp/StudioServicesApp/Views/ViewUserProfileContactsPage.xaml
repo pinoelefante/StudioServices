@@ -24,8 +24,8 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" Text="Indirizzi" />
                 <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalOptions="End">
-                    <Button Text="+" Command="{Binding OpenAddAddressPopupCommand}"/>
-                    <Button Text="-" Command="{Binding DeleteAddressCommand}" CommandParameter="{Binding Source={x:Reference listAddr}, Path=SelectedItem}">
+                    <Button Image="add.png" Command="{Binding OpenAddAddressPopupCommand}"/>
+                    <Button Image="trash.png" Command="{Binding DeleteAddressCommand}" CommandParameter="{Binding Source={x:Reference listAddr}, Path=SelectedItem}">
                         <Button.Triggers>
                             <DataTrigger TargetType="Button" Binding="{Binding Source={x:Reference listAddr}, Path=SelectedItem, Converter={StaticResource IsNull}}" Value="True">
                                 <Setter Property="IsVisible" Value="False"/>
@@ -47,8 +47,8 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" Text="Contatti" />
                 <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalOptions="End">
-                    <Button Text="+" Command="{Binding OpenAddContactPopupCommand}"/>
-                    <Button Text="-" Command="{Binding DeleteContactCommand}" CommandParameter="{Binding Source={x:Reference listContacts}, Path=SelectedItem}">
+                    <Button Image="add.png" Command="{Binding OpenAddContactPopupCommand}"/>
+                    <Button Image="trash.png" Command="{Binding DeleteContactCommand}" CommandParameter="{Binding Source={x:Reference listContacts}, Path=SelectedItem}">
                         <Button.Triggers>
                             <DataTrigger TargetType="Button" Binding="{Binding Source={x:Reference listContacts}, Path=SelectedItem, Converter={StaticResource IsNull}}" Value="True">
                                 <Setter Property="IsVisible" Value="False"/>
@@ -70,8 +70,8 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" Text="Email" />
                 <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalOptions="End">
-                    <Button Text="+" Command="{Binding OpenAddEmailPopupCommand}" />
-                    <Button Text="-" Command="{Binding DeleteEmailCommand}" CommandParameter="{Binding Source={x:Reference listEmails}, Path=SelectedItem}">
+                    <Button Image="add.png" Command="{Binding OpenAddEmailPopupCommand}" />
+                    <Button Image="trash.png" Command="{Binding DeleteEmailCommand}" CommandParameter="{Binding Source={x:Reference listEmails}, Path=SelectedItem}">
                         <Button.Triggers>
                             <DataTrigger TargetType="Button" Binding="{Binding Source={x:Reference listEmails}, Path=SelectedItem, Converter={StaticResource IsNull}}" Value="True">
                                 <Setter Property="IsVisible" Value="False"/>

@@ -45,6 +45,13 @@ namespace StudioServices.Data.Sqlite
             CreationTime = DateTime.Now;
             DisabledTime = DateTime.FromBinary(0);
         }
+        public virtual void InitFrom(DataFile f)
+        {
+            Id = f.Id;
+            Enabled = f.Enabled;
+            CreationTime = f.CreationTime;
+            DisabledTime = f.DisabledTime;
+        }
         public virtual bool IsValid() => true;
     }
 }

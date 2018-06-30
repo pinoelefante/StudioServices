@@ -17,18 +17,20 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OpenProfilePage}" />
-                </Grid.GestureRecognizers>
-                
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Source="profile.png" HeightRequest="80" />
-                <Label Grid.Column="1" Text="Il mio profilo" VerticalOptions="Center" Margin="10,0"/>
-            </Grid>
+            <StackLayout Orientation="Vertical" Grid.Row="0" BackgroundColor="White">
+                <Button Image="profile.png"
+                        Command="{Binding OpenProfilePage}"
+                        BorderRadius="50"
+                        Margin="10,20,10,10"
+                        Clicked="Button_Clicked"
+                        HorizontalOptions="Center"
+                        BackgroundColor="Transparent"/>
+
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="0, 0, 0, 10">
+                    <Label Text="{Binding Persona.Name}" />
+                    <Label Text="{Binding Persona.Surname}" />
+                </StackLayout>
+            </StackLayout>
             
             <!-- Commands List -->
             <ListView Grid.Row="1" x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="None" ListView.RowHeight="40">

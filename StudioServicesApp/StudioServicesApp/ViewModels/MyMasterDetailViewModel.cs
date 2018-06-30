@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using pinoelefante.ViewModels;
+using StudioServices.Data.Sqlite.Registry;
 using StudioServicesApp.Services;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,21 @@ namespace StudioServicesApp.ViewModels
 {
     public class MyMasterDetailViewModel : MyViewModel
     {
-        public MyMasterDetailViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
+        private Person person;
+        public Person Persona { get => person; set => SetMT(ref person, value); }
+        public MyMasterDetailViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k)
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                Person p = null;
+                do
+                {
+                    await Task.Delay(500);
+                    p = cache.GetValue<Person>("person");
+                } while (p == null);
+                Persona = p;
+            });
+        }
         private RelayCommand openProfilePage;
         public void Navigate(string pageKey)
         {
@@ -25,7 +40,7 @@ namespace StudioServicesApp.ViewModels
             openProfilePage ??
             (openProfilePage = new RelayCommand(() =>
             {
-                Navigation.NavigateTo(ViewModelLocator.USERPROFILE_PAGE);
+                Navigate(ViewModelLocator.USERPROFILE_PAGE);
             }));
     }
 }

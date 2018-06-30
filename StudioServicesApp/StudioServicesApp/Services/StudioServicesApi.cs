@@ -146,11 +146,10 @@ namespace StudioServicesApp.Services
             var prmts = new ParametersList("id", id.ToString());
             return await SendRequestAsync<bool>(address, HttpMethod.DELETE, prmts);
         }
-        public async Task<ResponseMessage<bool>> AddEmailAsync(string address, bool pec, bool managed, string password, string fullname, string imap_address, int imap_port, string imap_username, string smtp_address, int smtp_port, string smtp_username, string service_username, string service_password, DateTime expire_day, bool renew_auto, string renew_paypal)
+        public async Task<ResponseMessage<bool>> Person_AddEmailAsync(Email email)
         {
             var url_address = $"{WS_ADDRESS}/api/person/email";
-            var parameters = new ParametersList("address", address, "pec", pec, "managed", managed, "password", password, "fullname", fullname, "imap_address", imap_address, "imap_port", imap_port, "imap_username", imap_username, "smtp_address", smtp_address, "smtp_port", smtp_port, "smtp_username", smtp_username, "service_username", service_username, "service_password", service_password, "expire_day", expire_day.Ticks, "renew_auto", renew_auto, "renew_paypal", renew_paypal);
-            return await SendRequestAsync<bool>(url_address, HttpMethod.POST, parameters);
+            return await SendRequestAsync<bool>(url_address, HttpMethod.POST, email);
         }
         public async Task<ResponseMessage<bool>> Person_DeleteEmailAsync(int id)
         {

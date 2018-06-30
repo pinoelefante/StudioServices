@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,6 +16,7 @@ using StudioServices.Controllers.Newsboard;
 using StudioServices.Controllers.Persons;
 using StudioServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudioServicesWeb.DataControllers;
 
@@ -37,7 +39,8 @@ namespace StudioServicesWeb
                 AddJsonOptions(options =>
                 { 
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                });
+                })
+				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             var sqlserver_connection = Configuration.GetConnectionString("SQLServerConnection");
             
@@ -76,6 +79,11 @@ namespace StudioServicesWeb
             {
                 app.UseDeveloperExceptionPage();
             }
+			else
+			{
+				app.UseExceptionHandler("/Error");
+				app.UseHsts();
+			}
             SessionOptions sessionOptions = new SessionOptions()
             {
                 IdleTimeout = TimeSpan.FromDays(7),
@@ -85,6 +93,8 @@ namespace StudioServicesWeb
                     Expiration = TimeSpan.FromDays(90)
                 }
             };
+			// app.UseHttpsRedirection();
+			
             app.UseSession(sessionOptions);
 
             app.UseMvc();

@@ -14,14 +14,11 @@ namespace StudioServicesWeb
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+			CreateWebHostBuilder(args).Build().Run();
         }
-
-        public static IWebHost BuildWebHost(string[] args) {
-            return WebHost.CreateDefaultBuilder(args)
+		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:5000", "http://0.0.0.0:5000")
-                .Build();
-        }
+                .UseUrls("http://localhost:5000", "http://0.0.0.0:5000");
     }
 }

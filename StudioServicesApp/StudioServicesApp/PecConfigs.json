@@ -1,0 +1,63 @@
+﻿[
+  {
+    "name": "Aruba",
+    "domains": [ "pec.it", "pec.cloud", "arubapec.it", "mypec.eu", "gigapec.it", "casellapec.com", "pecditta.com" ],
+    "server": {
+      "IMAPServer": "imaps.pec.aruba.it",
+      "IMAPPort": 993,
+      "IMAPUsername": true, // specifica se è uguale all'indirizzo email
+      "IMAP_SSL": true,
+      "SMTPServer": "smtps.pec.aruba.it",
+      "SMTPPort": 465,
+      "SMTPUsername": true, // specifica se è uguale all'indirizzo email
+      "SMTP_SSL": true,
+      "HasServiceConfig": true,
+      "ServiceUsername": "@aruba.it"
+    }
+  },
+  {
+    "name": "Legalmail",
+    "domains": [ "legalmail.it", "odcectorreannunziata.it" ],
+    "server": {
+      "IMAPServer": "mbox.cert.legalmail.it",
+      "IMAPPort": 993,
+      "IMAPUsername": true, // specifica se è uguale all'indirizzo email
+      "IMAP_SSL": true,
+      "SMTPServer": "sendm.cert.legalmail.it",
+      "SMTPPort": 465,
+      "SMTPUsername": true, // specifica se è uguale all'indirizzo email
+      "SMTP_SSL": true,
+      "HasServiceConfig": false
+    }
+  },
+  {
+    "name": "Outlook",
+    "domains": [ "outlook.it", "outlook.com", "hotmail.it", "hotmail.com", "live.it", "live.com", "msn.com" ],
+    "server": {
+      "IMAPServer": "imap-mail.outlook.com",
+      "IMAPPort": 993,
+      "IMAPUsername": true, // specifica se è uguale all'indirizzo email
+      "IMAP_SSL": true,
+      "SMTPServer": "smtp-mail.outlook.com",
+      "SMTPPort": 587,
+      "SMTPUsername": true, // specifica se è uguale all'indirizzo email
+      "SMTP_SSL": true,
+      "HasServiceConfig": false
+    }
+  },
+  {
+    "name": "Google",
+    "domains": [ "gmail.com", "googlemail.com" ],
+    "server": {
+      "IMAPServer": "imap.gmail.com",
+      "IMAPPort": 993,
+      "IMAPUsername": true, // specifica se è uguale all'indirizzo email
+      "IMAP_SSL": true,
+      "SMTPServer": "smtp.gmail.com",
+      "SMTPPort": 465,
+      "SMTPUsername": true, // specifica se è uguale all'indirizzo email
+      "SMTP_SSL": true,
+      "HasServiceConfig": false
+    }
+  }
+]

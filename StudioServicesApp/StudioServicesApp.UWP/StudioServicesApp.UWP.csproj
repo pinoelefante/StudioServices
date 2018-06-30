@@ -107,6 +107,7 @@
     <None Include="StudioServicesApp.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="add.png" />
     <Content Include="add_icon.png" />
     <Content Include="back_icon.png" />
     <Content Include="close_circle_button.png" />
@@ -143,6 +144,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="trash.png" />
     <Content Include="xamarin_logo.png" />
   </ItemGroup>
   <ItemGroup>

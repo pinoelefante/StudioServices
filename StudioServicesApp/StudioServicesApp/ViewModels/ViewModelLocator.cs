@@ -43,6 +43,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<ConnectionStatus>();
             SimpleIoc.Default.Register<AlertService>();
             SimpleIoc.Default.Register<KeyValueService>();
+            SimpleIoc.Default.Register<AssemblyFileReader>();
 
             SimpleIoc.Default.Register<MyMasterDetailViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
