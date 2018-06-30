@@ -172,6 +172,18 @@ namespace StudioServicesApp.ViewModels
                 });
                 Navigation.PushPopupAsync(new AddContactMethodPopup());
             }));
+        public RelayCommand OpenAddEmailPopupCommand =>
+            openAddEmailPopup ??
+            (openAddEmailPopup = new RelayCommand(() =>
+            {
+                MessengerInstance.Register<bool>(this, "AddEmailStatus", async (x) =>
+                {
+                    MessengerInstance.Unregister<bool>("AddEmailStatus");
+                    if (x)
+                        await LoadPersonAsync(true);
+                });
+                Navigation.PushPopupAsync(new AddEmailPopup());
+            }));
         private static CompanyComparerByName companyComparerByName = new CompanyComparerByName();
         public RelayCommand<string> OpenAddCompanyPopup =>
             openAddCompanyPopup ??

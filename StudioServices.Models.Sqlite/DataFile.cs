@@ -37,6 +37,14 @@ namespace StudioServices.Data.Sqlite
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
         protected virtual void CorrectFields() { }
+
+        public virtual void Reset()
+        {
+            Id = 0;
+            Enabled = true;
+            CreationTime = DateTime.Now;
+            DisabledTime = DateTime.FromBinary(0);
+        }
         public virtual bool IsValid() => true;
     }
 }

@@ -36,12 +36,6 @@ namespace StudioServicesApp.Views
                     IconSource = "add_icon.png"
                 }
             };
-
-            (ViewModel as MyMasterDetailViewModel).CloseMasterPage = new RelayCommand(() =>
-            {
-                if(Device.Idiom != TargetIdiom.Desktop)
-                    MasterDetails.IsPresented = false;
-            });
         }
     }
 }

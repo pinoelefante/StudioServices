@@ -9,10 +9,11 @@
                  CloseWhenBackgroundIsClicked="False"
                  HasSystemPadding="False"
                  InputTransparent="False">
+    <!--
     <popup:PopupPage.Animation>
         <popupAnimation:ScaleAnimation PositionIn="Bottom" PositionOut="Center" ScaleIn="1" ScaleOut="0.7" DurationIn="700" EasingIn="BounceOut"/>
     </popup:PopupPage.Animation>
-
+    -->
     <Grid Margin="20" BackgroundColor="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -25,134 +26,85 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Command="{Binding ClosePopupCommand}" Image="back_icon.png" HeightRequest="32" VerticalOptions="Center"/>
             <StackLayout Grid.Column="1" Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,10">
-                <Label Text="Aggiungi"/>
-                <Label Text="azienda">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding IsClient}" Value="True">
-                            <Setter Property="Text" Value="cliente/fornitore" />
-                        </DataTrigger>
-                    </Label.Triggers>
-                </Label>
+                <Label Text="Aggiungi email"/>
             </StackLayout>
         </Grid>
 
         <ScrollView Grid.Row="1" Margin="10">
             <Grid>
                 <!-- first page -->
-                <StackLayout Orientation="Vertical" Padding="40,10" IsVisible="False">
-                    <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding CurrentPage}" Value="0">
-                            <Setter Property="IsVisible" Value="True" />
-                        </DataTrigger>
-                    </StackLayout.Triggers>
+                <StackLayout Orientation="Vertical" Padding="40,10">
+                    <Label Text="Indirizzo email"/>
+                    <Entry Text="{Binding Email.Address, Mode=TwoWay}"/>
 
-                    <Label Text="Nome azienda"/>
-                    <Entry Text="{Binding CompanyName, Mode=TwoWay}"/>
-                    <Label Text="Partita IVA"/>
-                    <Entry Text="{Binding VatNumber, Mode=TwoWay}"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="E' una pec?"/>
+                        <Switch IsToggled="{Binding Email.IsPec, Mode=TwoWay}" />
+                    </StackLayout>
 
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="End">
-                        <Button Text="Avanti" Command="{Binding GoPage}" CommandParameter="1" IsVisible="False">
-                            <Button.Triggers>
-                                <MultiTrigger TargetType="Button">
-                                    <MultiTrigger.Conditions>
-                                        <BindingCondition Binding="{Binding CompanyName, Converter={StaticResource StringEmpty}}" Value="False"/>
-                                        <BindingCondition Binding="{Binding VatNumber, Converter={StaticResource StringEmpty}}" Value="False"/>
-                                    </MultiTrigger.Conditions>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="E' gestito dallo studio?"/>
+                        <Switch IsToggled="{Binding Email.IsManaged, Mode=TwoWay}" />
+                    </StackLayout>
+
+                    <StackLayout Orientation="Vertical" IsVisible="False">
+                        <StackLayout.Triggers>
+                            <DataTrigger Binding="{Binding Email.IsManaged}" TargetType="StackLayout" Value="True">
+                                <Setter Property="IsVisible" Value="True" />
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+
+                        <Label Text="Nome visualizzato"/>
+                        <Entry Text="{Binding Email.FullName}" />
+
+                        <Label Text="Password" />
+                        <Entry Text="{Binding Email.Password}" />
+
+                        <Label Text="IMAP Server"/>
+                        <Entry Text="{Binding Email.IMAPAddress}" />
+
+                        <Label Text="IMAP Port" />
+                        <Entry Text="{Binding Email.IMAPPort}" />
+
+                        <Label Text="IMAP Username" />
+                        <Entry Text="{Binding Email.IMAPUsername}"/>
+
+                        <Label Text="SMTP Server" />
+                        <Entry Text="{Binding Email.SMTPAddress}"/>
+
+                        <Label Text="SMTP Port" />
+                        <Entry Text="{Binding Email.SMTPPort}" />
+
+                        <Label Text="SMTP User" />
+                        <Entry Text="{Binding Email.SMTPUsername}"/>
+
+                        <!-- campi pec -->
+                        <StackLayout Orientation="Vertical" IsVisible="False">
+                            <StackLayout.Triggers>
+                                <DataTrigger Binding="{Binding Email.IsPec}" TargetType="StackLayout" Value="True">
                                     <Setter Property="IsVisible" Value="True" />
-                                </MultiTrigger>
-                            </Button.Triggers>
-                        </Button>
-                    </StackLayout>
-                </StackLayout>
+                                </DataTrigger>
+                            </StackLayout.Triggers>
 
-                <!-- second page -->
-                <StackLayout Orientation="Vertical" Padding="40,10" IsVisible="False">
-                    <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding CurrentPage}" Value="1">
-                            <Setter Property="IsVisible" Value="True" />
-                        </DataTrigger>
-                    </StackLayout.Triggers>
+                            <Label Text="Service Username" />
+                            <Entry Text="{Binding Email.ServiceUsername}" />
 
-                    <Label Text="Indirizzo"/>
-                    <Entry Text="{Binding Address, Mode=TwoWay}" MinimumWidthRequest="100"/>
-                    <Label Text="Numero civico" />
-                    <Entry Text="{Binding CivicNumber, Mode=TwoWay}"/>
-                    <Label Text="Città"/>
-                    <Entry Text="{Binding City, Mode=TwoWay}"/>
-                    <Label Text="Prov."/>
-                    <Entry Text="{Binding Province, Mode=TwoWay}"/>
-                    <Label Text="CAP"/>
-                    <Entry Text="{Binding ZIPCode, Mode=TwoWay}"/>
-                    <Label Text="Nazione"/>
-                    <Entry Text="{Binding Country, Mode=TwoWay}"/>
-                    <Label Text="Note"/>
-                    <Entry Text="{Binding Description, Mode=TwoWay}"/>
+                            <Label Text="Service Password" />
+                            <Entry Text="{Binding Email.ServicePassword}"/>
 
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End">
-                        <Button Text="Indietro" Command="{Binding GoPage}" CommandParameter="0"/>
-                        <Button Text="Avanti" Command="{Binding GoPage}" CommandParameter="2" IsVisible="False">
-                            <Button.Triggers>
-                                <MultiTrigger TargetType="Button">
-                                    <MultiTrigger.Conditions>
-                                        <BindingCondition Binding="{Binding Address, Converter={StaticResource StringEmpty}}" Value="False"/>
-                                        <BindingCondition Binding="{Binding CivicNumber, Converter={StaticResource StringEmpty}}" Value="False"/>
-                                        <BindingCondition Binding="{Binding City, Converter={StaticResource StringEmpty}}" Value="False"/>
-                                        <BindingCondition Binding="{Binding Province, Converter={StaticResource StringEmpty}}" Value="False"/>
-                                        <BindingCondition Binding="{Binding ZIPCode, Converter={StaticResource StringEmpty}}" Value="False"/>
-                                        <BindingCondition Binding="{Binding Country, Converter={StaticResource StringEmpty}}" Value="False"/>
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="IsVisible" Value="True" />
-                                </MultiTrigger>
-                            </Button.Triggers>
-                        </Button>
-                    </StackLayout>
-                </StackLayout>
+                            <Label Text="Data di scadenza" />
+                            <DatePicker Date="{Binding Email.Expire}" />
 
-                <!-- third page -->
-                <StackLayout Orientation="Vertical" Padding="40,20,40,10" IsVisible="False" HorizontalOptions="Center">
-                    <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding CurrentPage}" Value="2">
-                            <Setter Property="IsVisible" Value="True" />
-                        </DataTrigger>
-                    </StackLayout.Triggers>
+                            <Label Text="Rinnovo automatico" />
+                            <Switch IsToggled="{Binding Email.AutoRenewEnabled}" />
 
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="Nome:" />
-                        <Label Text="{Binding CompanyName}"/>
-                    </StackLayout>
-
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="P.IVA/CF:" />
-                        <Label Text="{Binding VatNumber}"/>
-                    </StackLayout>
-
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="in:"/>
-                        <Label Text="{Binding City}"/>
-                        <Label Text="prov.:"/>
-                        <Label Text="{Binding Province}"/>
-                    </StackLayout>
-
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="{Binding Address}"/>
-                        <Label Text="n."/>
-                        <Label Text="{Binding CivicNumber}"/>
-                    </StackLayout>
-
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="{Binding ZIPCode}" />
-                        <Label Text="," />
-                        <Label Text="{Binding Country}"/>
-                    </StackLayout>
-
-                    <StackLayout>
-                        <Label Text="{Binding Description}" />
+                            <Label Text="PayPal rinnovo automatico" />
+                            <Entry Text="{Binding Email.AutoRenewPaypalAddress}"/>
+                        </StackLayout>
                     </StackLayout>
 
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End">
-                        <Button Text="Indietro" Command="{Binding GoPage}" CommandParameter="1"/>
-                        <Button Text="Aggiungi" Command="{Binding AddCompanyCommand}"/>
+                        <Button Text="Aggiungi" Command="{Binding AddEmailCommand}"/>
                     </StackLayout>
                 </StackLayout>
             </Grid>

@@ -21,8 +21,6 @@ namespace StudioServicesApp.ViewModels
         {
             Navigation.NavigateTo(pageKey);
         }
-        public RelayCommand CloseMasterPage { get; set; }
-
         public RelayCommand OpenProfilePage =>
             openProfilePage ??
             (openProfilePage = new RelayCommand(() =>

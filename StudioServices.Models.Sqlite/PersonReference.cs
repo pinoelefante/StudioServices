@@ -9,5 +9,10 @@ namespace StudioServices.Data.Sqlite
         public virtual int PersonId { get; set; }
 
         // public virtual Person Person { get; set; }
+        public override void Reset()
+        {
+            base.Reset();
+            PersonId = 0;
+        }
     }
 }
