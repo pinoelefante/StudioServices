@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Acr.UserDialogs;
 using GalaSoft.MvvmLight.Command;
@@ -62,7 +63,7 @@ namespace StudioServicesApp.ViewModels
                         }
                         else if (MyCompanies.Count != ListCompanies.Count)
                         {
-                            ListCompanies.AddRange(GetMyCompaniesList(), true);
+                            ListCompanies.AddRange(MyCompanies, true);
                             SelectedMyCompanyIndex = SelectedMyCompany != null ? ListCompanies.IndexOf(SelectedMyCompany) : (ListCompanies.Count > 0 ? 0 : -1);
                         }
                         break;
@@ -158,8 +159,8 @@ namespace StudioServicesApp.ViewModels
             InvoiceNumberText = invoice.Number.ToString();
             InvoiceNumberExtraText = invoice.NumberExtra;
             SelectedIndexInvoiceType = (int)invoice.Type;
-            SelectedMyCompanyIndex = ListCompanies.IndexOf(GetMyCompany(invoice.SenderId));
-            SelectedCompany = GetClientSupplier(invoice.Recipient);
+            SelectedMyCompanyIndex = ListCompanies.IndexOf(MyCompanies.First(x => x.Id == invoice.SenderId));
+            SelectedCompany = ClientsSuppliers.FirstOrDefault(x => x.Id == invoice.Recipient);
         }
         private int GetNextInvoiceNumber(int year)
         {
@@ -222,7 +223,7 @@ namespace StudioServicesApp.ViewModels
                 else
                 {
                     var lowersearch = search.ToLower();
-                    var res = ClientsSuppliers.FindAll(x => x.Name.ToLower().Contains(lowersearch) || x.VATNumber.StartsWith(lowersearch));
+                    var res = ClientsSuppliers.Where(x => x.Name.ToLower().Contains(lowersearch) || x.VATNumber.StartsWith(lowersearch));
                     CompanyList.AddRange(res);
                 }
             }));

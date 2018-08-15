@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MyPopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:views="clr-namespace:pinoelefante.Views"
+                 x:Class="StudioServicesApp.Views.AddCompanyProductPopup"
+                 BindingContext="{Binding AddCompanyProductViewModel, Source={StaticResource Locator}}"
+                 CloseWhenBackgroundIsClicked="False"
+                 HasSystemPadding="False"
+                 InputTransparent="False">
+    <Grid Margin="20" BackgroundColor="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Command="{Binding ClosePopupCommand}" Image="back_icon.png" HeightRequest="32"/>
+            <Label Grid.Column="1">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Aggiungi prodotto" />
+                        <Span Text=" (" />
+                        <Span Text="{Binding CompanyName, Mode=TwoWay}" />
+                        <Span Text=")" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </Grid>
+        <ScrollView Grid.Row="1">
+            <StackLayout Orientation="Vertical" Padding="40,10">
+                <Label Text="Nome"/>
+                <Entry Text="{Binding Product.Name, Mode=TwoWay}" MinimumWidthRequest="100"/>
+                <Label Text="Prezzo unitario" />
+                <Entry Text="{Binding Product.UnitPrice, Mode=TwoWay}"/>
+                <Label Text="IVA"/>
+                <Entry Text="{Binding Product.Tax, Mode=TwoWay}"/>
+                <Label Text="Quantità"/>
+                <Entry Text="{Binding Product.Quantity, Mode=TwoWay}"/>
+                <Label Text="Unità di misura"/>
+                <Picker SelectedItem="{Binding SelectedUnitType, Mode=TwoWay}">
+                    <Picker.Items>
+                        <x:String>PZ</x:String>
+                        <x:String>Kg</x:String>
+                        <x:String>g</x:String>
+                        <x:String>m</x:String>
+                        <x:String>mq</x:String>
+                    </Picker.Items>
+                </Picker>
+
+                <Button Text="Aggiungi" Command="{Binding SaveCommand}"/>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+</views:MyPopupPage>

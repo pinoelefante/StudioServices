@@ -45,7 +45,8 @@ namespace StudioServicesApp.ViewModels
                 var res = await SendRequestAsync(() => api.Person_AddAddressAsync(addr));
                 if (res.IsOK)
                 {
-                    MessengerInstance.Send<bool>(res.Data, "AddAddressStatus");
+                    addr.Id = res.Data;
+                    MessengerInstance.Send<Address>(addr, MSG_PERSON_ADD_ADDRESS);
                     await Navigation.PopPopupAsync();
                 }
                 else

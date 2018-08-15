@@ -184,6 +184,15 @@ namespace StudioServicesApp.Services
             Cookie cookie = new Cookie(name, value, "/", uri.Host);
             cookieContainer.Add(cookie);
         }
+        public void RemoveCookies(string domain)
+        {
+            var cookies = cookieContainer.GetCookies(new Uri(domain));
+            foreach (Cookie cookie in cookies)
+            {
+                cookie.Expires = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+                cookie.Expired = true;
+            }
+        }
     }
     public enum HttpMethod
     {

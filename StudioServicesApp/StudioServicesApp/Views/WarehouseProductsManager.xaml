@@ -5,5 +5,42 @@
              xmlns:pages="clr-namespace:pinoelefante.Views"
              Title="Gestione prodotti"
              BindingContext="{Binding WarehouseProductsManagerViewModel, Source={StaticResource Locator}}">
-    
+    <pages:MyContentPage.ToolbarItems>
+        <ToolbarItem Text="Aggiungi" Command="{Binding OpenProductCommand}" />
+    </pages:MyContentPage.ToolbarItems>
+    <pages:MyContentPage.Resources>
+        <DataTemplate x:Key="ProductTemplate">
+            <ViewCell>
+                <Grid>
+                    <Label Text="{Binding Name}" />
+                </Grid>
+            </ViewCell>
+        </DataTemplate>
+    </pages:MyContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ListView Grid.Row="0" ItemsSource="{Binding ProductsList}" ItemTemplate="{StaticResource ProductTemplate}">
+            <ListView.Behaviors>
+                <pages:EventToCommandBehavior EventName="ItemTapped" Command="{Binding OpenProductCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}"/>
+            </ListView.Behaviors>
+        </ListView>
+
+        <Button Grid.Row="0" Grid.RowSpan="3"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Margin="10,10,10,10"
+                    Text="+"
+                    FontSize="32"
+                    FontAttributes="Bold"
+                    BackgroundColor="LightGreen"
+                    TextColor="White"
+                    BorderRadius="25"
+                    WidthRequest="60"
+                    HeightRequest="60"
+                    BorderColor="White"
+                    Command="{Binding OpenInvoiceCreatorSellCommand}"/>
+    </Grid>
 </pages:MyContentPage>

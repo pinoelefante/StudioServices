@@ -8,49 +8,68 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using StudioServices.Data.Sqlite.Registry;
 using StudioServicesApp.Services;
-using StudioServicesApp.Views;
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace StudioServicesApp.ViewModels
 {
     public class ViewUserProfileContactsViewModel : MyAuthViewModel
     {
+        public ViewUserProfileContactsViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
         private RelayCommand<Address> deleteAddress;
         private RelayCommand<ContactMethod> deleteContact;
         private RelayCommand<Email> deleteEmail;
-        public ViewUserProfileContactsViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k)
-        {
-        }
+
+        public MyObservableCollection<Address> Addresses { get; } = new MyObservableCollection<Address>();
+        public MyObservableCollection<Email> Emails { get; } = new MyObservableCollection<Email>();
+        public MyObservableCollection<ContactMethod> Contacts { get; } = new MyObservableCollection<ContactMethod>();
+
         public override async Task NavigatedToAsync(object parameter = null)
         {
-            base.PropertyChanged += ViewUserProfileContactsViewModel_PropertyChanged;
             await base.NavigatedToAsync(parameter);
+
+            Addresses.AddRange(Persona.Addresses, true);
+            Contacts.AddRange(Persona.Contacts, true);
+            Emails.AddRange(Persona.Emails, true);
         }
-        public override void NavigatedFrom()
+
+        public override void RegisterMessenger()
         {
-            base.PropertyChanged -= ViewUserProfileContactsViewModel_PropertyChanged;
-            base.NavigatedFrom();
-        }
-        private void ViewUserProfileContactsViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if(e.PropertyName.Equals(nameof(Persona)))
+            MessengerInstance.Register<Address>(this, MSG_PERSON_ADD_ADDRESS, (address) =>
             {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    Addresses.Clear();
-                    Addresses.AddRange(Persona.Addresses);
-
-                    Contacts.Clear();
-                    Contacts.AddRange(Persona.Contacts);
-
-                    Emails.Clear();
-                    Emails.AddRange(Persona.Emails);
-                });
-            }
+                Addresses.Add(address);
+            });
+            MessengerInstance.Register<ContactMethod>(this, MSG_PERSON_ADD_CONTACT, (contact) =>
+            {
+                Contacts.Add(contact);
+            });
+            MessengerInstance.Register<Email>(this, MSG_PERSON_ADD_EMAIL, (email) =>
+            {
+                Emails.Add(email);
+            });
+            MessengerInstance.Register<Address>(this, MSG_PERSON_DEL_ADDRESS, (address) =>
+            {
+                Addresses.Remove(address);
+            });
+            MessengerInstance.Register<ContactMethod>(this, MSG_PERSON_DEL_CONTACT, (contact) =>
+            {
+                Contacts.Remove(contact);
+            });
+            MessengerInstance.Register<Email>(this, MSG_PERSON_DEL_EMAIL, (email) =>
+            {
+                Emails.Remove(email);
+            });
         }
-        public MyObservableCollection<Address> Addresses { get; } = new MyObservableCollection<Address>();
-        public MyObservableCollection<ContactMethod> Contacts { get; } = new MyObservableCollection<ContactMethod>();
-        public MyObservableCollection<Email> Emails { get; } = new MyObservableCollection<Email>();
+        public override void UnregisterMessenger()
+        {
+            base.UnregisterMessenger();
+            MessengerInstance.Unregister<Address>(this, MSG_PERSON_ADD_ADDRESS);
+            MessengerInstance.Unregister<Address>(this, MSG_PERSON_DEL_ADDRESS);
+            MessengerInstance.Unregister<ContactMethod>(this, MSG_PERSON_ADD_CONTACT);
+            MessengerInstance.Unregister<ContactMethod>(this, MSG_PERSON_DEL_CONTACT);
+            MessengerInstance.Unregister<Email>(this, MSG_PERSON_ADD_EMAIL);
+            MessengerInstance.Unregister<Email>(this, MSG_PERSON_DEL_EMAIL);
+        }
 
         public RelayCommand<Address> DeleteAddressCommand =>
             deleteAddress ??
@@ -62,11 +81,7 @@ namespace StudioServicesApp.ViewModels
                     return;
                 var res = await SendRequestAsync(async () => await api.Person_DeleteAddressAsync(SelectedAddress.Id));
                 if (res.IsOK && res.Data)
-                {
-                    Persona.Addresses.Remove(Persona.Addresses.FirstOrDefault(x => x.Id == SelectedAddress.Id));
-                    cache.SetValue("person", Persona);
-                    MessengerInstance.Send(false, "ReloadPerson");
-                }
+                    MessengerInstance.Send<Address>(SelectedAddress, MSG_PERSON_DEL_ADDRESS);
                 else
                     ShowMessage("L'indirizzo non è stato eliminato", "Elimina indirizzo");
             }));
@@ -80,11 +95,7 @@ namespace StudioServicesApp.ViewModels
                     return;
                 var res = await SendRequestAsync(async () => await api.Person_DeleteContactAsync(SelectedContact.Id));
                 if (res.IsOK && res.Data)
-                {
-                    Persona.Contacts.Remove(Persona.Contacts.FirstOrDefault(x => x.Id == SelectedContact.Id));
-                    cache.SetValue("person", Persona);
-                    MessengerInstance.Send(false, "ReloadPerson");
-                }
+                    MessengerInstance.Send<ContactMethod>(SelectedContact, MSG_PERSON_DEL_CONTACT);
                 else
                     ShowMessage("Il contatto non è stato eliminato", "Elimina contatto");
             }));
@@ -103,11 +114,7 @@ namespace StudioServicesApp.ViewModels
                     return;
                 var res = await SendRequestAsync(async () => await api.Person_DeleteEmailAsync(SelectedEmail.Id));
                 if (res.IsOK && res.Data)
-                {
-                    Persona.Emails.Remove(Persona.Emails.FirstOrDefault(x => x.Id == SelectedEmail.Id));
-                    cache.SetValue("person", Persona);
-                    MessengerInstance.Send(false, "ReloadPerson");
-                }
+                    MessengerInstance.Send<Email>(SelectedEmail, MSG_PERSON_DEL_EMAIL);
                 else
                     ShowMessage("L'indirizzo email non è stato eliminato", "Elimina email");
             }));

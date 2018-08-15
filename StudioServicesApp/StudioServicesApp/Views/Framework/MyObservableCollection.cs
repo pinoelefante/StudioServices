@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 public class MyObservableCollection<T> : ObservableCollection<T>
 {
@@ -18,21 +19,13 @@ public class MyObservableCollection<T> : ObservableCollection<T>
                 this.Add(item);
         }
     }
-    public int Remove(IEnumerable<T> list)
+    public new void Remove(T o)
     {
-        if (list == null)
-            return 0;
-        else
+        Device.BeginInvokeOnMainThread(() =>
         {
-            int removed = 0;
-            foreach (var item in list)
-                removed += Remove(item) ? 1 : 0;
-            return removed;
-        }
-    }
-    public new bool Remove(T o)
-    {
-        return o == null ? false : base.Remove(o);
+            base.Remove(o);
+        });
+        
     }
 }
 

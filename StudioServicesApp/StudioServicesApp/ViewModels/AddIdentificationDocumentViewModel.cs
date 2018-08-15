@@ -178,10 +178,10 @@ namespace StudioServicesApp.ViewModels
                 if (!ValidateDocument(document))
                     return;
                 var response = await SendRequestAsync(() => api.Person_AddDocumentAsync(document));
-                if (response.IsOK && response.Data)
+                if (response.IsOK)
                 {
-                    MessengerInstance.Send(true, "ReloadPerson");
-                    // Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
+                    document.Id = response.Data;
+                    MessengerInstance.Send<IdentificationDocument>(document, MSG_PERSON_ADD_DOCUMENT);
                     Navigation.GoBack();
                 }
             }));

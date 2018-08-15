@@ -20,6 +20,34 @@ namespace pinoelefante.ViewModels
 {
     public class MyViewModel : ViewModelBase
     {
+        public static readonly string MSG_PERSON_RELOAD = "PersonReload",
+            MSG_PERSON_LOADED = "PersonLoaded",
+            MSG_PERSON_ADD_EMAIL = "PersonAddEmail",
+            MSG_PERSON_DEL_EMAIL = "PersonDelEmail",
+            MSG_PERSON_UPD_EMAIL = "PersonUpdEmail",
+            MSG_PERSON_ADD_ADDRESS = "PersonAddAddress",
+            MSG_PERSON_DEL_ADDRESS = "PersonDelAddress",
+            MSG_PERSON_UPD_ADDRESS = "PersonUpdAddress",
+            MSG_PERSON_ADD_CONTACT = "PersonAddContact",
+            MSG_PERSON_DEL_CONTACT = "PersonDelContact",
+            MSG_PERSON_UPD_CONTACT = "PersonUpdContact",
+            MSG_PERSON_ADD_DOCUMENT = "PersonAddDocument",
+            MSG_PERSON_DEL_DOCUMENT = "PersonDelDocument",
+            MSG_PERSON_UPD_DOCUMENT = "PersonUpdDocument",
+            MSG_MY_COMPANY_LOADED = "MyCompaniesLoaded",
+            MSG_MY_COMPANY_ADD = "MyCompanyAdd",
+            MSG_MY_COMPANY_DEL = "MyCompanyDel",
+            MSG_MY_COMPANY_UPD = "MyCompanyUpd",
+            MSG_MY_COMPANY_PRODUCT_ADD = "MyCompanyProductAdd",
+            MSG_MY_COMPANY_PRODUCT_DEL = "MyCompanyProductDel",
+            MSG_MY_COMPANY_PRODUCT_UPD = "MyCompanyProductUpd",
+            MSG_MY_COMPANY_CLIENT_ADD = "MyCompanyClientAdd",
+            MSG_MY_COMPANY_CLIENT_DEL = "MyCompanyClientDel",
+            MSG_MY_COMPANY_CLIENT_UPD = "MyCompanyClientUpd",
+            MSG_REQUEST_CURRENT_COMPANY = "RequestCurrentCompany",
+            MSG_SET_CURRENT_COMPANY = "SetCurrentCompany",
+            MSG_RESPONSE_CURRENT_COMPANY = "ResponseCurrentCompany";
+
         private static readonly int LIMIT_TRY = 3;
         public NavigationService Navigation { get; private set; }
         protected CacheManager cache = ViewModelLocator.GetService<CacheManager>();
@@ -59,11 +87,17 @@ namespace pinoelefante.ViewModels
 
         public virtual Task NavigatedToAsync(object parameter = null)
         {
-            RegisterMessenger();
+            this.RegisterMessenger();
             return Task.CompletedTask;   
         }
-        public virtual void RegisterMessenger() { }
-        public virtual void NavigatedFrom() { }
+        public virtual void RegisterMessenger() {
+            Debug.WriteLine("RegisterMessenger: MyViewModel");
+        }
+        public virtual void UnregisterMessenger() { }
+        public virtual void NavigatedFrom()
+        {
+            UnregisterMessenger();
+        }
         /*
          * OnBackPressed() must return true when override 
          */
@@ -165,9 +199,20 @@ namespace pinoelefante.ViewModels
         {
             var old_value = field;
             field = value;
+            RaisePropertyChangedMT(fieldName);
+        }
+        public void RaisePropertyChangedMT<T>(System.Linq.Expressions.Expression<Func<T>> expression)
+        {
             Device.BeginInvokeOnMainThread(() =>
             {
-                RaisePropertyChanged(fieldName, old_value, value);
+                RaisePropertyChanged(expression);
+            });
+        }
+        public void RaisePropertyChangedMT([CallerMemberName]string propertyName="")
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                RaisePropertyChanged(propertyName);
             });
         }
         public string IntValidation(string oldValue, string newValue, bool allowEmpty=true, int? ifEmptyValue=null)

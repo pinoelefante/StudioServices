@@ -13,27 +13,41 @@ namespace StudioServicesApp.ViewModels
 {
     public class ViewUserProfileDocumentsViewModel : MyAuthViewModel
     {
-        public ViewUserProfileDocumentsViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k)
-        {
-        }
-        public override async Task NavigatedToAsync(object parameter = null)
-        {
-            base.PropertyChanged += ViewUserProfileDocumentsViewModel_PropertyChanged;
-            await base.NavigatedToAsync(parameter);
-        }
         public MyObservableCollection<IdentificationDocument> Documents { get; } = new MyObservableCollection<IdentificationDocument>();
 
-        private void ViewUserProfileDocumentsViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public ViewUserProfileDocumentsViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
+
+        public override async Task NavigatedToAsync(object parameter = null)
         {
-            if (e.PropertyName.Equals(nameof(base.Persona)))
-                Documents.AddRange(Persona.Identifications, true);
+            await base.NavigatedToAsync(parameter);
+            Documents.AddRange(Persona.Identifications, true);
+        }
+        
+        public override void RegisterMessenger()
+        {
+            MessengerInstance.Register<IdentificationDocument>(this, MSG_PERSON_ADD_DOCUMENT, (doc) =>
+            {
+                Documents.Add(doc);
+            });
+            MessengerInstance.Register<IdentificationDocument>(this, MSG_PERSON_DEL_DOCUMENT, (doc) =>
+            {
+                Documents.Remove(doc);
+            });
+        }
+        public override void UnregisterMessenger()
+        {
+            MessengerInstance.Unregister<IdentificationDocument>(this, MSG_PERSON_ADD_DOCUMENT);
+            MessengerInstance.Unregister<IdentificationDocument>(this, MSG_PERSON_DEL_DOCUMENT);
         }
         private RelayCommand<IdentificationDocument> deleteCmd;
+        private RelayCommand addDocumentCmd;
+
         public RelayCommand AddDocument =>
-            new RelayCommand(() =>
+            addDocumentCmd ??
+            (addDocumentCmd = new RelayCommand(() =>
             {
                 Navigation.NavigateTo(ViewModelLocator.ADD_IDENTIFICATION_DOC_PAGE);
-            });
+            }));
         public RelayCommand<IdentificationDocument> DeleteDocumentCommand =>
             deleteCmd ??
             (deleteCmd = new RelayCommand<IdentificationDocument>(async (doc) =>
@@ -49,11 +63,7 @@ namespace StudioServicesApp.ViewModels
                     return;
                 var res = await SendRequestAsync(async () => await api.Person_DeleteDocumentAsync(doc.Id));
                 if (res.IsOK && res.Data)
-                {
-                    Persona.Identifications.Remove(Persona.Identifications.FirstOrDefault(x => x.Id == doc.Id));
-                    cache.SetValue("person", Persona);
-                    MessengerInstance.Send(false, "ReloadPerson");
-                }
+                    MessengerInstance.Send<IdentificationDocument>(doc, MSG_PERSON_DEL_DOCUMENT);
                 else
                     ShowMessage("Il documento non è stato eliminato", "Elimina documento");
             }));

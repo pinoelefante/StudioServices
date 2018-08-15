@@ -15,47 +15,54 @@ namespace StudioServicesApp.ViewModels
     {
         public WarehouseInvoiceListViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k)
         {
-
+            // Costruttore
         }
 
         public override async Task NavigatedToAsync(object parameter = null)
         {
             await base.NavigatedToAsync(parameter);
-            Device.BeginInvokeOnMainThread(() =>
+            MessengerInstance.Send(true, MSG_REQUEST_CURRENT_COMPANY);
+        }
+        public override void RegisterMessenger()
+        {
+            MessengerInstance.Register<Company>(this, MSG_SET_CURRENT_COMPANY, (company) =>
             {
-                CompanyList.Clear();
-                CompanyList.AddRange(GetMyCompaniesList());
-
-                if (CompanyList.Count == 0)
-                {
-                }
-                else
-                {
-                    if (CompanyIndex < 0)
-                        CompanyIndex = 0;
-                }
+                OnCompanyChanged(company);
+            });
+            MessengerInstance.Register<Company>(this, MSG_RESPONSE_CURRENT_COMPANY, (company) =>
+            {
+                OnCompanyChanged(company);
             });
         }
-        private int _companyIndex=-1, _yearIndex = -1;
+        public override void NavigatedFrom()
+        {
+            MessengerInstance.Unregister<Company>(this, MSG_SET_CURRENT_COMPANY);
+            MessengerInstance.Unregister<Company>(this, MSG_RESPONSE_CURRENT_COMPANY);
+        }
+        private void OnCompanyChanged(Company company)
+        {
+            if (company == null)
+            {
+                ShowMessage("Non è possibile operare con un'azienda nulla");
+                Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
+            }
+            else if(company != CurrentCompany)
+            {
+                CurrentCompany = company;
+                LoadInvoiceByCompany(CurrentCompany);
+            }
+        }
+
+        private int _yearIndex = -1;
         private RelayCommand openInvoiceCreatorPurchase, openInvoiceCreatorSell;
         private RelayCommand<Invoice> openInvoiceCreatorWithInvoice;
 
-        public MyObservableCollection<Company> CompanyList { get; } = new MyObservableCollection<Company>();
         public MyObservableCollection<int> YearsList { get; } = new MyObservableCollection<int>();
         public MyObservableCollection<Invoice> InvoiceByYear { get; } = new MyObservableCollection<Invoice>();
         public MyObservableCollection<Invoice> InvoiceSell { get; } = new MyObservableCollection<Invoice>();
         public MyObservableCollection<Invoice> InvoicePurchase { get; } = new MyObservableCollection<Invoice>();
-        public int CompanyIndex
-        {
-            get => _companyIndex;
-            set
-            {
-                if (value == _companyIndex) return;
-                SetMT(ref _companyIndex, value);
-                if(value >= 0)
-                    LoadInvoiceByCompany(CompanyList[value]);
-            }
-        }
+        public Company CurrentCompany { get; set; }
+        
         public int YearIndex
         {
             get => _yearIndex;
@@ -64,7 +71,7 @@ namespace StudioServicesApp.ViewModels
                 if (value == _yearIndex) return;
                 SetMT(ref _yearIndex, value);
                 if(value >= 0)
-                    LoadInvoiceByYear(CompanyList[CompanyIndex], YearsList[value]);
+                    LoadInvoiceByYear(CurrentCompany, YearsList[value]);
             }
         }
 
@@ -75,7 +82,7 @@ namespace StudioServicesApp.ViewModels
                 var invoice = new Invoice()
                 {
                     Type = InvoiceType.PURCHASE,
-                    SenderId = CompanyIndex >= 0 ? CompanyList[CompanyIndex].Id : 0,
+                    SenderId = CurrentCompany.Id,
                 };
                 Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_HOME, invoice);
             }));
@@ -86,7 +93,7 @@ namespace StudioServicesApp.ViewModels
                 var invoice = new Invoice()
                 {
                     Type = InvoiceType.SELL,
-                    SenderId = CompanyIndex >= 0 ? CompanyList[CompanyIndex].Id : 0,
+                    SenderId = CurrentCompany.Id,
                 };
                 Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_HOME, invoice);
             }));
@@ -98,7 +105,7 @@ namespace StudioServicesApp.ViewModels
             }));
         private void LoadInvoiceByCompany(Company company)
         {
-            var invoices = testInvoice;
+            var invoices = testInvoice; //TODO: api call to get invoices
             var years = invoices.Select(x => x.Emission.Year).Distinct().OrderByDescending(x => x);
             YearsList?.Clear();
             YearsList.AddRange(years);

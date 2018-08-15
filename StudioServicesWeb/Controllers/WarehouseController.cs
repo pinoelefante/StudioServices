@@ -18,16 +18,16 @@ namespace StudioServicesWeb.Controllers.Warehouse
         }
         [Route("product")]
         [HttpPost]
-        public Response<bool> SaveProduct([FromBody]CompanyProduct product)
+        public Response<Tuple<int, string>> SaveProduct([FromBody]CompanyProduct product)
         {
             if (!_isLogged())
-                return CreateLoginRequired<bool>();
+                return CreateLoginRequired<Tuple<int, string>>();
             var company = manager.GetCompany(product.CompanyId);
             if (company == null || company.PersonId != _getPersonId())
-                return CreateBoolean(false, ResponseCode.FAIL, "Operazione non autorizzata");
+                return CreateResponse<Tuple<int, string>>(default(Tuple<int,string>), ResponseCode.FAIL, "Operazione non autorizzata");
 
             bool res = manager.SaveProduct(product);
-            return CreateBoolean(res);
+            return CreateResponse<Tuple<int,string>>(res ? new Tuple<int,string>(product.Id,product.ProductCode) : default(Tuple<int,string>), res ? ResponseCode.OK : ResponseCode.FAIL);
         }
         [Route("products/{companyId}")]
         [HttpGet]

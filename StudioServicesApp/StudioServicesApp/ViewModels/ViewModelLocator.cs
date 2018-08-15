@@ -63,6 +63,7 @@ namespace StudioServicesApp.ViewModels
             SimpleIoc.Default.Register<ViewUserProfileDocumentsViewModel>();
             SimpleIoc.Default.Register<AddContactMethodViewModel>();
             SimpleIoc.Default.Register<AddEmailViewModel>();
+            SimpleIoc.Default.Register<AddCompanyProductViewModel>();
 
             SimpleIoc.Default.Register<ServerSettingsViewModel>();
 
@@ -104,5 +105,6 @@ namespace StudioServicesApp.ViewModels
         public AddContactMethodViewModel AddContactMethodViewModel => GetService<AddContactMethodViewModel>();
         public ServerSettingsViewModel ServerSettingsViewModel => GetService<ServerSettingsViewModel>();
         public AddEmailViewModel AddEmailViewModel => GetService<AddEmailViewModel>();
+        public AddCompanyProductViewModel AddCompanyProductViewModel => GetService<AddCompanyProductViewModel>();
     }
 }

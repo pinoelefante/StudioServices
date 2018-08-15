@@ -26,7 +26,24 @@
                     </Button.Triggers>
                 </Button>
             </StackLayout>
-            <ListView x:Name="listDocs" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Documents}"/>
+            <ListView x:Name="listDocs" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Documents, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Number}" />
+                                        <Span Text=" ("/>
+                                        <Span Text="{Binding Type}" />
+                                        <Span Text=")"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </Grid>
 </views:MyContentPage>

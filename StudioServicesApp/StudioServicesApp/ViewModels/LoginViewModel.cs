@@ -20,6 +20,8 @@ namespace StudioServicesApp.ViewModels
         }
         public override Task NavigatedToAsync(object parameter = null)
         {
+            App.ConfigureNavigation(App.Current.MainPage as NavigationPage, ViewModelLocator.LOGIN_PAGE);
+
             Username = kvSettings.Get("username", "");
             Password = kvSettings.Get("password", "");
 

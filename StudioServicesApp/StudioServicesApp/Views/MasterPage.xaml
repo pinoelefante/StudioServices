@@ -15,6 +15,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <StackLayout Orientation="Vertical" Grid.Row="0" BackgroundColor="White">
@@ -30,6 +31,16 @@
                     <Label Text="{Binding Persona.Name}" />
                     <Label Text="{Binding Persona.Surname}" />
                 </StackLayout>
+
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="myCompanyLabel" Text="{Binding CurrentCompany.Name}" HorizontalTextAlignment="Center" />
+                    <Picker x:Name="myCompaniesPicker" ItemsSource="{Binding MyCompanies}" SelectedItem="{Binding SelectedCompany, Mode=TwoWay}" ItemDisplayBinding="{Binding Name}" />
+                    <Button x:Name="addCompanyButton" Text="+" Grid.Column="1" Command="{Binding AddCompanyCommand}" />
+                </Grid>
             </StackLayout>
             
             <!-- Commands List -->
@@ -47,6 +58,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Button Grid.Row="2" Text="Logout" Command="{Binding LogoutCommand}" />
         </Grid>
     </ContentPage.Content>
 </views:MyContentPage>

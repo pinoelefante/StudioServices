@@ -33,7 +33,25 @@
                         </Button.Triggers>
                     </Button>
                 </StackLayout>
-                <ListView x:Name="listAddr" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Addresses}" SelectedItem="{Binding SelectedAddress, Mode=TwoWay}" />
+                <ListView x:Name="listAddr" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Addresses, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Street}"/>
+                                            <Span Text=" n."/>
+                                            <Span Text="{Binding CivicNumber}"/>
+                                            <Span Text=", "/>
+                                            <Span Text="{Binding City}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
 
             <Grid Grid.Row="1">
@@ -56,7 +74,15 @@
                         </Button.Triggers>
                     </Button>
                 </StackLayout>
-                <ListView x:Name="listContacts" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Contacts}" SelectedItem="{Binding SelectedContact, Mode=TwoWay}"/>
+                <ListView x:Name="listContacts" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Contacts, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label Text="{Binding Number}" />
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
 
             <Grid Grid.Row="2">
@@ -79,7 +105,15 @@
                         </Button.Triggers>
                     </Button>
                 </StackLayout>
-                <ListView x:Name="listEmails" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Emails}" SelectedItem="{Binding SelectedEmail, Mode=TwoWay}"/>
+                <ListView x:Name="listEmails" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Emails}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label Text="{Binding Address}" />
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
         </Grid>
     </Grid>

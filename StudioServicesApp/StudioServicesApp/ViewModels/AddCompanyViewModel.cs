@@ -80,7 +80,7 @@ namespace StudioServicesApp.ViewModels
                 var res = await SendRequestAsync(async () => await api.Warehouse_SaveCompanyAsync(company));
                 if (res.IsOK && res.Data != null)
                 {
-                    MessengerInstance.Send(res.Data, "AddCompanyStatus");
+                    MessengerInstance.Send<Company>(res.Data, MSG_MY_COMPANY_ADD);
                     await Navigation.PopPopupAsync();
                 }
                 else

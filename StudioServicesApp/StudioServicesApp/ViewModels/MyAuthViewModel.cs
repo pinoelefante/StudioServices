@@ -13,17 +13,27 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Reflection;
+using StudioServices.Data.Sqlite;
 
 namespace StudioServicesApp.ViewModels
 {
     public class MyAuthViewModel : MyViewModel
     {
-        private Person _person;
-        public Person Persona { get => _person; set => SetMT(ref _person, value); }
-        public Dictionary<Company, List<CompanyProduct>> MyCompanies { get; private set; } = new Dictionary<Company, List<CompanyProduct>>();
-        public List<Company> ClientsSuppliers { get; private set; } = new List<Company>();
+        public static readonly string CACHE_MY_COMPANIES = "MyCompaniesCache",
+            CACHE_IS_ADMIN = "IsAdminCache",
+            CACHE_PERSON = "Person",
+            CACHE_CLIENTS_SUPPLIERS = "ClientsSuppliers";
 
+        private Person _person;
         private bool _isAdmin;
+
+        public Person Persona { get => _person; set => SetMT(ref _person, value); }
+        public MyObservableCollection<Company> MyCompanies { get; } = new MyObservableCollection<Company>();
+        public Dictionary<int, List<CompanyProduct>> ProductList { get; } = new Dictionary<int, List<CompanyProduct>>();
+        public MyObservableCollection<Company> ClientsSuppliers { get; } = new MyObservableCollection<Company>();
+
         public bool IsAdmin { get => _isAdmin; set => SetMT(ref _isAdmin, value); }
         public bool VerifyPersonEnabled { get; set; } = true;
 
@@ -43,90 +53,179 @@ namespace StudioServicesApp.ViewModels
         }
         public override void RegisterMessenger()
         {
-            MessengerInstance.Register<bool>(this, "ReloadPerson", async (force) =>
+            MessengerInstance.Register<Address>(this, MSG_PERSON_ADD_ADDRESS, (address) =>
             {
-                await LoadPersonAsync(force);
+                lock (Persona)
+                {
+                    if (Persona.Addresses.FirstOrDefault(x => x.Id == address.Id) == null)
+                        Persona.Addresses.Add(address);
+                }
+                RaisePropertyChangedMT(() => Persona);
+                RaisePropertyChangedMT(() => Persona.Addresses);
             });
+            MessengerInstance.Register<ContactMethod>(this, MSG_PERSON_ADD_CONTACT, (contact) =>
+            {
+                lock (Persona)
+                {
+                    if (Persona.Contacts.FirstOrDefault(x => x.Id == contact.Id) == null)
+                        Persona.Contacts.Add(contact);
+                }
+                RaisePropertyChangedMT(() => Persona);
+                RaisePropertyChangedMT(() => Persona.Contacts);
+            });
+            MessengerInstance.Register<Email>(this, MSG_PERSON_ADD_EMAIL, (email) =>
+            {
+                lock (Persona)
+                {
+                    if (Persona.Emails.FirstOrDefault(x => x.Id == email.Id) == null)
+                        Persona.Emails.Add(email);
+                }
+                Persona.Emails.Add(email);
+                RaisePropertyChangedMT(() => Persona);
+                RaisePropertyChangedMT(() => Persona.Emails);
+            });
+            MessengerInstance.Register<IdentificationDocument>(this, MSG_PERSON_ADD_DOCUMENT, (doc) =>
+            {
+                lock (Persona)
+                {
+                    if(Persona.Identifications.FirstOrDefault(x => x.Id == doc.Id) == null)
+                        Persona.Identifications.Add(doc);
+                }
+            });
+            MessengerInstance.Register<Company>(this, MSG_MY_COMPANY_ADD, (company) =>
+            {
+                if (company == null)
+                    return;
+
+                if (company.IsClient)
+                {
+                    var clientsList = ClientsSuppliers.ToList();
+                    clientsList.Add(company);
+                    clientsList.Sort(companyComparerByName);
+                    var index = clientsList.IndexOf(company);
+                    ClientsSuppliers.Insert(index, company);
+                    RaisePropertyChanged(() => ClientsSuppliers);
+                }
+                else
+                {
+                    MyCompanies.Add(company);
+                    RaisePropertyChanged(() => MyCompanies);
+                }
+            });
+            MessengerInstance.Register<Address>(this, MSG_PERSON_DEL_ADDRESS, (address) =>
+            {
+                Persona.Addresses.Remove(address);
+            });
+            MessengerInstance.Register<ContactMethod>(this, MSG_PERSON_DEL_CONTACT, (contact) =>
+            {
+                Persona.Contacts.Remove(contact);
+            });
+            MessengerInstance.Register<Email>(this, MSG_PERSON_DEL_EMAIL, (email) =>
+            {
+                Persona.Emails.Remove(email);
+            });
+            MessengerInstance.Register<IdentificationDocument>(this, MSG_PERSON_DEL_DOCUMENT, (doc) =>
+            {
+                Persona.Identifications.Remove(doc);
+            });
+        }
+        public override void UnregisterMessenger()
+        {
+            MessengerInstance.Unregister<Address>(this, MSG_PERSON_ADD_ADDRESS);
+            MessengerInstance.Unregister<Address>(this, MSG_PERSON_DEL_ADDRESS);
+            MessengerInstance.Unregister<ContactMethod>(this, MSG_PERSON_ADD_CONTACT);
+            MessengerInstance.Unregister<ContactMethod>(this, MSG_PERSON_DEL_CONTACT);
+            MessengerInstance.Unregister<Email>(this, MSG_PERSON_ADD_EMAIL);
+            MessengerInstance.Unregister<Email>(this, MSG_PERSON_DEL_EMAIL);
+            MessengerInstance.Unregister<IdentificationDocument>(this, MSG_PERSON_ADD_DOCUMENT);
+            MessengerInstance.Unregister<IdentificationDocument>(this, MSG_PERSON_DEL_DOCUMENT);
         }
         public override void NavigatedFrom()
         {
             base.NavigatedFrom();
+            SaveCache();
+        }
+        protected void SaveCache()
+        {
+            cache.SetValue(CACHE_PERSON, Persona);
+            // TODO - complete saving
         }
         protected async Task LoadPersonAsync(bool force = false)
         {
-            if (force || cache.GetValue<Person>("person", null) == null)
+            if (force || cache.GetValue<Person>(CACHE_PERSON, null) == null)
             {
-                var busy_message = "Recupero profilo in corso";
-                SetBusy(true, busy_message);
                 var res = await SendRequestAsync(async () => await api.Person_GetAsync());
-                SetBusy(false, busy_message);
-                if (res.Code == ResponseCode.OK && res.Data != null)
-                    cache.SetValue("person", res.Data);
+                if (res.IsOK && res.Data != null)
+                    cache.SetValue(CACHE_PERSON, res.Data);
                 else
+                {
                     ShowMessage("Non è stato possibile recuperare le informazioni del profilo", "Informazioni profilo");
+                    return;
+                }
             }
-            Persona = cache.GetValue<Person>("person");
+            Persona = cache.GetValue<Person>(CACHE_PERSON);
+            if(Persona == null)
+            {
+                // TODO : Navigate to loginPage
+                Debug.WriteLine("Catastrophic error: Persona = null");
+            }
+            MessengerInstance.Send<Person>(Persona, MSG_PERSON_LOADED);
 
-            if (cache.GetValue<bool?>("is_admin", null) == null)
+            if (cache.GetValue<bool?>(CACHE_IS_ADMIN, null) == null)
             {
                 var res = await SendRequestAsync(async () => await api.Admin_IsAdminAsync());
-                if (res.Code == ResponseCode.OK)
-                    cache.SetValue("is_admin", res.Data);
+                if (res.IsOK)
+                    cache.SetValue(CACHE_IS_ADMIN, res.Data);
             }
-            var admin = cache.GetValue("is_admin", false);
+            var admin = cache.GetValue(CACHE_IS_ADMIN, false);
             IsAdmin = admin;
         }
         protected async Task LoadCompaniesAsync(bool force = false)
         {
-            if(force || cache.GetValue<Dictionary<Company,List<CompanyProduct>>>("my_companies",null) == null)
+            if (force || cache.GetValue<List<Company>>(CACHE_MY_COMPANIES, null) == null)
             {
                 var res = await SendRequestAsync(async () => await api.Warehouse_GetMyCompaniesAsync());
-                if (res.Code == ResponseCode.OK && res.Data != null)
+                if (res.Code == ResponseCode.OK && res.Data != null && res.Data.Any())
                 {
-                    MyCompanies.Clear();
-                    foreach(var c in res.Data)
-                        MyCompanies.Add(c, new List<CompanyProduct>());
-                    cache.SetValue("my_companies", MyCompanies);
+                    cache.SetValue(CACHE_MY_COMPANIES, res.Data);
+                    MessengerInstance.Send<List<Company>>(res.Data, MSG_MY_COMPANY_LOADED);
                 }
                 else
+                {
                     ShowMessage("Non è stato possibile recuperare le informazioni delle aziende", "Aziende");
+                    return;
+                }
             }
-            else
-                MyCompanies = cache.GetValue<Dictionary<Company, List<CompanyProduct>>>("my_companies", new Dictionary<Company, List<CompanyProduct>>());
+            var companies = cache.GetValue<List<Company>>(CACHE_MY_COMPANIES, null);
+            MyCompanies.AddRange(companies, true);
             RaisePropertyChanged(() => MyCompanies);
         }
         protected async Task LoadClientsSuppliersAsync(bool force = false)
         {
-            if (force || cache.GetValue<List<Company>>("clients_suppliers", null) == null)
+            if (force || cache.GetValue<List<Company>>(CACHE_CLIENTS_SUPPLIERS, null) == null)
             {
                 var res = await SendRequestAsync(async () => await api.Warehouse_ClientsSuppliersList());
                 if (res.IsOK && res.Data != null)
+                    cache.SetValue(CACHE_CLIENTS_SUPPLIERS, res.Data);
+                else
                 {
-                    cache.SetValue("clients_suppliers", res.Data);
-                    ClientsSuppliers.Clear();
-                    ClientsSuppliers.AddRange(res.Data);
+                    // not retrieved
+                    return;
                 }
             }
-            else
-                ClientsSuppliers = cache.GetValue<List<Company>>("clients_suppliers");
+            var clients = cache.GetValue<List<Company>>(CACHE_CLIENTS_SUPPLIERS, null);
+            ClientsSuppliers.AddRange(clients, true);
             RaisePropertyChanged(() => ClientsSuppliers);
-        }
-        public List<Company> GetMyCompaniesList()
-        {
-            List<Company> list = new List<Company>();
-            if(MyCompanies!=null)
-            {
-                foreach (var company in MyCompanies.Keys)
-                    list.Add(company);
-            }
-            list.Sort(companyComparerByName);
-            list.TrimExcess();
-            return list;
         }
         protected void CheckPerson()
         {
             if (Persona == null)
+            {
+                // var logout = SendRequestAsync(async () => await api.Authentication_LogoutAsync()).Result;
+                // App.Current.MainPage = new LoginPage();
+                Debug.WriteLine("Person is null, but can't be null");
                 throw new Exception("Person is null, but can't be null");
+            }
             if(Persona.Identifications.Count == 0)
             {
                 Device.BeginInvokeOnMainThread(() =>
@@ -135,14 +234,6 @@ namespace StudioServicesApp.ViewModels
                 });
             }
         }
-        public Company GetMyCompany(int id)
-        {
-            foreach (var k in MyCompanies.Keys)
-                if (k.Id == id)
-                    return k;
-            return null;
-        }
-        public Company GetClientSupplier(int id) => ClientsSuppliers.Find(x => x.Id == id);
 
         private RelayCommand openAddAddressPopup, openAddContactPopup, openAddEmailPopup;
         private RelayCommand<string> openAddCompanyPopup;
@@ -151,37 +242,18 @@ namespace StudioServicesApp.ViewModels
             openAddAddressPopup ??
             (openAddAddressPopup = new RelayCommand(() =>
             {
-                MessengerInstance.Register<bool>(this, "AddAddressStatus", async (x) =>
-                {
-                    Debug.WriteLine("AddAddressStatusMessenger");
-                    await LoadPersonAsync(true);
-
-                    MessengerInstance.Unregister<bool>(this, "AddAddressStatus");
-                });
                 Navigation.PushPopupAsync(new AddAddressPopup());
             }));
         public RelayCommand OpenAddContactPopupCommand =>
             openAddContactPopup ??
             (openAddContactPopup = new RelayCommand(() =>
             {
-                MessengerInstance.Register<bool>(this, "AddContactStatus", async (x) =>
-                {
-                    MessengerInstance.Unregister<bool>("AddContactStatus");
-                    if (x)
-                        await LoadPersonAsync(true);
-                });
                 Navigation.PushPopupAsync(new AddContactMethodPopup());
             }));
         public RelayCommand OpenAddEmailPopupCommand =>
             openAddEmailPopup ??
             (openAddEmailPopup = new RelayCommand(() =>
             {
-                MessengerInstance.Register<bool>(this, "AddEmailStatus", async (x) =>
-                {
-                    MessengerInstance.Unregister<bool>("AddEmailStatus");
-                    if (x)
-                        await LoadPersonAsync(true);
-                });
                 Navigation.PushPopupAsync(new AddEmailPopup());
             }));
         private static CompanyComparerByName companyComparerByName = new CompanyComparerByName();
@@ -190,23 +262,6 @@ namespace StudioServicesApp.ViewModels
             (openAddCompanyPopup = new RelayCommand<string>((isClientS) =>
             {
                 bool isClient = bool.Parse(isClientS);
-                MessengerInstance.Register<Company>(this, "AddCompanyStatus", (company) =>
-                {
-                    MessengerInstance.Unregister<Company>(this, "AddCompanyStatus");
-                    if (company == null)
-                        return;
-                    if (company.IsClient)
-                    {
-                        ClientsSuppliers.Add(company);
-                        ClientsSuppliers.Sort(companyComparerByName);
-                        RaisePropertyChanged(() => ClientsSuppliers);
-                    }
-                    else
-                    {
-                        MyCompanies.Add(company, new List<CompanyProduct>());
-                        RaisePropertyChanged(() => MyCompanies);
-                    }
-                });
                 Navigation.PushPopupAsync(new AddCompanyPopup(isClient));
             }));
     }

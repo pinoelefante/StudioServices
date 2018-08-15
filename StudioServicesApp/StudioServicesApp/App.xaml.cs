@@ -16,7 +16,6 @@ namespace StudioServicesApp
             
             var nav = new NavigationPage(new LoginPage());
             MainPage = nav;
-            ConfigureNavigation(nav, ViewModelLocator.LOGIN_PAGE);
         }
         public static void ConfigureNavigation(NavigationPage nav, string homePageKey, bool askToClose = false)
         {

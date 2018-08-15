@@ -49,6 +49,11 @@ namespace StudioServicesApp.Services
             WS_ADDRESS = $"{protocol}://{server_name}:{port}";
             kvSettings.Add("server_address", WS_ADDRESS);
         }
+        public void Clear()
+        {
+            kvSettings.Remove("session_id");
+            web.RemoveCookies(GetServerAddress());
+        }
         public string GetServerAddress() => WS_ADDRESS;
 
         #region Test
@@ -113,10 +118,10 @@ namespace StudioServicesApp.Services
             var prms = new ParametersList("person_id", person_id.ToString(), "status", status.ToString());
             return await SendRequestAsync<Person>(address, HttpMethod.GET, prms);
         }
-        public async Task<ResponseMessage<bool>> Person_AddDocumentAsync(IdentificationDocument document)
+        public async Task<ResponseMessage<int>> Person_AddDocumentAsync(IdentificationDocument document)
         {
             var address = $"{WS_ADDRESS}/api/person/document";
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, document);
+            return await SendRequestAsync<int>(address, HttpMethod.POST, document);
         }
         public async Task<ResponseMessage<bool>> Person_DeleteDocumentAsync(int id)
         {
@@ -124,10 +129,10 @@ namespace StudioServicesApp.Services
             var prmts = new ParametersList("id", id.ToString());
             return await SendRequestAsync<bool>(address, HttpMethod.DELETE, prmts);
         }
-        public async Task<ResponseMessage<bool>> Person_AddContactAsync(ContactMethod contact)
+        public async Task<ResponseMessage<int>> Person_AddContactAsync(ContactMethod contact)
         {
             var address = $"{WS_ADDRESS}/api/person/contact";
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, contact);
+            return await SendRequestAsync<int>(address, HttpMethod.POST, contact);
         }
         public async Task<ResponseMessage<bool>> Person_DeleteContactAsync(int id)
         {
@@ -135,10 +140,10 @@ namespace StudioServicesApp.Services
             var prmts = new ParametersList("id", id.ToString());
             return await SendRequestAsync<bool>(address, HttpMethod.DELETE, prmts);
         }
-        public async Task<ResponseMessage<bool>> Person_AddAddressAsync(Address address)
+        public async Task<ResponseMessage<int>> Person_AddAddressAsync(Address address)
         {
             var url_address = $"{WS_ADDRESS}/api/person/address";
-            return await SendRequestAsync<bool>(url_address, HttpMethod.POST, address);
+            return await SendRequestAsync<int>(url_address, HttpMethod.POST, address);
         }
         public async Task<ResponseMessage<bool>> Person_DeleteAddressAsync(int id)
         {
@@ -146,10 +151,10 @@ namespace StudioServicesApp.Services
             var prmts = new ParametersList("id", id.ToString());
             return await SendRequestAsync<bool>(address, HttpMethod.DELETE, prmts);
         }
-        public async Task<ResponseMessage<bool>> Person_AddEmailAsync(Email email)
+        public async Task<ResponseMessage<int>> Person_AddEmailAsync(Email email)
         {
             var url_address = $"{WS_ADDRESS}/api/person/email";
-            return await SendRequestAsync<bool>(url_address, HttpMethod.POST, email);
+            return await SendRequestAsync<int>(url_address, HttpMethod.POST, email);
         }
         public async Task<ResponseMessage<bool>> Person_DeleteEmailAsync(int id)
         {
@@ -210,10 +215,10 @@ namespace StudioServicesApp.Services
             var address = $"{WS_ADDRESS}/api/warehouse/products/{companyId}";
             return await SendRequestAsync<List<CompanyProduct>>(address, HttpMethod.GET);
         }
-        public async Task<ResponseMessage<bool>> Warehouse_SaveProduct(CompanyProduct product)
+        public async Task<ResponseMessage<Tuple<int,string>>> Warehouse_SaveProduct(CompanyProduct product)
         {
             var address = $"{WS_ADDRESS}/api/warehouse/product";
-            return await SendRequestAsync<bool>(address, HttpMethod.POST, product);
+            return await SendRequestAsync<Tuple<int,string>>(address, HttpMethod.POST, product);
         }
         public async Task<ResponseMessage<List<Company>>> Warehouse_ClientsSuppliersList()
         {

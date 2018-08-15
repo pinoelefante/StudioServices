@@ -97,7 +97,7 @@ namespace StudioServicesApp.ViewModels
         private ServerEmailConfig GetConfigFromJson(string domain)
         {
             if(EmailConfigs == null || EmailConfigs.Count == 0)
-                EmailConfigs = assembly_files.ReadLocalJson<List<JsonServerEmailConfig>>("PecConfigs.json");
+                EmailConfigs = assembly_files.ReadLocalJson<List<JsonServerEmailConfig>>("EmailsConfigs.json");
             foreach(var conf in EmailConfigs)
             {
                 if (conf.domains.Contains(domain))
@@ -114,9 +114,10 @@ namespace StudioServicesApp.ViewModels
                 if(Email.IsValid())
                 {
                     var res = await SendRequestAsync(async () => await api.Person_AddEmailAsync(Email));
-                    if(res.IsOK && res.Data)
+                    if(res.IsOK)
                     {
-                        MessengerInstance.Send(true, "AddEmailStatus");
+                        Email.Id = res.Data;
+                        MessengerInstance.Send<Email>(Email, MSG_PERSON_ADD_EMAIL);
                         await Navigation.PopPopupAsync();
                     }
                     else

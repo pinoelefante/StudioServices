@@ -40,7 +40,8 @@ namespace StudioServicesApp.ViewModels
                 var response = await SendRequestAsync(async () => await api.Person_AddContactAsync(contact));
                 if (response.IsOK)
                 {
-                    MessengerInstance.Send(true, "AddContactStatus");
+                    contact.Id = response.Data;
+                    MessengerInstance.Send<ContactMethod>(contact, MSG_PERSON_ADD_CONTACT);
                     await Navigation.PopPopupAsync();
                 }
                 else

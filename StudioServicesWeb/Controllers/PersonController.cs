@@ -54,13 +54,13 @@ namespace StudioServicesWeb.Controllers
 
         [Route("document")]
         [HttpPost]
-        public Response<bool> AddDocument([FromBody]IdentificationDocument document)
+        public Response<int> AddDocument([FromBody]IdentificationDocument document)
         {
             var checkCode = CheckLoginAndPerson(document);
             if (checkCode != ResponseCode.OK)
-                return CreateBoolean(false, checkCode);
+                return CreateResponse<int>(-1, checkCode);
             bool res = persons.AddIdentificationDocument(document);
-            return CreateBoolean(res);
+            return CreateResponse(res ? document.Id : -1, res ? ResponseCode.OK : ResponseCode.FAIL);
         }
 
         [Route("document")]
@@ -75,13 +75,13 @@ namespace StudioServicesWeb.Controllers
 
         [Route("contact")]
         [HttpPost]
-        public Response<bool> AddContact([FromBody]ContactMethod contact)
+        public Response<int> AddContact([FromBody]ContactMethod contact)
         {
             var checkCode = CheckLoginAndPerson(contact);
             if (checkCode != ResponseCode.OK)
-                return CreateBoolean(false, checkCode);
+                return CreateResponse<int>(-1, checkCode);
             var res = persons.AddContactNumber(contact);
-            return CreateBoolean(res);
+            return CreateResponse(res ? contact.Id : -1, res ? ResponseCode.OK : ResponseCode.FAIL);
         }
         [Route("contact")]
         [HttpDelete]
@@ -93,13 +93,13 @@ namespace StudioServicesWeb.Controllers
 
         [Route("address")]
         [HttpPost]
-        public Response<bool> AddAddress([FromBody]Address address)
+        public Response<int> AddAddress([FromBody]Address address)
         {
             var checkCode = CheckLoginAndPerson(address);
             if (checkCode != ResponseCode.OK)
-                return CreateBoolean(false, checkCode);
+                return CreateResponse(-1, checkCode);
             var res = persons.AddAddress(address);
-            return CreateBoolean(res);
+            return CreateResponse(res ? address.Id : -1, res ? ResponseCode.OK : ResponseCode.FAIL);
         }
 
         [Route("address")]
@@ -112,13 +112,13 @@ namespace StudioServicesWeb.Controllers
 
         [Route("email")]
         [HttpPost]
-        public Response<bool> AddEmail([FromBody]Email email)
+        public Response<int> AddEmail([FromBody]Email email)
         {
             var user_ok = CheckLoginAndPerson(email);
             if (user_ok != ResponseCode.OK)
-                return CreateBoolean(false, user_ok);
+                return CreateResponse<int>(-1, user_ok);
             var res = persons.AddEmail(email);
-            return CreateBoolean(res);
+            return CreateResponse(res ? email.Id : -1, res ? ResponseCode.OK : ResponseCode.FAIL);
         }
 
         [Route("email")]

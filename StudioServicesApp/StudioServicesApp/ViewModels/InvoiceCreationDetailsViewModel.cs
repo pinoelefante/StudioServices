@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
@@ -25,8 +26,8 @@ namespace StudioServicesApp.ViewModels
         {
             await base.NavigatedToAsync();
             CurrentInvoice = parameter as Invoice;
-            MyCompany = GetMyCompany(CurrentInvoice.SenderId);
-            RecipientCompany = GetClientSupplier(CurrentInvoice.Recipient); 
+            MyCompany = MyCompanies.FirstOrDefault(x => x.Id == CurrentInvoice.SenderId);
+            RecipientCompany = ClientsSuppliers.FirstOrDefault(x => x.Id == CurrentInvoice.Recipient);
         }
         private RelayCommand _openAddInvoiceProductCmd;
 
