@@ -10,10 +10,8 @@ namespace StudioServicesApp.ViewModels
 {
     public class AddAddressViewModel : MyAuthViewModel
     {
-        public AddAddressViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k)
-        {
-            OnClosePopupMessengerToken = "AddAddressStatus";
-        }
+        public AddAddressViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
+
         private int typeIndex = 0;
         private string address, civicNum, city, province, zipcode, country = "IT", description;
         public int TypeIndex { get => typeIndex; set => SetMT(ref typeIndex, value); }

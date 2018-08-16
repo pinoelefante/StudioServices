@@ -22,10 +22,8 @@ namespace StudioServicesApp.ViewModels
         private string address, civicNum, city, province, zipcode, nation, addressNote;
         private bool isClient;
 
-        public AddCompanyViewModel(INavigationService n, StudioServicesApi a, AlertService alert, KeyValueService k) : base(n, a, alert, k)
-        {
-            OnClosePopupMessengerToken = "AddCompanyStatus";
-        }
+        public AddCompanyViewModel(INavigationService n, StudioServicesApi a, AlertService alert, KeyValueService k) : base(n, a, alert, k) { }
+
         public override async Task NavigatedToAsync(object parameter = null)
         {
             IsClient = parameter == null ? false : (bool)parameter;

@@ -26,6 +26,7 @@ namespace StudioServicesWeb.Controllers.Warehouse
             if (company == null || company.PersonId != _getPersonId())
                 return CreateResponse<Tuple<int, string>>(default(Tuple<int,string>), ResponseCode.FAIL, "Operazione non autorizzata");
 
+            product.PersonId = company.PersonId;
             bool res = manager.SaveProduct(product);
             return CreateResponse<Tuple<int,string>>(res ? new Tuple<int,string>(product.Id,product.ProductCode) : default(Tuple<int,string>), res ? ResponseCode.OK : ResponseCode.FAIL);
         }

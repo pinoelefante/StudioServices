@@ -52,7 +52,18 @@ namespace StudioServicesApp.ViewModels
                 Product.UnitMeasure = (InvoiceQuantity)Enum.Parse(typeof(InvoiceQuantity), SelectedUnitType);
 
                 var response = await SendRequestAsync(async () => await api.Warehouse_SaveProduct(Product));
-                //TODO
+
+                if(response.IsOK && response.Data != null)
+                {
+                    Product.Id = response.Data.Item1;
+                    Product.ProductCode = response.Data.Item2;
+                    MessengerInstance.Send<CompanyProduct>(Product, MSG_MY_COMPANY_PRODUCT_ADD);
+                    await Navigation.PopPopupAsync();
+                }
+                else
+                {
+                    ShowMessage("Prodotto non inserito", "Inserimento prodotto");
+                }
             }));
     }
 }

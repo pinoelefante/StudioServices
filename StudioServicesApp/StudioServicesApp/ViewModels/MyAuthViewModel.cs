@@ -24,7 +24,8 @@ namespace StudioServicesApp.ViewModels
         public static readonly string CACHE_MY_COMPANIES = "MyCompaniesCache",
             CACHE_IS_ADMIN = "IsAdminCache",
             CACHE_PERSON = "Person",
-            CACHE_CLIENTS_SUPPLIERS = "ClientsSuppliers";
+            CACHE_CLIENTS_SUPPLIERS = "ClientsSuppliers",
+            CACHE_PRODUCTS = "ProductsList";
 
         private Person _person;
         private bool _isAdmin;
@@ -60,8 +61,6 @@ namespace StudioServicesApp.ViewModels
                     if (Persona.Addresses.FirstOrDefault(x => x.Id == address.Id) == null)
                         Persona.Addresses.Add(address);
                 }
-                RaisePropertyChangedMT(() => Persona);
-                RaisePropertyChangedMT(() => Persona.Addresses);
             });
             MessengerInstance.Register<ContactMethod>(this, MSG_PERSON_ADD_CONTACT, (contact) =>
             {
@@ -70,8 +69,6 @@ namespace StudioServicesApp.ViewModels
                     if (Persona.Contacts.FirstOrDefault(x => x.Id == contact.Id) == null)
                         Persona.Contacts.Add(contact);
                 }
-                RaisePropertyChangedMT(() => Persona);
-                RaisePropertyChangedMT(() => Persona.Contacts);
             });
             MessengerInstance.Register<Email>(this, MSG_PERSON_ADD_EMAIL, (email) =>
             {
@@ -80,9 +77,6 @@ namespace StudioServicesApp.ViewModels
                     if (Persona.Emails.FirstOrDefault(x => x.Id == email.Id) == null)
                         Persona.Emails.Add(email);
                 }
-                Persona.Emails.Add(email);
-                RaisePropertyChangedMT(() => Persona);
-                RaisePropertyChangedMT(() => Persona.Emails);
             });
             MessengerInstance.Register<IdentificationDocument>(this, MSG_PERSON_ADD_DOCUMENT, (doc) =>
             {
@@ -128,6 +122,12 @@ namespace StudioServicesApp.ViewModels
             {
                 Persona.Identifications.Remove(doc);
             });
+            MessengerInstance.Register<CompanyProduct>(this, MSG_MY_COMPANY_PRODUCT_ADD, (product) =>
+            {
+                if (!ProductList.ContainsKey(product.CompanyId))
+                    ProductList.Add(product.CompanyId, new List<CompanyProduct>());
+                ProductList[product.CompanyId].Add(product);
+            });
         }
         public override void UnregisterMessenger()
         {
@@ -139,11 +139,16 @@ namespace StudioServicesApp.ViewModels
             MessengerInstance.Unregister<Email>(this, MSG_PERSON_DEL_EMAIL);
             MessengerInstance.Unregister<IdentificationDocument>(this, MSG_PERSON_ADD_DOCUMENT);
             MessengerInstance.Unregister<IdentificationDocument>(this, MSG_PERSON_DEL_DOCUMENT);
+            MessengerInstance.Unregister<CompanyProduct>(this, MSG_MY_COMPANY_PRODUCT_ADD);
         }
         public override void NavigatedFrom()
         {
             base.NavigatedFrom();
             SaveCache();
+        }
+        protected void LoadCache()
+        {
+
         }
         protected void SaveCache()
         {
@@ -216,6 +221,21 @@ namespace StudioServicesApp.ViewModels
             var clients = cache.GetValue<List<Company>>(CACHE_CLIENTS_SUPPLIERS, null);
             ClientsSuppliers.AddRange(clients, true);
             RaisePropertyChanged(() => ClientsSuppliers);
+        }
+        protected async Task<List<CompanyProduct>> GetProductsAsync(int companyId)
+        {
+            lock(ProductList)
+            {
+                if (!ProductList.ContainsKey(companyId))
+                    ProductList.Add(companyId, null);
+            }
+            if(ProductList.ContainsKey(companyId) && ProductList[companyId]==null)
+            {
+                var response = await SendRequestAsync(async () => await api.Warehouse_GetCompanyProducts(companyId));
+                if (response.IsOK)
+                    ProductList[companyId] = response.Data;
+            }
+            return ProductList.ContainsKey(companyId) ? ProductList[companyId] : null;
         }
         protected void CheckPerson()
         {

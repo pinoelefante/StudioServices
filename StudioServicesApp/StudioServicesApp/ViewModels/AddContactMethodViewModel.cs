@@ -14,10 +14,8 @@ namespace StudioServicesApp.ViewModels
         private string number;
         private int typeIndex=0;
         private RelayCommand addCommand;
-        public AddContactMethodViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k)
-        {
-            OnClosePopupMessengerToken = "AddContactStatus";
-        }
+        public AddContactMethodViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
+
         public int TypeIndex { get => typeIndex; set => SetMT(ref typeIndex, value); }
         public string Number { get => number; set => SetMT(ref number, value); }
         public bool IsWhatsapp { get => whatsapp; set => SetMT(ref whatsapp, value); }

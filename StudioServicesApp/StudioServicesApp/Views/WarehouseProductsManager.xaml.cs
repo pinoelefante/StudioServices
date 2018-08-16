@@ -13,7 +13,7 @@ namespace StudioServicesApp.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class WarehouseProductsManager : MyContentPage
 	{
-		public WarehouseProductsManager ()
+		public WarehouseProductsManager () : base()
 		{
 			InitializeComponent ();
 		}

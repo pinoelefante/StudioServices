@@ -238,14 +238,12 @@ namespace pinoelefante.ViewModels
                 return oldValue;
             return newValue;
         }
-        public string OnClosePopupMessengerToken { get; set; }
+
         private RelayCommand closePopupCmd;
         public RelayCommand ClosePopupCommand =>
             closePopupCmd ??
             (closePopupCmd = new RelayCommand(() =>
             {
-                if (!string.IsNullOrEmpty(OnClosePopupMessengerToken))
-                    MessengerInstance.Send(false, OnClosePopupMessengerToken);
                 Navigation.PopPopupAsync();
             }));
     }
