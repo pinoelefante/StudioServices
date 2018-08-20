@@ -18,95 +18,45 @@ namespace StudioServicesApp.ViewModels
 {
     public class InvoiceCreationHomeViewModel : MyAuthViewModel
     {
-        
-        private RelayCommand nextPageCommand;
-
         public InvoiceCreationHomeViewModel(INavigationService n, StudioServicesApi a, AlertService al, KeyValueService k) : base(n, a, al, k) { }
+
+        private Invoice invoice;
+        private DateTime invoiceDate = DateTime.Now;
+        private Company selectedCompany = null;
+        private string invoiceNumberText = string.Empty, invoiceNumberTextExtra = string.Empty;
+
+        private RelayCommand nextPageCommand;
+        private RelayCommand<string> searchClientSupplierCmd;
+
+        public MyObservableCollection<Company> CompanyList { get; } = new MyObservableCollection<Company>();
+        public string InvoiceNumberText { get => invoiceNumberText; set => SetMT(ref invoiceNumberText, IntValidation(invoiceNumberText, value)); }
+        public string InvoiceNumberExtraText { get => invoiceNumberTextExtra; set => SetMT(ref invoiceNumberTextExtra, StringValidation(InvoiceNumberExtraText, value, 5)); }
+
+        public Invoice Invoice { get => invoice; set => SetMT(ref invoice, value); }
 
         public override async Task NavigatedToAsync(object parameter = null)
         {
-            base.PropertyChanged += InvoiceCreationHomeViewModel_PropertyChangedAsync;
             await base.NavigatedToAsync();
+            Invoice = parameter as Invoice;
+
             Device.BeginInvokeOnMainThread(() =>
             {
-                PopulateFields(parameter as Invoice);
-
-                if (SelectedIndexInvoiceType < 0)
-                    SelectedIndexInvoiceType = 0;
+                PopulateFields(Invoice);
+                SearchClientSupplierCommand.Execute(null);
             });
         }
-        private void InvoiceCreationHomeViewModel_PropertyChangedAsync(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public override void RegisterMessenger()
         {
-            Device.BeginInvokeOnMainThread(() =>
+            MessengerInstance.Register<Company>(this, MSG_MY_COMPANY_CLIENT_ADD, (company) =>
             {
-                Debug.WriteLine("PropertyChanged: " + e.PropertyName);
-                switch (e.PropertyName)
-                {
-                    case nameof(MyCompanies):
-                        if (MyCompanies.Count == 0)
-                        {
-                            using (UserDialogs.Instance.Confirm(
-                                new ConfirmConfig()
-                                {
-                                    Message = "Non sono presenti aziende.",
-                                    Title = "Aggiungi azienda",
-                                    OkText = "Aggiungi",
-                                    CancelText = "Indietro",
-                                    OnAction = (res) =>
-                                    {
-                                        if (res)
-                                            OpenAddCompanyPopup.Execute(false);
-                                        else
-                                            Navigation.NavigateTo(ViewModelLocator.NEWS_PAGE);
-                                    }
-                                })) { }
-                        }
-                        else if (MyCompanies.Count != ListCompanies.Count)
-                        {
-                            ListCompanies.AddRange(MyCompanies, true);
-                            SelectedMyCompanyIndex = SelectedMyCompany != null ? ListCompanies.IndexOf(SelectedMyCompany) : (ListCompanies.Count > 0 ? 0 : -1);
-                        }
-                        break;
-                    case nameof(ClientsSuppliers):
-                        SearchClientSupplierCommand.Execute(null);
-                        break;
-                }
+                SearchClientSupplierCommand.Execute(null);
             });
         }
-        public override void NavigatedFrom()
+        public override void UnregisterMessenger()
         {
-            base.PropertyChanged -= InvoiceCreationHomeViewModel_PropertyChangedAsync;
-            Cleanup();
+            MessengerInstance.Unregister<Company>(this, MSG_MY_COMPANY_CLIENT_DEL);
         }
 
-        private DateTime invoiceDate = DateTime.Now;
-        private int invoiceTypeIndex = -1, myCompanyIndex = -1;
-        private Company selectedCompany = null, myCompany = null;
-        private string invoiceNumberText = string.Empty, invoiceNumberTextExtra = string.Empty;
-        public int SelectedMyCompanyIndex
-        {
-            get => myCompanyIndex;
-            set
-            {
-                if (myCompanyIndex != value)
-                {
-                    SetMT(ref myCompanyIndex, value);
-                    InitInvoiceNumber();
-                }
-            }
-        }
-        public int SelectedIndexInvoiceType
-        {
-            get => invoiceTypeIndex;
-            set
-            {
-                if (invoiceTypeIndex != value)
-                {
-                    SetMT(ref invoiceTypeIndex, value);
-                    InitInvoiceNumber();
-                }
-            }
-        }
         public DateTime InvoiceDate
         {
             get => invoiceDate;
@@ -116,31 +66,19 @@ namespace StudioServicesApp.ViewModels
                 InitInvoiceNumber();
             }
         }
-        public Company SelectedMyCompany
-        {
-            get => myCompany;
-            set
-            {
-                SetMT(ref myCompany, value);
-                InitInvoiceNumber();
-            }
-        }
         public Company SelectedCompany
         {
             get => selectedCompany;
             set => SetMT(ref selectedCompany, value);
         }
-        public MyObservableCollection<Company> ListCompanies { get; } = new MyObservableCollection<Company>();
-        public MyObservableCollection<Company> CompanyList { get; } = new MyObservableCollection<Company>();
-        public string InvoiceNumberText { get => invoiceNumberText; set => SetMT(ref invoiceNumberText, IntValidation(invoiceNumberText, value)); }
-        public string InvoiceNumberExtraText { get => invoiceNumberTextExtra; set => SetMT(ref invoiceNumberTextExtra, StringValidation(InvoiceNumberExtraText, value, 5)); }
-
+        
         private void InitInvoiceNumber()
         {
-            var invoiceType = (InvoiceType)Enum.ToObject(typeof(InvoiceType), SelectedIndexInvoiceType);
+            if (Invoice == null)
+                return;
             var invoiceYear = InvoiceDate.Year;
             InvoiceNumberExtraText = string.Empty;
-            switch (invoiceType)
+            switch (Invoice.Type)
             {
                 case InvoiceType.PURCHASE:
                     InvoiceNumberText = string.Empty;
@@ -153,13 +91,11 @@ namespace StudioServicesApp.ViewModels
         }
         private void PopulateFields(Invoice invoice)
         {
-            if (invoice == null)
-                return;
+            Cleanup();
+
             InvoiceDate = invoice.Emission;
             InvoiceNumberText = invoice.Number.ToString();
             InvoiceNumberExtraText = invoice.NumberExtra;
-            SelectedIndexInvoiceType = (int)invoice.Type;
-            SelectedMyCompanyIndex = ListCompanies.IndexOf(MyCompanies.First(x => x.Id == invoice.SenderId));
             SelectedCompany = ClientsSuppliers.FirstOrDefault(x => x.Id == invoice.Recipient);
         }
         private int GetNextInvoiceNumber(int year)
@@ -168,68 +104,59 @@ namespace StudioServicesApp.ViewModels
             return 1;
         }
         public RelayCommand NextInvoicePageCommand => nextPageCommand ??
-            (nextPageCommand = new RelayCommand(() =>
+            (nextPageCommand = new RelayCommand(async () =>
             {
-                if (VerifyInvoiceHome())
+                if (await VerifyInvoiceHomeAsync())
                 {
-                    Invoice invoice = new Invoice()
-                    {
-                        Emission = InvoiceDate,
-                        Number = Int32.Parse(InvoiceNumberText),
-                        NumberExtra = InvoiceNumberExtraText,
-                        SenderId = SelectedMyCompany.Id,
-                        Recipient = SelectedCompany.Id,
-                        Type = (InvoiceType)Enum.ToObject(typeof(InvoiceType), SelectedIndexInvoiceType)
-                    };
-                    Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_DETAILS, invoice);
+                    Invoice.Emission = InvoiceDate;
+                    Invoice.Number = Int32.Parse(InvoiceNumberText);
+                    Invoice.NumberExtra = InvoiceNumberExtraText;
+                    Invoice.Recipient = SelectedCompany.Id;
+
+                    Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_DETAILS, Invoice);
                 }
             }));
-        private bool VerifyInvoiceHome()
+        private async Task<bool> VerifyInvoiceHomeAsync()
         {
-            if(SelectedMyCompany == null)
-            {
-                ShowMessage("Seleziona la tua azienda");
-                return false;
-            }
-            if(SelectedIndexInvoiceType < 0 || SelectedIndexInvoiceType > 1)
-            {
-                ShowMessage("Seleziona il tipo di fattura");
-                return false;
-            }
             //DataFattura
-
-            // TODO: verifica che il numero della fattura non esista
+            
+            // TODO: verifica che il numero della fattura non esista (anno - numero fattura - numero extra)
             if (string.IsNullOrEmpty(IntValidation(string.Empty, InvoiceNumberText, false)))
             {
                 ShowMessage("Inserisci un numero di fattura valido");
                 return false;
             }
-            //NumeroExtra
-            if(SelectedCompany == null)
+            if(InvoiceDate.Year < DateTime.Now.Year)
+            {
+                var confirm = await UserDialogs.Instance.ConfirmAsync($"Stai inserendo una fattura del {InvoiceDate.Year} ma siamo nel {DateTime.Now.Year}. Vuoi continuare?", "Verifica anno della fattura", "Si", "No");
+                if (!confirm)
+                    return false;
+            }
+
+            // NumeroExtra
+            if (SelectedCompany == null)
             {
                 ShowMessage("Seleziona il cliente/fornitore");
                 return false;
             }
             return true;
         }
-        private RelayCommand<string> searchCSCmd;
         public RelayCommand<string> SearchClientSupplierCommand =>
-            searchCSCmd ??
-            (searchCSCmd = new RelayCommand<string>(search =>
+            searchClientSupplierCmd ??
+            (searchClientSupplierCmd = new RelayCommand<string>(search =>
             {
-                CompanyList.Clear();
                 if(string.IsNullOrEmpty(search))
-                    CompanyList.AddRange(base.ClientsSuppliers);
+                    CompanyList.AddRange(base.ClientsSuppliers, true);
                 else
                 {
                     var lowersearch = search.ToLower();
-                    var res = ClientsSuppliers.Where(x => x.Name.ToLower().Contains(lowersearch) || x.VATNumber.StartsWith(lowersearch));
-                    CompanyList.AddRange(res);
+                    var res = ClientsSuppliers.Where(x => x.Name.ToLower().Contains(lowersearch) || x.VATNumber.Contains(lowersearch));
+                    CompanyList.AddRange(res, true);
                 }
             }));
+
         public override void Cleanup()
         {
-            ListCompanies.Clear();
             CompanyList.Clear();
             SelectedCompany = null;
             InvoiceNumberText = string.Empty;

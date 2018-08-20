@@ -8,9 +8,7 @@ namespace StudioServices.Data.EntityFramework
     {
         [ForeignKey(nameof(Person))]
         public virtual int PersonId { get; set; }
-        /*
-        [JsonIgnore]
+        
         public virtual Person Person { get; set; }
-        */
     }
 }

@@ -20,68 +20,75 @@
         <!-- Riepilogo mittente/destinatario -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <!-- Mittente -->
-            <Grid Grid.Row="0" Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0" Text="Mittente" FontAttributes="Bold"/>
-                <Label Grid.Row="1" Text="{Binding MyCompany.Name}"/>
-                <Label Grid.Row="2" Text="{Binding MyCompany.VATNumber}"/>
-                <!--<Label Grid.Row="3" Text="{Binding MyCompany.Address}"/>-->
-            </Grid>
-            
-            <!-- Destinatario -->
-            <Grid Grid.Row="0" Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0" Text="Destinatario" FontAttributes="Bold"/>
-                <Label Grid.Row="1" Text="{Binding RecipientCompany.Name}"/>
-                <Label Grid.Row="2" Text="{Binding RecipientCompany.VATNumber}"/>
-                <!--<Label Grid.Row="3" Text="{Binding RecipientCompany.Address}"/>-->
-            </Grid>
+
+
+            <Button Grid.Row="0" Grid.Column="0" Text="Show" />
+            <Label Grid.Row="0" Grid.Column="1" LineBreakMode="CharacterWrap">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Mittente: " FontAttributes="Bold" />
+                        <Span Text="{Binding Invoice.Sender.Name, Mode=OneWay}" />
+                        <Span Text=", " />
+                        <Span Text="{Binding Invoice.Sender.VATNumber, Mode=OneWay}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Button Grid.Row="1" Grid.Column="0" Text="Show" />
+            <Label Grid.Row="1" Grid.Column="1" LineBreakMode="CharacterWrap">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Destinatario: " FontAttributes="Bold" />
+                        <Span Text="{Binding RecipientCompany.Name, Mode=OneWay}" />
+                        <Span Text=", " />
+                        <Span Text="{Binding RecipientCompany.VATNumber, Mode=OneWay}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
             
             <!-- Fattura -->
-            <ScrollView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <ScrollView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
                 <StackLayout Orientation="Horizontal">
                     <Label Text="Fattura n."/>
-                    <Label Text="{Binding CurrentInvoice.Number}" FontAttributes="Bold"/>
+                    <Label Text="{Binding Invoice.Number}" FontAttributes="Bold"/>
                     <Label Text="/" FontAttributes="Bold" IsVisible="True">
                         <Label.Triggers>
-                            <DataTrigger TargetType="Label" Binding="{Binding CurrentInvoice.NumberExtra.Length}" Value="0">
+                            <DataTrigger TargetType="Label" Binding="{Binding Invoice.NumberExtra.Length}" Value="0">
                                 <Setter Property="IsVisible" Value="False" />
                             </DataTrigger>
                         </Label.Triggers>
                     </Label>
-                    <Label Text="{Binding CurrentInvoice.NumberExtra}" FontAttributes="Bold" IsVisible="True">
+                    <Label Text="{Binding Invoice.NumberExtra}" FontAttributes="Bold" IsVisible="True">
                         <Label.Triggers>
-                            <DataTrigger TargetType="Label" Binding="{Binding CurrentInvoice.NumberExtra.Length}" Value="0">
+                            <DataTrigger TargetType="Label" Binding="{Binding Invoice.NumberExtra.Length}" Value="0">
                                 <Setter Property="IsVisible" Value="False" />
                             </DataTrigger>
                         </Label.Triggers>
                     </Label>
                     <Label Text="del"/>
-                    <Label Text="{Binding CurrentInvoice.Emission, Converter={StaticResource DateTimeString}, ConverterParameter=Date}" FontAttributes="Bold"/>
+                    <Label Text="{Binding Invoice.Emission, Converter={StaticResource DateTimeString}, ConverterParameter=Date}" FontAttributes="Bold"/>
                 </StackLayout>
             </ScrollView>
         </Grid>
         
         <ListView Grid.Row="1" ItemsSource="{Binding InvoiceDetails}" ItemSelected="ListView_ItemSelectionDisable">
-            
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Label Text="{Binding Product.Name}" />
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
+
+        <Button Text="Salva" Command="{Binding SaveInvoiceCommand}"/>
     </Grid>
 </views:MyContentPage>

@@ -55,6 +55,13 @@ namespace StudioServicesWeb.DataControllers
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ReadStatus>().HasKey(x => new { x.PersonId, x.MessageId } );
+
+            // modelBuilder.Entity<InvoiceDetail>().HasOne<Invoice>(x => x.Invoice).WithOne().HasForeignKey<InvoiceDetail>(x => x.InvoiceId);
+            // modelBuilder.Entity<InvoiceDetail>().HasOne<CompanyProduct>(x => x.Product).WithOne().HasForeignKey<InvoiceDetail>(x => x.ProductId);
+            // modelBuilder.Entity<InvoiceDetail>().Ignore(x => x.Invoice).Ignore(x => x.Product);
+
+            modelBuilder.Entity<CompanyProduct>().HasIndex((x) => new { x.CompanyId, x.ProductCode }).IsUnique(true);
+            // modelBuilder.Entity<CompanyProduct>().HasOne<Company>(x => x.Company).WithOne().HasForeignKey<CompanyProduct>(x => x.CompanyId);
         }
 
         private Dictionary<Type, object> @switch = new Dictionary<Type, object>();

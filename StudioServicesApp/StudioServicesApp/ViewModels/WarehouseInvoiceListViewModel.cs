@@ -75,7 +75,7 @@ namespace StudioServicesApp.ViewModels
             }
         }
 
-        public RelayCommand OpenInvoicePurchaseCommand =>
+        public RelayCommand OpenInvoiceCreatorPurchaseCommand =>
             openInvoiceCreatorPurchase ??
             (openInvoiceCreatorPurchase = new RelayCommand(() =>
             {
@@ -83,6 +83,8 @@ namespace StudioServicesApp.ViewModels
                 {
                     Type = InvoiceType.PURCHASE,
                     SenderId = CurrentCompany.Id,
+                    Sender = CurrentCompany,
+                    Emission = DateTime.Now
                 };
                 Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_HOME, invoice);
             }));
@@ -94,6 +96,8 @@ namespace StudioServicesApp.ViewModels
                 {
                     Type = InvoiceType.SELL,
                     SenderId = CurrentCompany.Id,
+                    Sender = CurrentCompany,
+                    Emission = DateTime.Now
                 };
                 Navigation.NavigateTo(ViewModelLocator.INVOICE_CREATION_HOME, invoice);
             }));

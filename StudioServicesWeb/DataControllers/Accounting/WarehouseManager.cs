@@ -97,5 +97,9 @@ namespace StudioServices.Controllers.Accounting
         {
             return db.Warehouse_GetInvoices(company, year);
         }
+        public bool SaveInvoice(Invoice invoice)
+        {
+            return db.Save(invoice);
+        }
     }
 }

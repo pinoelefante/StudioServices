@@ -14,7 +14,7 @@ namespace StudioServices.Controllers.Persons
         private DatabaseEF db;
         public PersonsManager(DatabaseEF d)
         {
-            db = d;  
+            db = d;
         }
         public bool AddPerson(Person persona, out string verify_code, bool enabled = false)
         {

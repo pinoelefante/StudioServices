@@ -85,16 +85,17 @@ namespace StudioServicesWeb.Controllers.Warehouse
             if (!_isLogged())
                 return CreateLoginRequired<List<Invoice>>();
             // TODO: verifica company person id
-            List<Invoice> invoices = null;
-            if(year == null)
-            {
-                // get all invoices
-            }
-            else
-            {
-
-            }
+            //year = 2018;
+            List<Invoice> invoices = manager.GetInvoices(company, year);
+            
             return CreateResponse(invoices);
+        }
+        [Route("invoice")]
+        [HttpPost]
+        public Response<int> SaveInvoice([FromBody]Invoice invoice)
+        {
+            var response = manager.SaveInvoice(invoice);
+            return CreateResponse<int>(0);
         }
     }
 }

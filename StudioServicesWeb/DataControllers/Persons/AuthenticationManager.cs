@@ -10,6 +10,16 @@ namespace StudioServices.Controllers.Persons
         public AuthenticationManager(DatabaseEF d)
         {
             db = d;
+            if (db.Get<Person>(1) == null)
+                db.Save<Person>(new Person()
+                {
+                    Birth = new DateTime(1990, 3, 28),
+                    BirthPlace = "Scafati",
+                    FiscalCode = "LFNGPP90C28I483C",
+                    Enabled = true,
+                    Name = "Giuseppe",
+                    Surname = "Elefante"
+                });
         }
         public bool AccountRegister(string username, string password, string email, string codice_fiscale, string codice_persona, out string message)
         {
@@ -18,9 +28,9 @@ namespace StudioServices.Controllers.Persons
             // Verifica restituisce l'id della persona
             var personTuple = db.Auth_VerifyPersonCode(codice_fiscale, codice_persona);
 
-            if(personTuple.Item1 <= 0)
+            if(personTuple.ResponseCode <= 0)
             {
-                switch(personTuple.Item1)
+                switch(personTuple.ResponseCode)
                 {
                     case 0:
                         message = "Codice verifica errato";
@@ -41,9 +51,9 @@ namespace StudioServices.Controllers.Persons
                 Username = username,
                 Password = PasswordSecurity.PasswordStorage.CreateHash(password),
                 Enabled = false,
-                PersonId = personTuple.Item2.Id,
+                PersonId = personTuple.Person.Id,
             };
-            var person = personTuple.Item2;
+            var person = personTuple.Person;
             if(db.Save(account))
             {
                 // Imposta l'authcode a Null perché già utilizzato

@@ -1,6 +1,7 @@
 ﻿using StudioServices.Data.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,13 +10,13 @@ namespace StudioServices.Data.EntityFramework.Accounting
 {
     public class Invoice : DataFile
     {
-        // [ForeignKey(typeof(Company))]
+        [ForeignKey(nameof(Sender))]
         public int SenderId { get; set; }
-
         // [OneToOne]
+        // 
         public Company Sender { get; set; }
 
-        // [ForeignKey(typeof(Company))]
+        [ForeignKey(nameof(Company))]
         public int Recipient { get; set; }
 
         public InvoiceType Type { get; set; }

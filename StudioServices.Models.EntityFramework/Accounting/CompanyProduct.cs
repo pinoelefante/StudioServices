@@ -8,6 +8,7 @@ namespace StudioServices.Data.EntityFramework.Accounting
     public class CompanyProduct : PersonReference
     {
         // [Indexed(Name = "ProductId", Order = 1, Unique = true), ForeignKey(typeof(Company))]
+        [ForeignKey(nameof(Company))]
         public int CompanyId { get; set; }
         // [Indexed(Name = "ProductId", Order = 2, Unique = true)]
         public string ProductCode { get; set; }

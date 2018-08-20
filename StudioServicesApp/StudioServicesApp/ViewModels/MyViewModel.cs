@@ -46,7 +46,8 @@ namespace pinoelefante.ViewModels
             MSG_MY_COMPANY_CLIENT_UPD = "MyCompanyClientUpd",
             MSG_REQUEST_CURRENT_COMPANY = "RequestCurrentCompany",
             MSG_SET_CURRENT_COMPANY = "SetCurrentCompany",
-            MSG_RESPONSE_CURRENT_COMPANY = "ResponseCurrentCompany";
+            MSG_RESPONSE_CURRENT_COMPANY = "ResponseCurrentCompany",
+            MSG_INVOICE_DETAIL_ADD = "InvoiceDetailAdd";
 
         private static readonly int LIMIT_TRY = 3;
         public NavigationService Navigation { get; private set; }

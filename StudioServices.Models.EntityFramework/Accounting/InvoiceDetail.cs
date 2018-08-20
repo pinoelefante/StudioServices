@@ -1,21 +1,22 @@
 ﻿using StudioServices.Data.EntityFramework;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudioServices.Data.EntityFramework.Accounting
 {
     public class InvoiceDetail : DataFile
     {
-        // [ForeignKey(typeof(CompanyProduct))]
+        [ForeignKey(nameof(Product))]
         public int ProductId { get; set; }
+
+        // [ForeignKey(nameof(Invoice))]
+        public int InvoiceId { get; set; }
 
         public double UnitPrice { get; set; }
         public float Quantity { get; set; }
         public double UnitPriceDiscount { get; set; }
         public float Tax { get; set; }
 
-        // [ForeignKey(typeof(Invoice))]
-        public int InvoiceId { get; set; }
-
-        // [OneToOne]
+        // public Invoice Invoice { get; set; }
         public CompanyProduct Product { get; set; }
     }
     public enum InvoiceQuantity

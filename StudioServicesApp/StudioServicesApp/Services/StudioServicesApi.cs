@@ -225,6 +225,11 @@ namespace StudioServicesApp.Services
             var address = $"{WS_ADDRESS}/api/warehouse/clients_suppliers";
             return await SendRequestAsync<List<Company>>(address, HttpMethod.GET);
         }
+        public async Task<ResponseMessage<int>> Warehouse_SaveInvoice(Invoice invoice)
+        {
+            var address = $"{WS_ADDRESS}/api/warehouse/invoice";
+            return await SendRequestAsync<int>(address, HttpMethod.POST, invoice);
+        }
         #endregion
 
         private async Task<ResponseMessage<T>> SendRequestAsync<T>(string url, HttpMethod method, object parameters = null, byte[] file = null, bool send_later = false)

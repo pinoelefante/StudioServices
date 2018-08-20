@@ -6,13 +6,12 @@ namespace StudioServices.Data.Sqlite.Accounting
 {
     public class Invoice : DataFile
     {
-        // [ForeignKey(typeof(Company))]
+        // [ForeignKey(typeof(Sender))]
         public int SenderId { get; set; }
 
         [OneToOne]
         public Company Sender { get; set; }
-
-        // [ForeignKey(typeof(Company))]
+        
         public int Recipient { get; set; }
 
         public InvoiceType Type { get; set; }

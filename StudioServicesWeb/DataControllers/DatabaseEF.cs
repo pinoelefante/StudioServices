@@ -64,17 +64,17 @@ namespace StudioServicesWeb.DataControllers
         #endregion
 
         #region Authentication
-        public Tuple<int, Person> Auth_VerifyPersonCode(string fiscal_code, string auth_code)
+        public (int ResponseCode, Person Person) Auth_VerifyPersonCode(string fiscal_code, string auth_code)
         {
             var person = db.Persons.Where(x => x.FiscalCode.Equals(fiscal_code)).FirstOrDefault();
 
             if (person == null)
-                return new Tuple<int, Person>(-2, null);
+                return (-2, null);
             if (person.AuthCode == null || string.IsNullOrEmpty(auth_code))
-                return new Tuple<int, Person>(-1, null);
+                return (-1, null);
             if (person.AuthCode.CompareTo(auth_code) == 0)
-                return new Tuple<int, Person>(1, person);
-            return new Tuple<int, Person>(0, null);
+                return (1, person);
+            return (0, null);
         }
         public Account Auth_GetAccountByUsername(string username)
         {
@@ -125,11 +125,12 @@ namespace StudioServicesWeb.DataControllers
 
         public List<Invoice> Warehouse_GetInvoices(int company, int? year)
         {
-            var query = from invoices in db.Invoices
-                        where invoices.SenderId == company && (year != null ? invoices.Emission.Year == year : true)
-                        orderby invoices.Number descending, invoices.NumberExtra descending
-                        select invoices;
-            return query.ToList();
+            var invoices = db.Invoices
+                .Include((p) => p.InvoiceDetails)
+                //.Include((p) => p.Sender) // disabled. retrieve the value in the client database
+                //.ThenInclude(p => p.Person)
+                .Where((p) => p.SenderId == company && (year == null ? true : p.Emission.Year == year)).ToList();
+            return invoices;
         }
         public List<Company> Warehouse_GetClientSupplierList(int person_id)
         {

@@ -28,23 +28,18 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" Text="Azienda" VerticalOptions="Center"/>
-                <Grid Grid.Row="0" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Picker Grid.Column="0" ItemsSource="{Binding ListCompanies}" SelectedIndex="{Binding SelectedMyCompanyIndex, Mode=TwoWay}" SelectedItem="{Binding SelectedMyCompany, Mode=TwoWay}" ItemDisplayBinding="{Binding Name}"/>
-                    <Button Grid.Column="1" Text="+" Command="{Binding OpenAddCompanyPopup}" CommandParameter="False"/>
-                </Grid>
+                <Label Grid.Row="0" Text="{Binding Invoice.Sender.Name}" />
 
-                <Label Grid.Row="1" Grid.Column="0" Text="Tipo di fattura" VerticalOptions="Center"/>
-                <Picker Grid.Row="1" Grid.Column="1" x:Name="InvoiceType" SelectedIndex="{Binding SelectedIndexInvoiceType, Mode=TwoWay}">
-                    <Picker.Items>
-                        <x:String>Vendita</x:String>
-                        <x:String>Acquisto</x:String>
-                    </Picker.Items>
-                </Picker>
+                <Label Grid.Row="1">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Invoice.Type}" Value="SELL">
+                            <Setter Property="Text" Value="Fattura vendita"/>
+                        </DataTrigger>
+                        <DataTrigger TargetType="Label" Binding="{Binding Invoice.Type}" Value="PURCHASE">
+                            <Setter Property="Text" Value="Fattura acquisti"/>
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
 
                 <Label Grid.Row="2" Grid.Column="0" Text="Data" VerticalOptions="Center"/>
                 <DatePicker Grid.Row="2" Grid.Column="1" HorizontalOptions="Start" Date="{Binding InvoiceDate, Mode=TwoWay}" MaximumDate="{x:Static sys:DateTime.Now}">
@@ -84,10 +79,10 @@
             <!-- Lista aziende -->
             <Label Grid.Row="1" FontAttributes="Bold" HorizontalOptions="Center">
                 <Label.Triggers>
-                    <DataTrigger TargetType="Label" Binding="{Binding SelectedIndexInvoiceType}" Value="0">
+                    <DataTrigger TargetType="Label" Binding="{Binding Invoice.Type}" Value="SELL">
                         <Setter Property="Text" Value="Clienti"/>
                     </DataTrigger>
-                    <DataTrigger TargetType="Label" Binding="{Binding SelectedIndexInvoiceType}" Value="1">
+                    <DataTrigger TargetType="Label" Binding="{Binding Invoice.Type}" Value="PURCHASE">
                         <Setter Property="Text" Value="Fornitori"/>
                     </DataTrigger>
                 </Label.Triggers>
