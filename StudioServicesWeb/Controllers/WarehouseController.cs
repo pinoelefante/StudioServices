@@ -22,11 +22,10 @@ namespace StudioServicesWeb.Controllers.Warehouse
         {
             if (!_isLogged())
                 return CreateLoginRequired<Tuple<int, string>>();
-            var company = manager.GetCompany(product.CompanyId);
-            if (company == null || company.PersonId != _getPersonId())
-                return CreateResponse<Tuple<int, string>>(default(Tuple<int,string>), ResponseCode.FAIL, "Operazione non autorizzata");
+            if (CheckPersonCompany(product.CompanyId, manager.GetCompany))
+                CreateResponse(default(Tuple<int,string>), ResponseCode.INVALID_PERSON);
 
-            product.PersonId = company.PersonId;
+            product.PersonId = _getPersonId();
             bool res = manager.SaveProduct(product);
             return CreateResponse<Tuple<int,string>>(res ? new Tuple<int,string>(product.Id,product.ProductCode) : default(Tuple<int,string>), res ? ResponseCode.OK : ResponseCode.FAIL);
         }
@@ -36,9 +35,8 @@ namespace StudioServicesWeb.Controllers.Warehouse
         {
             if (!_isLogged())
                 return CreateLoginRequired<List<CompanyProduct>>();
-            var company = manager.GetCompany(companyId);
-            if (company == null || company.PersonId != _getPersonId())
-                return CreateResponse<List<CompanyProduct>>(null, ResponseCode.FAIL, "Operazione non autorizzata");
+            if (CheckPersonCompany(companyId, manager.GetCompany))
+                CreateResponse(default(List<CompanyProduct>), ResponseCode.INVALID_PERSON);
 
             var res = manager.ListCompanyProducts(companyId, _getPersonId(), all);
             return CreateResponse(res);
@@ -67,7 +65,8 @@ namespace StudioServicesWeb.Controllers.Warehouse
         {
             if (!_isLogged())
                 return CreateLoginRequired<string>();
-            // TODO verifica azienda - person id
+            if (CheckPersonCompany(company, manager.GetCompany))
+                CreateResponse(default(string), ResponseCode.INVALID_PERSON);
             return CreateResponse(manager.GenerateProductCode(productName, company));
         }
         [Route("clients_suppliers")]
@@ -84,18 +83,22 @@ namespace StudioServicesWeb.Controllers.Warehouse
         {
             if (!_isLogged())
                 return CreateLoginRequired<List<Invoice>>();
-            // TODO: verifica company person id
-            //year = 2018;
+            if (CheckPersonCompany(company, manager.GetCompany))
+                CreateResponse(default(List<Invoice>), ResponseCode.INVALID_PERSON);
+
             List<Invoice> invoices = manager.GetInvoices(company, year);
-            
             return CreateResponse(invoices);
         }
         [Route("invoice")]
         [HttpPost]
         public Response<int> SaveInvoice([FromBody]Invoice invoice)
         {
+            if (!_isLogged())
+                return CreateLoginRequired<int>();
+            if (CheckPersonCompany(invoice.SenderId, manager.GetCompany))
+                CreateResponse(default(int), ResponseCode.INVALID_PERSON);
             var response = manager.SaveInvoice(invoice);
-            return CreateResponse<int>(0);
+            return CreateResponse<int>(invoice.Id);
         }
     }
 }

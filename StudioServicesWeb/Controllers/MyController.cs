@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using StudioServices.Data.EntityFramework;
 using System.Runtime.CompilerServices;
+using StudioServices.Data.EntityFramework.Accounting;
 
 namespace StudioServicesWeb.Controllers
 {
@@ -54,6 +55,14 @@ namespace StudioServicesWeb.Controllers
         {
             var personId = _getPersonId();
             return data.PersonId == personId;
+        }
+        protected bool CheckPersonCompany(int companyId, Func<int,Company> GetCompany)
+        {
+            var personId = _getPersonId();
+            var company = GetCompany(companyId);
+            if (personId > 0 && company != null && company.PersonId == personId)
+                return true;
+            return false;
         }
         protected ResponseCode CheckLoginAndPerson(PersonReference data)
         {

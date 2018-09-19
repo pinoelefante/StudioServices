@@ -1,6 +1,7 @@
 ﻿using StudioServices.Data.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace StudioServices.Data.EntityFramework.Accounting
